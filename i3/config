@@ -1,0 +1,188 @@
+set $mod Mod4
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+#font pango:Source Code Pro 10
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# rofi/dmenu
+bindsym $mod+d   exec "rofi -show run"
+bindsym $mod+Tab exec "rofi -show window"
+#bindsym $mod+d exec dmenu_run
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# keyboard layout selection (it's not working with gui)
+exec "setxkbmap -layout us -variant intl"
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+x layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# switch to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# Create Log out, Reboot, Poweroff bindings
+mode "Exit (L)ogout, (R)eboot, (P)oweroff" {
+        bindsym $mod+r exec systemctl reboot
+        bindsym $mod+l exit
+        bindsym $mod+p exec systemctl poweroff
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+e mode "Exit (L)ogout, (R)eboot, (P)oweroff"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# bar {
+    # status_command $HOME/Software/scripts/conky-i3bar
+# }
+
+# exec polybar example
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+# brillo
+bindsym XF86MonBrightnessUp exec "light -A 5"
+bindsym XF86MonBrightnessDown exec "light -U 5"
+
+# sonido
+set $statuscmd i3status
+set $statussig SIGUSR1
+bindsym XF86AudioRaiseVolume exec "amixer -q sset IEC958,0 3%+ unmute"
+bindsym XF86AudioLowerVolume exec "amixer -q sset IEC958,0 3%- unmute"
+bindsym XF86AudioMute exec "amixer -q sset IEC958,0 toggle"
+
+# applications shortcuts
+bindsym $mod+shift+Return exec gnome-terminal
+bindsym $mod+Return exec konsole
+bindsym $mod+shift+n exec caja
+bindsym $mod+n exec dolphin
+bindsym $mod+f exec google-chrome-stable
+bindsym $mod+b exec emacs
+bindsym $mod+i exec ~/Software/idea-IC/bin/idea.sh
+bindsym $mod+p exec ~/Software/Popcorn-Time/Popcorn-Time
+
+# Mover workspaces entre pantallas
+bindsym $mod+Control+h move workspace to output left
+bindsym $mod+Control+j move workspace to output right
+
+# Startup applications
+exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/Sierra.jpg
+exec xrandr --output VGA1 # --left-of eDP!1 --output VGA1 --primary
+exec xrandr --output eDP1 --off
+exec --no-startup-id ~/.dropbox-dist/dropboxd
+exec_always --no-startup-id ~/bin/compton_init.sh
+
+
+# Definition of workspaces
+#workspace  1 output VGA1
+#workspace 10 output eDP1
+workspace 1 output eDP1
+
+# Gaps
+gaps inner 5
+gaps outer 0
+
+# Borders
+for_window [class="^.*"] border pixel 0
+smart_borders on
+

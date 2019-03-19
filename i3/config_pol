@@ -1,0 +1,203 @@
+# Venkatraman Srikanth's i3 Config File
+
+# base and fonts
+set $mod Mod1
+font pango:Iosevka Term 16
+floating_modifier $mod
+
+# quick start applications
+bindsym $mod+Return exec termite
+bindsym $mod+c exec code --force-device-scale-factor=1.25
+bindsym $mod+g exec google-chrome-stable --force-device-scale-factor=1.25
+bindsym $mod+u exec spotify --force-device-scale-factor=1.25
+#bindsym $mod+g exec google-chrome-stable --force-device-scale-factor=1
+#bindsym $mod+c exec code --force-device-scale-factor=1
+bindsym $mod+t exec thunar
+bindsym $mod+b exec subl3
+bindsym $mod+y exec okular
+bindsym $mod+space exec ~/.config/polybar/scripts/launcher
+
+# kill focused window
+bindsym $mod+Shift+w kill
+
+# lock i3
+bindsym $mod+Shift+x exec /home/venkat/bin/scripts/lock
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# move focussed window between monitors
+bindsym $mod+Shift+Mod4+Up move container to output up
+bindsym $mod+Shift+Mod4+Down move container to output down
+bindsym $mod+Shift+Mod4+Left move container to output left
+bindsym $mod+Shift+Mod4+Right move container to output right
+
+# move current workspace between monitors
+#bindsym $mod+Ctrl+x+Up move container to output up
+#bindsym $mod+Ctrl+x+Down move container to output down
+#bindsym $mod+Ctrl+x+Left move container to output left
+#bindsym $mod+Ctrl+x+Right move container to output right
+
+# splits
+bindsym $mod+v split v
+bindsym $mod+h split h
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+ 
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+# replaced by the vim document launcher
+# bindsym $mod+d focus child
+
+# switch to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# move between adjacent workspaces
+bindsym $mod+Control+Left workspace prev
+bindsym $mod+Control+Right workspace next
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+Control+Left move container to workspace prev
+bindsym $mod+Shift+Control+Right move container to workspace next
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+
+# screen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 7
+bindsym XF86MonBrightnessDown exec xbacklight -dec 7
+
+# Media player controls
+# Shit never works
+#bindsym XF86AudioPlay exec playerctl play
+#bindsym XF86AudioPause exec playerctl pause
+#bindsym XF86AudioNext exec playerctl next
+#bindsym XF86AudioPrev exec playerctl previous
+
+# Set Wallpaper
+exec_always feh --bg-scale ~/Desktop/Wallpapers/daftpunk.png
+exec_always compton
+#exec polybar example
+
+# reloads
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Do you really want to exit, you fucking moron?' -b 'Yes, you stupid prick' -b 'No, now fuck off'"
+
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Gaps
+gaps inner 0
+gaps outer 0
+
+bindsym $mod+o         gaps inner current minus 5
+bindsym $mod+p         gaps inner current plus 5
+bindsym $mod+Shift+o   gaps outer current minus 5
+bindsym $mod+Shift+p   gaps outer current plus 5
+
+# Borders
+for_window [class="^.*"] border pixel 0
+smart_borders on
+
+#client.focused          #3c3836 #3c3836 #504945 #504945
+#client.focused_inactive #333333 #333333 #555555 #555555
+#client.unfocused        #333333 #333333 #555555 #555555
+#client.urgent           #ff5555 #ff5555 #ff5555 #ff5555
+
+#client.focused          #222222 #222222 #272727 #272727
+#client.focused_inactive #111111 #111111 #222222 #222222
+#client.unfocused        #111111 #111111 #222222 #222222
+#client.urgent           #ff5555 #ff5555 #ff5555 #ff5555
+
+# Let the GMAT dropdown thing always float
+for_window [class="Wine"] floating enable
+for_window [class="gmatprep.exe"] floating enable
+for_window [class="tvp"] floating enable
+for_window [class="Welcome to TVP"] floating enable
+
+exec_always ~/.config/polybar/launch.sh
+
+ #Replaced by polybar
+#bar {
+        #position top
+        #status_command i3status
+        #hidden_state hide
+        #modifier Mod4
+#}
+
+# disable window titles
+# new_window none
