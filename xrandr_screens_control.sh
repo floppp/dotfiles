@@ -1,4 +1,4 @@
-if [[ -z $(xrandr --query | grep "VGA1 connected") ]]; then
+if [[ -z $(xrandr | grep "VGA1 connected") ]]; then
     xrandr --output VGA1
     xrandr --output eDP1 --off
 else
