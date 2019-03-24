@@ -147,9 +147,9 @@ bindsym XF86MonBrightnessDown exec "light -U 5"
 # sonido
 set $statuscmd i3status
 set $statussig SIGUSR1
-bindsym XF86AudioRaiseVolume exec "amixer -q sset IEC958,0 3%+ unmute"
-bindsym XF86AudioLowerVolume exec "amixer -q sset IEC958,0 3%- unmute"
-bindsym XF86AudioMute exec "amixer -q sset IEC958,0 toggle"
+bindsym XF86AudioRaiseVolume exec "amixer -q sset Master,0 3%+ unmute"
+bindsym XF86AudioLowerVolume exec "amixer -q sset Master,0 3%- unmute"
+bindsym XF86AudioMute exec        "amixer -q sset Master,0 toggle"
 
 # applications shortcuts
 bindsym $mod+shift+Return exec gnome-terminal
@@ -167,7 +167,7 @@ bindsym $mod+Control+j move workspace to output right
 
 # Startup applications
 exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/Sierra.jpg
-exec xrandr --output VGA1 # --left-of eDP!1 --output VGA1 --primary
+exec xrandr --output VGA1 # --left-of eDP1 --output VGA1 --primary
 exec xrandr --output eDP1 --off
 exec --no-startup-id ~/.dropbox-dist/dropboxd
 exec_always --no-startup-id ~/bin/compton_init.sh

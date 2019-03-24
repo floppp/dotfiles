@@ -122,9 +122,8 @@
 ;; --------------------
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
-;; (desktop-save-mode 1) ;; Prefiero no tener grabado el escritorio porque al
-;; final voy abriendo y cerrando en un sitio y otro y me da más quebraderos de
-;; cabeza que otra cosa.
+(desktop-save-mode 1)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Cambiamos el comportamiento por defecto de la shell.
 (remove-hook 'eshell-output-filter-functions
