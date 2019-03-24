@@ -167,10 +167,9 @@ bindsym $mod+Control+j move workspace to output right
 
 # Startup applications
 exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/Sierra.jpg
-exec xrandr --output VGA1 # --left-of eDP1 --output VGA1 --primary
-exec xrandr --output eDP1 --off
+exec --no-startup-id ~/workspaces/dotfiles/xrandr_screens_control.sh
 exec --no-startup-id ~/.dropbox-dist/dropboxd
-exec_always --no-startup-id ~/bin/compton_init.sh
+exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 
 
 # Definition of workspaces
