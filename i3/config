@@ -156,7 +156,7 @@ bindsym $mod+shift+Return exec gnome-terminal
 bindsym $mod+Return exec konsole
 bindsym $mod+shift+n exec caja
 bindsym $mod+n exec dolphin
-bindsym $mod+f exec google-chrome-stable
+bindsym $mod+f exec firefox
 bindsym $mod+b exec emacs
 bindsym $mod+i exec ~/Software/idea-IC/bin/idea.sh
 bindsym $mod+p exec ~/Software/Popcorn-Time/Popcorn-Time
