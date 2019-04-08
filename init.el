@@ -133,6 +133,7 @@
 ;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; -----------
 ;; KEYBINDINGS
