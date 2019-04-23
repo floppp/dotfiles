@@ -58,9 +58,9 @@ font-0 = "FiraCode:pixelsize=10;1"
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
-modules-left = bspwm i3 spotify
+modules-left = i3 spotify
 ;modules-center = mpd
-modules-right = filesystem xbacklight pulseaudio xkeyboard memory cpu wlan eth battery temperature date powermenu
+modules-right = cpu memory filesystem xbacklight pulseaudio xkeyboard wlan eth battery temperature date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -95,8 +95,6 @@ label-indicator-underline = ${colors.secondary}
 [module/spotify]
 type = custom/script
 interval = 2
-;format-prefix = " "
-;format = <label>
 exec = /bin/python /home/nando/workspaces/dotfiles/polybar/spotify_status.py -f '{play_pause} {artist} - {song}' -p '⏵,⏸'
 format-underline = #1db954
 
@@ -105,6 +103,7 @@ type = internal/fs
 interval = 25
 
 mount-0 = /home
+mount-1 = /
 
 label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
 label-unmounted = %mountpoint% not mounted
@@ -130,7 +129,7 @@ label-empty-foreground = ${colors.foreground-alt}
 label-empty-padding = 2
 
 ; Separator in between workspaces
-; label-separator = |
+;label-separator = |
 
 [module/i3]
 type = internal/i3
@@ -167,7 +166,7 @@ label-urgent-background = ${module/bspwm.label-urgent-background}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 ; Separator in between workspaces
-; label-separator = |
+;label-separator = |
 
 [module/xbacklight]
 type = internal/xbacklight
@@ -193,11 +192,43 @@ card = intel_backlight
 
 [module/cpu]
 type = internal/cpu
-interval = 2
-format-prefix = " "
+interval = 0.5
+
+format = <label> <ramp-coreload>
+;format-background = #66cc99
 format-prefix-foreground = ${colors.foreground-alt}
+;format-foreground = ${colors.foreground-alt}
 format-underline = #f90000
-label = CPU %percentage:2%%
+;format-overline = #60eaa5
+format-padding = 0
+
+label = cpu %percentage:2%%
+label-font = 3
+
+ramp-coreload-0 = ▁
+ramp-coreload-0-font = 5
+ramp-coreload-0-foreground = #ffffff
+ramp-coreload-1 = ▂
+ramp-coreload-1-font = 5
+ramp-coreload-1-foreground = #ffffff
+ramp-coreload-2 = ▃
+ramp-coreload-2-font = 5
+ramp-coreload-2-foreground = #ffffff
+ramp-coreload-3 = ▄
+ramp-coreload-3-font = 5
+ramp-coreload-3-foreground = #ffffff
+ramp-coreload-4 = ▅
+ramp-coreload-4-font = 5
+ramp-coreload-4-foreground = #ffffff
+ramp-coreload-5 = ▆
+ramp-coreload-5-font = 5
+ramp-coreload-5-foreground = #ffffff
+ramp-coreload-6 = ▇
+ramp-coreload-6-font = 5
+ramp-coreload-6-foreground = #ff3b51
+ramp-coreload-7 = █
+ramp-coreload-7-font = 5
+ramp-coreload-7-foreground = #ff3b51
 
 [module/memory]
 type = internal/memory
