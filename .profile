@@ -17,7 +17,6 @@ export PATH="/home/nando/bin:$PATH"
 export PATH="/home/nando/.local/bin:$PATH"
 export PATH="/home/nando/.gem/ruby/2.4.0/bin:$PATH"
 export PATH="/home/nando/Software/utils:$PATH"
-export PATH="/home/nando/Software/flutter/bin:$PATH"
 export PATH="/home/nando/Software/scripts:$PATH"
 
 export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"

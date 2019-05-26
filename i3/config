@@ -159,7 +159,9 @@ bindsym $mod+shift+n exec caja
 bindsym $mod+n exec dolphin
 bindsym $mod+f exec firefox
 bindsym $mod+b exec emacs
-bindsym $mod+i exec ~/Software/idea-IC/bin/idea.sh
+bindsym $mod+Shift+b exec /home/nando/bin/studio.sh
+bindsym $mod+i exec /home/nando/bin/idea.sh
+
 # Mover workspaces entre pantallas
 bindsym $mod+Control+h move workspace to output left
 bindsym $mod+Control+j move workspace to output right
