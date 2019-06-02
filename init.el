@@ -59,17 +59,17 @@
   (package-initialize)
   (delete-other-windows))
 
-(defun spell-buffer-spanish ()
-  "Buffer in spanish."
-  (interactive)
-  (ispell-change-dictionary "es")
-  (flyspell-buffer))
+;; (defun spell-buffer-spanish ()
+;;   "Buffer in spanish."
+;;   (interactive)
+;;   (ispell-change-dictionary "es")
+;;   (flyspell-buffer))
 
-(defun spell-buffer-english ()
-  "Buffer in english."
-  (interactive)
-  (ispell-change-dictionary "en_US")
-  (flyspell-buffer))
+;; (defun spell-buffer-english ()
+;;   "Buffer in english."
+;;   (interactive)
+;;   (ispell-change-dictionary "en_US")
+;;   (flyspell-buffer))
 
 (defun close-all-buffers ()
   "Para eliminar todos los buffers."
@@ -138,7 +138,7 @@
 ;; -----------
 ;; KEYBINDINGS
 ;; -----------
-(global-set-key (kbd "C-?") 'er/expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
@@ -259,15 +259,12 @@
   :ensure t
   :defer t)
 
-(use-package ispell
-  :config
-  (when (executable-find "hunspell")
-    (setq-default ispell-program-name "hunspell")
-    (setq ispell-really-hunspell t))
-  ;; (setq ispell-program-name "aspell"
-  ;;       ispell-extra-args '("--sug-mode=ultra"))
-  :bind (("C-c s" . spell-buffer-spanish)
-         ("C-c e" . spell-buffer-english)))
+;; (use-package ispell
+;;   :config
+;;   (setq-default ispell-program-name "hunspell")
+;;   (setq ispell-really-hunspell t)
+;;   :bind (("C-c s" . spell-buffer-spanish)
+;;          ("C-c e" . spell-buffer-english)))
 
 (use-package highlight-parentheses
   :ensure t)
