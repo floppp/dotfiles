@@ -150,6 +150,7 @@
 (global-set-key (kbd "C-q") 'comment-line)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
+
 ;; Multiple-cursors
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -157,6 +158,7 @@
 (global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-<up>") 'move-line-up)
 (global-set-key (kbd "M-<down>") 'move-line-down)
+
 ;; Undo y Redo
 ;; (global-unset-key "C-z")
 (global-set-key (kbd "C-z") 'advertised-undo)
@@ -165,8 +167,10 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
+
 ;; Autocierre de paréntesis, llaves, corchetes, etc
 (electric-pair-mode 1)
+
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -233,44 +237,36 @@
 ;; ---
 ;; Ivy
 ;; ---
-;; Configuración a partir de daemons.it, quitándole algunas cosas que no uso
-;; actualmente (ya veré en un futuro) y modificando otras.
-(unless (require 'ivy nil 'noerror)
-  (sleep-for 5))
 
 ;; Ivy está formado por:
 ;;    - ivy: un mecanismo genérico de completado de emacs
 ;;    - counsel: varios comandos habituales de emacs mejorados con ivy
 ;;    - swiper: un isearch mejorado con ivy
+
+;; Configuración a partir de daemons.it, quitándole algunas cosas que no uso
+;; actualmente (ya veré en un futuro) y modificando otras.
+(unless (require 'ivy nil 'noerror)
+  (sleep-for 5))
+
 (use-package ivy
   :init
-  ;; Añade los buffers de bookmarks y de recentf
-  (setq ivy-use-virtual-buffers t)
-  ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-  (setq ivy-count-format "(%d/%d) ")
-  ;; Un mejor buscador
-  (setq ivy-re-builders-alist
+  (setq ivy-use-virtual-buffers t) ;; Añade los buffers de bookmarks y de recentf
+  (setq ivy-count-format "(%d/%d) ") ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
+  (setq ivy-re-builders-alist ;; Un mejor buscador
 	'((read-file-name-internal . ivy--regex-fuzzy)
 	  (t . ivy--regex-plus)))
-  ;; número de resultados a mostrar
-  (setq ivy-height 15)
-  ;; No se sale del minibuffer si se encuentra un error
-  (setq ivy-on-del-error-function nil)
-  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
-  (setq ivy-initial-inputs-alist nil)
-  ;; Dar la vuelta a los candidatos
-  (setq ivy-wrap t)
-  ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
-  (setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
-  ;; Ver la ruta de los ficheros virtuales
-  (setq ivy-virtual-abbreviate 'full)
-  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
-  (setq ivy-use-selectable-prompt t)
+  (setq ivy-height 15) ;; número de resultados a mostrar
+  (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
+  (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
+  (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
+  (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
   ;; Asegurarse de que están smex, flx
   (use-package smex :ensure t)
   (use-package flx :ensure t)
+
   :config (ivy-mode 1)
   :config (counsel-mode 1)
   :diminish ivy-mode
