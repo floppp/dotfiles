@@ -19,6 +19,10 @@ export PATH="/home/nando/.gem/ruby/2.4.0/bin:$PATH"
 export PATH="/home/nando/Software/utils:$PATH"
 export PATH="/home/nando/Software/scripts:$PATH"
 
-export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"
+export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH" 
 
 export PATH="/home/nando/miniconda3/bin:$PATH"
+
+alias winscp="wine /home/nando/.wine/drive_c/Program\ Files\ \(x86\)/WinSCP/WinSCP.exe"
+
+alias connect_server="ssh -i /home/nando/Documentos/imm/20190206_fernando/id_rsa fernando@167.114.242.135 -p2345"

@@ -167,6 +167,13 @@
 (define-key global-map [f6] 'menu-bar-mode)
 ;; Autocierre de paréntesis, llaves, corchetes, etc
 (electric-pair-mode 1)
+;; Atajos para ivy y todo lo relacionado.
+(global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
 
 ;; ------------------
 ;; Modificaciones GUI
@@ -206,7 +213,7 @@
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; -------------------
-;; Variables Globlales
+;; variables Globlales
 ;; -------------------
 (require 'ido)
 (ido-mode t)
@@ -219,9 +226,78 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-;; ----------------------------------------
+;; =======================================----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ---------------------------------------
+
+;; ---
+;; Ivy
+;; ---
+;; Configuración a partir de daemons.it, quitándole algunas cosas que no uso
+;; actualmente (ya veré en un futuro) y modificando otras.
+(unless (require 'ivy nil 'noerror)
+  (sleep-for 5))
+
+;; Ivy está formado por:
+;;    - ivy: un mecanismo genérico de completado de emacs
+;;    - counsel: varios comandos habituales de emacs mejorados con ivy
+;;    - swiper: un isearch mejorado con ivy
+(use-package ivy
+  :init
+  ;; Añade los buffers de bookmarks y de recentf
+  (setq ivy-use-virtual-buffers t)
+  ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
+  (setq ivy-count-format "(%d/%d) ")
+  ;; Un mejor buscador
+  (setq ivy-re-builders-alist
+	'((read-file-name-internal . ivy--regex-fuzzy)
+	  (t . ivy--regex-plus)))
+  ;; número de resultados a mostrar
+  (setq ivy-height 15)
+  ;; No se sale del minibuffer si se encuentra un error
+  (setq ivy-on-del-error-function nil)
+  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
+  (setq ivy-initial-inputs-alist nil)
+  ;; Dar la vuelta a los candidatos
+  (setq ivy-wrap t)
+  ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  (setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
+  ;; Ver la ruta de los ficheros virtuales
+  (setq ivy-virtual-abbreviate 'full)
+  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
+  (setq ivy-use-selectable-prompt t)
+
+  ;; Asegurarse de que están smex, flx
+  (use-package smex :ensure t)
+  (use-package flx :ensure t)
+  :config (ivy-mode 1)
+  :config (counsel-mode 1)
+  :diminish ivy-mode
+  :ensure t)
+
+(use-package counsel
+	 :config
+	 (setq counsel-find-file-at-point t)
+	 :ensure t)
+
+(use-package swiper
+  :ensure t)
+
+;; ----------
+;; Projectile
+;; ----------
+(use-package projectile
+  :ensure t
+  :pin melpa-stable
+  :config
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
+
+;; -----
+;; Otros
+;; -----
 (use-package paredit
   :ensure t
   :config
@@ -231,14 +307,6 @@
 (use-package undo-tree
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
-
-(use-package projectile
-  :ensure t
-  :pin melpa-stable
-  :config
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode +1))
 
 (use-package which-key
   :ensure t
@@ -400,7 +468,7 @@
    ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes nil)
  '(custom-safe-themes
    (quote
 	("bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
@@ -413,7 +481,7 @@
 	("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-	(undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme aggressive-indent zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+	(counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme aggressive-indent zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(tool-bar-mode nil)
  '(vc-annotate-background "#2B2B2B")

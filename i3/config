@@ -156,9 +156,9 @@ bindsym XF86AudioMute exec        "amixer -q sset Master,0 toggle"
 bindsym $mod+shift+Return exec gnome-terminal
 bindsym $mod+Return exec konsole
 bindsym $mod+shift+n exec caja
-bindsym $mod+n exec dolphin
+bindsym $mod+n exec nautilus
 bindsym $mod+f exec firefox
-bindsym $mod+b exec emacs
+bindsym $mod+b exec subl
 bindsym $mod+Shift+b exec /home/nando/bin/studio.sh
 bindsym $mod+i exec /home/nando/bin/idea.sh
 
@@ -170,6 +170,7 @@ bindsym $mod+Control+j move workspace to output right
 exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/mountain-range.jpg
 exec --no-startup-id ~/workspaces/dotfiles/xrandr_screens_control.sh
 exec --no-startup-id ~/.dropbox-dist/dropboxd
+exec --no-startup-id emacs --daemon
 exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 
 
