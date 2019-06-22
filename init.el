@@ -6,9 +6,13 @@
 ;;   + Latex      -> Auctex
 ;;   + Scala      -> Ensime
 
-;;; Commentary:
+;;; Code:
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
+(setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
+(setq-default indent-tabs-mode nil)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; Incluyo en el PATH tanto donde está el jdk, como donde miniconda, para que
 ;; pueda encontrar los paquetes allí instalados.
@@ -17,11 +21,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
-
-;;(require 'package)
-
-;;; Code:
-(setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
 
 ;; Repositorios donde buscar paquetes.
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
@@ -119,6 +118,18 @@
   (interactive "p")
   (move-line (if (null n) 1 n)))
 
+;; From https://dougie.io/emacs/indentation/
+(defun disable-tabs (n)
+  "Tabs desactivation with N spaces indentation."
+  (setq indent-tabs-mode nil)
+  (setq tab-width n))
+
+(defun enable-tabs  (n)
+  "Tabs activation instead of spaces, with N as tab width."
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  (setq indent-tabs-mode t)
+  (setq tab-width n))
+
 ;; --------------------
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
@@ -203,7 +214,7 @@
   :defer t
   ;; :ensure t
   :init
-  (load-theme 'spacemacs-dark t))
+  (load-theme 'spacemacs-light t))
 (global-prettify-symbols-mode 1)
 
 ;; ------
@@ -252,9 +263,10 @@
   :init
   (setq ivy-use-virtual-buffers t) ;; Añade los buffers de bookmarks y de recentf
   (setq ivy-count-format "(%d/%d) ") ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-  (setq ivy-re-builders-alist ;; Un mejor buscador
-	'((read-file-name-internal . ivy--regex-fuzzy)
-	  (t . ivy--regex-plus)))
+  ;; En ppio esto no es necesario al definirlo para todo
+  ;; (setq ivy-re-builders-alist ;; Un mejor buscador
+  ;; 	'((read-file-name-internal . ivy--regex-fuzzy)
+  ;; 	  (t . ivy--regex-plus)))
   (setq ivy-height 15) ;; número de resultados a mostrar
   (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
   (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
@@ -362,9 +374,8 @@
 ;; C CPP
 ;; -----
 ;; TODO: C me está usando un completado y errores muy buenos... y no recuero qué paquete instalé. Investigarlo.
-(setq-default c-basic-offset 4
-              tab-width 4
-              indent-tabs-mode t)
+;; (setq-default c-basic-offset 4)
+(add-hook 'c-mode '(enable-tabs 4))
 
 ;; -----
 ;; LaTex
@@ -384,6 +395,17 @@
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)))
 (add-hook 'typescript-mode 'electric-pair-mode)
+(add-hook 'typescript-mode '(disable-tabs 2))
+
+;; ---
+;; PHP
+;; ---
+(use-package php-mode
+  :ensure t)
+(add-hook 'php-mode '(enable-tabs 4))
+
+;; hooks para web-mode
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;; --------
 ;; Markdown
@@ -437,7 +459,7 @@
 (pyvenv-mode 1)
 
 (require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
 
 ;; -----
@@ -464,43 +486,44 @@
    ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes nil)
+ '(counsel-projectile-mode t nil (counsel-projectile))
+ '(custom-enabled-themes (quote (spacemacs-light)))
  '(custom-safe-themes
    (quote
-	("bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(dumb-jump-mode t)
  '(fci-rule-color "#383838")
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(nrepl-message-colors
    (quote
-	("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-	(counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme aggressive-indent zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme aggressive-indent zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(tool-bar-mode nil)
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
    (quote
-	((20 . "#BC8383")
-	 (40 . "#CC9393")
-	 (60 . "#DFAF8F")
-	 (80 . "#D0BF8F")
-	 (100 . "#E0CF9F")
-	 (120 . "#F0DFAF")
-	 (140 . "#5F7F5F")
-	 (160 . "#7F9F7F")
-	 (180 . "#8FB28F")
-	 (200 . "#9FC59F")
-	 (220 . "#AFD8AF")
-	 (240 . "#BFEBBF")
-	 (260 . "#93E0E3")
-	 (280 . "#6CA0A3")
-	 (300 . "#7CB8BB")
-	 (320 . "#8CD0D3")
-	 (340 . "#94BFF3")
-	 (360 . "#DC8CC3"))))
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
  '(vc-annotate-very-old-color "#DC8CC3"))
 
 (provide 'init)

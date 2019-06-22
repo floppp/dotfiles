@@ -170,7 +170,7 @@ bindsym $mod+Control+j move workspace to output right
 exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/mountain-range.jpg
 exec --no-startup-id ~/workspaces/dotfiles/xrandr_screens_control.sh
 exec --no-startup-id ~/.dropbox-dist/dropboxd
-exec --no-startup-id emacs --daemon
+#exec --no-startup-id emacs --daemon
 exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 
 
@@ -180,9 +180,9 @@ exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 workspace 1 output eDP1
 
 # Gaps
-gaps inner 4
-gaps outer 0
+#gaps inner 4
+#gaps outer 0
 
 # Borders
-for_window [class="^.*"] border pixel 0
-smart_borders on
+#for_window [class="^.*"] border pixel 0
+#smart_borders on
