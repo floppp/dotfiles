@@ -348,7 +348,7 @@
 ;; --------
 (use-package lsp-mode
   :commands lsp
-  :hook (sh-mode . lsp)) ;; Configuración para funcionar con BASH
+  :hook (sh-mode . lsp))
 
 ;; Integración con otros paquetes
 (use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
@@ -358,7 +358,6 @@
 ;; -------
 ;; Company
 ;; -------
-
 (use-package company
   :defer 0.5
   :delight
@@ -518,9 +517,9 @@
   (cljr-add-keybindings-with-prefix "C-c C-m")
   (setq cljr-warn-on-eval nil))
 
-;; --------------------
-;; Configuración Python
-;; --------------------
+;; ------
+;; Python
+;; ------
 (use-package elpy
   :ensure t)
 (elpy-enable)
@@ -556,8 +555,13 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
+ '(company-begin-commands (quote (self-insert-command)))
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 2)
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
+ '(company-show-numbers t)
+ '(company-tooltip-align-annotations t)
  '(counsel-projectile-mode t nil (counsel-projectile))
  '(custom-enabled-themes (quote (spacemacs-light)))
  '(custom-safe-themes
@@ -565,6 +569,7 @@
     ("bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(dumb-jump-mode t)
  '(fci-rule-color "#383838")
+ '(global-company-mode t)
  '(global-display-line-numbers-mode t)
  '(menu-bar-mode nil)
  '(nrepl-message-colors
@@ -572,7 +577,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme aggressive-indent zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(tool-bar-mode nil)
  '(vc-annotate-background "#2B2B2B")
