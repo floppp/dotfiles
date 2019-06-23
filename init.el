@@ -230,8 +230,8 @@
 ;; -------------------
 ;; variables Globlales
 ;; -------------------
-(require 'ido)
-(ido-mode t)
+;; (require 'ido)
+;; (ido-mode t)
 (global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
@@ -241,10 +241,11 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-;; =======================================----------------------------------------
+;; ========================================
+;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
-;; ---------------------------------------
-
+;; ----------------------------------------
+;; ========================================
 ;; ---
 ;; Ivy
 ;; ---
@@ -263,10 +264,6 @@
   :init
   (setq ivy-use-virtual-buffers t) ;; Añade los buffers de bookmarks y de recentf
   (setq ivy-count-format "(%d/%d) ") ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-  ;; En ppio esto no es necesario al definirlo para todo
-  ;; (setq ivy-re-builders-alist ;; Un mejor buscador
-  ;; 	'((read-file-name-internal . ivy--regex-fuzzy)
-  ;; 	  (t . ivy--regex-plus)))
   (setq ivy-height 15) ;; número de resultados a mostrar
   (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
   (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
@@ -302,6 +299,83 @@
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
+
+;; --------
+;; treemacs
+;; --------
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    ; Aquí van las opciones. Dejo una para saber dónde ponerlas.
+    (setq treemacs-file-event-delay 4000)
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+;; Para que se usen sus iconos en dired.
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+;; --------
+;; lsp-mode
+;; --------
+(use-package lsp-mode
+  :commands lsp
+  :hook (sh-mode . lsp)) ;; Configuración para funcionar con BASH
+
+;; Integración con otros paquetes
+(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
+(use-package company-lsp :commands company-lsp)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; -------
+;; Company
+;; -------
+
+(use-package company
+  :defer 0.5
+  :delight
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+;; configuración antigua
+;; (use-package company
+  ;; :ensure t
+  ;; ;; :bind (("C-c /". company-complete)) ;; con esto solo se muestran de forma manual, no automática
+  ;; :config
+  ;; (global-company-mode))
 
 ;; -----
 ;; Otros
@@ -359,16 +433,14 @@
   (yas-global-mode 1)
   (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
 
-(use-package company
-  :ensure t
-  ;;  :bind (("C-c /". company-complete)) ;; con esto solo se muestran de forma manual, no automática
-  :config
-  (global-company-mode))
-
-
 ;; ====================================
 ;; DEFINICIONES ESPECÍFICAS PARA CÓDIGO
 ;; ====================================
+
+;; ----
+;; Bash
+;; ----
+;; Está definido ya en lsp-mode.
 
 ;; -----
 ;; C CPP

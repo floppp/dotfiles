@@ -197,8 +197,8 @@
 ;; -------------------
 ;; Variables Globlales
 ;; -------------------
-(require 'ido)
-(ido-mode t)
+;; (require 'ido)
+;; (ido-mode t)
 (global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
@@ -225,29 +225,15 @@
 ;;    - swiper: un isearch mejorado con ivy
 (use-package ivy
   :init
-  ;; Añade los buffers de bookmarks y de recentf
-  (setq ivy-use-virtual-buffers t)
-  ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-  (setq ivy-count-format "(%d/%d) ")
-  ;; no hace falta porque ya fijo fuzzy para todo mas abajo
-  ;; (setq ivy-re-builders-alist
-	;; '((read-file-name-internal . ivy--regex-fuzzy)
-	  ;; (t . ivy--regex-plus)))
-  ;; número de resultados a mostrar
-  (setq ivy-height 15)
-  ;; No se sale del minibuffer si se encuentra un error
-  (setq ivy-on-del-error-function nil)
-  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
-  (setq ivy-initial-inputs-alist nil)
-  ;; Dar la vuelta a los candidatos
-  (setq ivy-wrap t)
-  ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
-  (setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
-  ;; Ver la ruta de los ficheros virtuales
-  (setq ivy-virtual-abbreviate 'full)
-  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
-  (setq ivy-use-selectable-prompt t)
+  (setq ivy-use-virtual-buffers t) ;; Añade los buffers de bookmarks y de recentf
+  (setq ivy-count-format "(%d/%d) ") ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
+  (setq ivy-height 15) ;; número de resultados a mostrar
+  (setq ivy-on-del-error-function nil)   ;; No se sale del minibuffer si se encuentra un error
+  (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
+  (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
+  (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
   ;; Asegurarse de que están smex, flx
   (use-package smex :ensure t)
@@ -258,16 +244,17 @@
   :ensure t)
 
 (use-package counsel
-	 :config
-	 (setq counsel-find-file-at-point t)
-	 :ensure t)
+  :config
+  (setq counsel-find-file-at-point t)
+  :ensure t)
 
 (use-package swiper
   :ensure t)
 
-;; ----------
-;; Projectile
-;; ----------
+  ;; ----------
+  ;; Projectile
+  ;; ----------
+
 (use-package projectile
   :ensure t
   :pin melpa-stable
