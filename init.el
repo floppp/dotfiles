@@ -230,9 +230,7 @@
 ;; -------------------
 ;; variables Globlales
 ;; -------------------
-;; (require 'ido)
-;; (ido-mode t)
-(global-display-line-numbers-mode 1)
+;;(global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
