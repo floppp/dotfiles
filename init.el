@@ -221,7 +221,7 @@
 ;; Editor
 ;; ------
 (setq-default fill-column 80)
-(global-hl-line-mode 1)
+;; (global-hl-line-mode 1)
 (require 'whitespace)
 (setq whitespace-line-column 79)
 (setq whitespace-style '(face lines-tail))
