@@ -133,7 +133,7 @@
 ;; --------------------
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
-(desktop-save-mode 1)
+;; (desktop-save-mode 1)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Cambiamos el comportamiento por defecto de la shell.
@@ -221,7 +221,6 @@
 ;; Editor
 ;; ------
 (setq-default fill-column 80)
-;; (global-hl-line-mode 1)
 (require 'whitespace)
 (setq whitespace-line-column 79)
 (setq whitespace-style '(face lines-tail))
@@ -230,7 +229,6 @@
 ;; -------------------
 ;; variables Globlales
 ;; -------------------
-;;(global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
@@ -568,9 +566,8 @@
  '(dumb-jump-mode t)
  '(fci-rule-color "#383838")
  '(global-company-mode t)
- '(global-display-line-numbers-mode t)
+ '(line-number-mode nil)
  '(linum-format " %7i ")
- '(menu-bar-mode nil)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
