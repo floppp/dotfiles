@@ -462,13 +462,13 @@
  '(company-tooltip-align-annotations t)
  '(compilation-message-face (quote default))
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (tango)))
+ '(custom-enabled-themes (quote (leuven)))
  '(custom-safe-themes
    (quote
     ("7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
  '(fci-rule-color "#3C3D37")
  '(global-company-mode t)
- '(global-display-line-numbers-mode t)
+ '(global-display-line-numbers-mode nil)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
    (quote
@@ -480,7 +480,8 @@
      ("#A75B00" . 70)
      ("#F309DF" . 85)
      ("#3C3D37" . 100))))
- '(js-indent-level 2 t)
+ '(js-indent-level 2)
+ '(line-number-mode nil)
  '(magit-diff-use-overlays nil)
  '(nrepl-message-colors
    (quote
