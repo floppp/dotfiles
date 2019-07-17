@@ -33,5 +33,7 @@ export ANDROID_HOME=$HOME/Android/Sdk
 export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"
 
 alias connect_server="ssh -i /home/nando/Documentos/imm/20190206_fernando/id_rsa fernando@167.114.242.135 -p2345"
+
 # Directorios actualmente en uso (IR LIMPIANDO REGULARMENTE)
 alias tcbelt-web="/home/nando/workspaces/imm/tc-belt-nebular/web"
+alias cubicdron-web="/home/nando/workspaces/imm/cubicdron/web"
