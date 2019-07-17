@@ -41,23 +41,9 @@
   (package-refresh-contents))
 
 
-;; -------------------------------
-;; FUNCIONES USADAS POSTERIORMENTE
-;; -------------------------------
-(defun packages-install (&rest packages)
-  "Function to install those PACKAGES which aren't."
-  (message "running packages-install")
-  (mapc (lambda (package)
-          (let ((name (car package))
-                (repo (cdr package)))
-            (when (not (package-installed-p name))
-              (let ((package-archives (list repo)))
-                (package-initialize)
-                (package-install name)))))
-        packages)
-  (package-initialize)
-  (delete-other-windows))
-
+;; ---------
+;; FUNCIONES
+;; ---------
 ;; (defun spell-buffer-spanish ()
 ;;   "Buffer in spanish."
 ;;   (interactive)
@@ -70,22 +56,27 @@
 ;;   (ispell-change-dictionary "en_US")
 ;;   (flyspell-buffer))
 
-(defun close-all-buffers ()
-  "Para eliminar todos los buffers."
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
-
-(defun kill-other-buffers ()
-  "Para eliminar el resto de buffers salvo el activo."
-  (interactive)
-  (mapc 'kill-buffer
-	(delq (current-buffer)
-	      (remove-if-not 'buffer-file-name (buffer-list)))))
-
 (defun bjm/kill-this-buffer ()
   "Para matar el buffer actual."
   (interactive)
   (kill-buffer (current-buffer)))
+
+(defun close-all-buffers ()
+  "Para eliminar todos los buffers."
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+  
+;; From https://dougie.io/emacs/indentation/
+(defun disable-tabs (n)
+  "Tabs desactivation with N spaces indentation."
+  (setq indent-tabs-mode nil)
+  (setq tab-width n))
+
+(defun enable-tabs  (n)
+  "Tabs activation instead of spaces, with N as tab width."
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  (setq indent-tabs-mode t)
+  (setq tab-width n))
 
 (defun init--install-packages ()
   "Instalación de paquetes no instalados."
@@ -94,6 +85,23 @@
    ;; Since use-package this is the only entry here
    ;; ALWAYS try to use use-package!
    (cons 'use-package melpa-stable)))
+
+(defun kill-other-buffers ()
+  "Para eliminar el resto de buffers salvo el activo."
+  (interactive)
+  (mapc 'kill-buffer
+	(delq (current-buffer)
+	      (remove-if-not 'buffer-file-name (buffer-list)))))
+   
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (if (null n) -1 (- n))))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line (if (null n) 1 n)))
 
 (defun move-line (n)
   "Move the current line up or down by N lines."
@@ -108,28 +116,19 @@
     (forward-line -1)
     (forward-char col)))
 
-(defun move-line-up (n)
-  "Move the current line up by N lines."
-  (interactive "p")
-  (move-line (if (null n) -1 (- n))))
-
-(defun move-line-down (n)
-  "Move the current line down by N lines."
-  (interactive "p")
-  (move-line (if (null n) 1 n)))
-
-;; From https://dougie.io/emacs/indentation/
-(defun disable-tabs (n)
-  "Tabs desactivation with N spaces indentation."
-  (setq indent-tabs-mode nil)
-  (setq tab-width n))
-
-(defun enable-tabs  (n)
-  "Tabs activation instead of spaces, with N as tab width."
-  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
-  (setq indent-tabs-mode t)
-  (setq tab-width n))
-
+(defun packages-install (&rest packages)
+  "Function to install those PACKAGES which aren't."
+  (message "running packages-install")
+  (mapc (lambda (package)
+          (let ((name (car package))
+                (repo (cdr package)))
+            (when (not (package-installed-p name))
+              (let ((package-archives (list repo)))
+                (package-initialize)
+                (package-install name)))))
+        packages)
+  (package-initialize)
+  (delete-other-windows))
 ;; --------------------
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
@@ -456,23 +455,47 @@
 ;; ----------
 ;; TypeScript
 ;; ----------
-(use-package tide
-  :ensure t
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)))
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  ;;(setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
+  ;;(setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+;; Si uso use-package solo me carga tide en el prime archivo que abro
+;;(use-package tide
+;;  :ensure t
+;;  :after (typescript-mode company flycheck)
+;;  :bind (("M-." . tide-jump-to-definition)
+;;         ("M-," . tide-jump-back))
+;;  :config (setup-tide-mode)
+;;  :hook ((typescript-mode . tide-setup)
+;;         (typescript-mode . tide-hl-identifier-mode)))
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
 (add-hook 'typescript-mode '(disable-tabs 2))
+;;(add-hook 'js2-mode-hook #'setup-tide-mode)
+(add-hook 'js-mode-hook #'setup-tide-mode)
 
 ;; ---
 ;; PHP
 ;; ---
-(use-package php-mode
-  :ensure t)
-(add-hook 'php-mode '(enable-tabs 4))
+;;(use-package php-mode
+;;  :ensure t)
+;;(add-hook 'php-mode '(enable-tabs 4))
 
-;; hooks para web-mode
+;; --------
+;; web-mode
+;; --------
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
+(setq web-mode-css-indent-offset 2)
+
+;;(setq web-mode-code-indent-offset 4)
 
 ;; --------
 ;; Markdown
