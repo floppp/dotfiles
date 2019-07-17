@@ -380,40 +380,41 @@
 ;; Bash
 ;; Está definido ya en lsp-mode.
 
-;; JavaScript
-(use-package js2-mode
-  :hook ((js2-mode . js2-imenu-extras-mode)
-         (js2-mode . prettier-js-mode))
-  :mode "\\.js\\'"
-  :custom (js-indent-level 2))
+;; ---------------------
+;; TypeScript/JavaScript
+;; ---------------------
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  ;;(setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
+  ;;(setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
 
-(add-hook 'js2-mode-hook
-          (defun my-js2-mode-setup ()
-            (flycheck-mode t)
-            (when (executable-find "eslint")
-              (flycheck-select-checker 'javascript-eslint))))
+;; Si uso use-package solo me carga tide en el prime archivo que abro
+;;(use-package tide
+;;  :ensure t
+;;  :after (typescript-mode company flycheck)
+;;  :bind (("M-." . tide-jump-to-definition)
+;;         ("M-," . tide-jump-back))
+;;  :config (setup-tide-mode)
+;;  :hook ((typescript-mode . tide-setup)
+;;         (typescript-mode . tide-hl-identifier-mode)))
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode 'electric-pair-mode)
+(add-hook 'typescript-mode '(disable-tabs 2))
+;;(add-hook 'js2-mode-hook #'setup-tide-mode)
+(add-hook 'js-mode-hook #'setup-tide-mode)
 
-(use-package js2-refactor
-  :bind (:map js2-mode-map
-              ("C-k" . js2r-kill)
-              ("M-." . nil))
-  :hook ((js2-mode . js2-refactor-mode)
-         (js2-mode . (lambda ()
-                       (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
-  :config (js2r-add-keybindings-with-prefix "C-c C-r"))
-
-(use-package xref-js2 :defer 5)
-
-(use-package tern
-  :bind (("C-c C-c" . compile)
-         :map tern-mode-keymap
-         ("M-." . nil))
-  :hook ((js2-mode . company-mode)
-         (js2-mode . tern-mode)))
-
-(use-package company-tern
-  :after (company tern)
-  :config (add-to-list 'company-backends 'company-tern))
+;; --------
+;; web-mode
+;; --------
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
+(setq web-mode-css-indent-offset 2)
 
 ;; Markdown
 (use-package markdown-mode
