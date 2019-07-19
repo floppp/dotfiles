@@ -21,7 +21,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
-
 ;; Repositorios donde buscar paquetes.
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -543,7 +542,8 @@
   :ensure t)
 (elpy-enable)
 
-(setq python-shell-interpreter "ipython"
+(setq elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
+      python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 (setenv "WORKON_HOME" "/home/nando/miniconda3/envs")
 (pyvenv-mode 1)
