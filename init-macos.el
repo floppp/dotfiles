@@ -4,14 +4,16 @@
 ;;; Code:
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
-(setq exec-path (append exec-path '("/Users/nando/miniconda3/gin")))
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
 
 ;; Incluyo en el PATH tanto donde está el jdk, como donde miniconda, para que
 ;; pueda encontrar los paquetes allí instalados.
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin/tern")))
+(setenv "PATH" (concat (getenv "PATH") ":/Users/nando/.local/bin"))
+;; (setq exec-path (append exec-path '("/usr/local/bin/tern")))
+(setq exec-path (append exec-path '("/Users/nando/miniconda3/bin")))
+(setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -231,7 +233,12 @@
   (setq ivy-on-del-error-function nil)   ;; No se sale del minibuffer si se encuentra un error
   (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
   (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
+  (setq ivy-re-builders-alist
+	'((ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
+	  (read-file-name-internal . ivy--regex-plus)
+	  (t . ivy--regex-fuzzy)))
   (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
   (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
@@ -342,8 +349,9 @@
   (which-key-mode))
 
 (use-package flycheck
-  :ensure t)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package expand-region
   :ensure t)
@@ -425,7 +433,8 @@
   :ensure t)
 (elpy-enable)
 
-(setq python-shell-interpreter "ipython"
+(setq ;;elpy-rpc-python-command "/Users/nando/miniconda3/bin/python"
+      python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 (setenv "WORKON_HOME" "/Users/nando/miniconda3/envs")
 (pyvenv-mode 1)
@@ -467,6 +476,7 @@
  '(custom-safe-themes
    (quote
     ("7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
+ '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#3C3D37")
  '(global-company-mode t)
  '(global-display-line-numbers-mode nil)
@@ -489,7 +499,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
