@@ -19,8 +19,11 @@
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/java/current/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
+(setenv "PATH" (concat (getenv "PATH") ":/home/nando/.local/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
+(setq exec-path (append exec-path '("/home/nando/.local/bin")))
+
 ;; Repositorios donde buscar paquetes.
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -64,7 +67,7 @@
   "Para eliminar todos los buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
-  
+
 ;; From https://dougie.io/emacs/indentation/
 (defun disable-tabs (n)
   "Tabs desactivation with N spaces indentation."
@@ -91,7 +94,7 @@
   (mapc 'kill-buffer
 	(delq (current-buffer)
 	      (remove-if-not 'buffer-file-name (buffer-list)))))
-   
+
 (defun move-line-up (n)
   "Move the current line up by N lines."
   (interactive "p")
@@ -263,6 +266,10 @@
   (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
   (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
   (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  (setq ivy-re-builders-alist 
+    '((ivy-switch-buffer . ivy--regex-plus)
+      (read-file-name-internal . ivy--regex-plus)
+      (t . ivy--rege-fuzzy)))
   (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
   (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
@@ -292,6 +299,10 @@
   :config
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ;; Aunque por defecto es el usado, por si acaso acabo usando también Emacs en Windows,
+  ;; donde por defecto no se usa.
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-switch-project-action #'projectile-dired)
   (projectile-mode +1))
 
 ;; --------
@@ -542,7 +553,7 @@
   :ensure t)
 (elpy-enable)
 
-(setq elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
+(setq ;;elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
       python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 (setenv "WORKON_HOME" "/home/nando/miniconda3/envs")
@@ -587,6 +598,7 @@
    (quote
     ("72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(dumb-jump-mode t)
+ '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#383838")
  '(global-company-mode t)
  '(line-number-mode nil)
