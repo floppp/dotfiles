@@ -192,19 +192,18 @@
 ;; ------
 ;; Editor
 ;; ------
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
+
 ;; (setq-default fill-column 80)
 ;; (require 'whitespace)
 ;; (setq whitespace-line-column 79)
 ;; (setq whitespace-style '(face lines-tail))
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
-(global-hl-line-mode 1)
-
-;; -------------------
-;; Variables Globlales
-;; -------------------
+;; (global-hl-line-mode 1)
 ;; (require 'ido)
 ;; (ido-mode t)
-(global-display-line-numbers-mode 1)
+;; (global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
@@ -504,7 +503,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
