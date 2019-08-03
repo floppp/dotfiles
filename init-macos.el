@@ -158,8 +158,7 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
-;; Autocierre de paréntesis, llaves, corchetes, etc
-(electric-pair-mode 1)
+(global-set-key (kbd "<f11>") 'global-linum-mode)
 
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
@@ -172,6 +171,8 @@
 ;; ------------------
 ;; Modificaciones GUI
 ;; ------------------
+;; Autocierre de paréntesis, llaves, corchetes, etc
+(electric-pair-mode 1)
 ;; El valor va en 1/10pt, así que 100 será 10pt...
 (set-face-attribute 'default nil :height 160)
 (setq visible-bell 1)
@@ -479,7 +480,7 @@
  '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes
    (quote
-    ("7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#3C3D37")
  '(global-company-mode t)
@@ -495,6 +496,23 @@
      ("#A75B00" . 70)
      ("#F309DF" . 85)
      ("#3C3D37" . 100))))
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#42ae2c")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
  '(js-indent-level 2)
  '(line-number-mode nil)
  '(magit-diff-use-overlays nil)
@@ -503,7 +521,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
