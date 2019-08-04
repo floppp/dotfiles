@@ -14,6 +14,8 @@
 ;; (setq exec-path (append exec-path '("/usr/local/bin/tern")))
 (setq exec-path (append exec-path '("/Users/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
+(setq exec-path (append exec-path '("/usr/local/bin")))
+;; (add-to-list 'exec-path "/usr/local/bin")
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -123,12 +125,13 @@
 ;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Lo quito para no tener problemas con markdown
+;;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; -----------
 ;; KEYBINDINGS
 ;; -----------
-(global-set-key (kbd "C-?") 'er/expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
@@ -155,8 +158,7 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
-;; Autocierre de paréntesis, llaves, corchetes, etc
-(electric-pair-mode 1)
+(global-set-key (kbd "<f11>") 'global-linum-mode)
 
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
@@ -169,8 +171,10 @@
 ;; ------------------
 ;; Modificaciones GUI
 ;; ------------------
+;; Autocierre de paréntesis, llaves, corchetes, etc
+(electric-pair-mode 1)
 ;; El valor va en 1/10pt, así que 100 será 10pt...
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 160)
 (setq visible-bell 1)
 (tool-bar-mode -1)
 (menu-bar-mode 1)
@@ -189,19 +193,18 @@
 ;; ------
 ;; Editor
 ;; ------
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
+
 ;; (setq-default fill-column 80)
 ;; (require 'whitespace)
 ;; (setq whitespace-line-column 79)
 ;; (setq whitespace-style '(face lines-tail))
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
-(global-hl-line-mode 1)
-
-;; -------------------
-;; Variables Globlales
-;; -------------------
+;; (global-hl-line-mode 1)
 ;; (require 'ido)
 ;; (ido-mode t)
-(global-display-line-numbers-mode 1)
+;; (global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
@@ -463,6 +466,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(company-begin-commands (quote (self-insert-command)))
  '(company-idle-delay 0.1)
  '(company-minimum-prefix-length 2)
@@ -472,14 +477,14 @@
  '(company-tooltip-align-annotations t)
  '(compilation-message-face (quote default))
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (leuven)))
+ '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes
    (quote
-    ("7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#3C3D37")
  '(global-company-mode t)
- '(global-display-line-numbers-mode nil)
+ '(global-display-line-numbers-mode t)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
    (quote
@@ -491,6 +496,23 @@
      ("#A75B00" . 70)
      ("#F309DF" . 85)
      ("#3C3D37" . 100))))
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#42ae2c")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
  '(js-indent-level 2)
  '(line-number-mode nil)
  '(magit-diff-use-overlays nil)
@@ -499,7 +521,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
@@ -507,6 +529,7 @@
  '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
  '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
  '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
+ '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
@@ -538,4 +561,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#FFFFFF" :foreground "#333333" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Monaco")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "nil" :family "Monaco")))))
