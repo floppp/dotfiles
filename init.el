@@ -180,9 +180,6 @@
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
 
-;; Autocierre de paréntesis, llaves, corchetes, etc
-(electric-pair-mode 1)
-
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -194,6 +191,8 @@
 ;; ------------------
 ;; Modificaciones GUI
 ;; ------------------
+;; Autocierre de paréntesis, llaves, corchetes, etc
+(electric-pair-mode 1)
 ;; El valor va en 1/10pt, así que 100 será 10pt...
 (set-face-attribute 'default nil :height 100)
 (setq visible-bell 1)
@@ -221,12 +220,13 @@
 ;; ------
 ;; Editor
 ;; ------
-(setq-default fill-column 80)
-(require 'whitespace)
-(setq whitespace-line-column 79)
-(setq whitespace-style '(face lines-tail))
-(add-hook 'prog-mode-hook 'whitespace-mode)
-
+;; (setq-default fill-column 80)
+;; (require 'whitespace)
+;; (setq whitespace-line-column 79)
+;; (setq whitespace-style '(face lines-tail))
+;; (add-hook 'prog-mode-hook 'whitespace-mode)
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
 ;; -------------------
 ;; variables Globlales
 ;; -------------------
@@ -501,7 +501,7 @@
 ;; web-mode
 ;; --------
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (setq web-mode-css-indent-offset 2)
 
