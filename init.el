@@ -266,10 +266,10 @@
   (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
   (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
   (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
-  (setq ivy-re-builders-alist 
+  (setq ivy-re-builders-alist
     '((ivy-switch-buffer . ivy--regex-plus)
       (read-file-name-internal . ivy--regex-plus)
-      (t . ivy--rege-fuzzy)))
+      (t . ivy--regex-fuzzy)))
   (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
   (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
@@ -456,11 +456,11 @@
 ;; -----
 ;; LaTex
 ;; -----
-(use-package tex
-  :defer t
-  :ensure auctex
-  :config
-  (setq TeX-auto-save t))
+;; (use-package tex
+  ;; :defer t
+  ;; :ensure auctex
+  ;; :config
+  ;; (setq TeX-auto-save t))
 
 ;; ----------
 ;; TypeScript
@@ -603,12 +603,13 @@
  '(global-company-mode t)
  '(line-number-mode nil)
  '(linum-format " %7i ")
+ '(menu-bar-mode nil)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(sublimity-mode t)
  '(tool-bar-mode nil)
@@ -642,4 +643,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight normal :height 98 :width normal)))))
+ '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 98 :width normal)))))
