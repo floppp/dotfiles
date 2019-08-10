@@ -157,7 +157,10 @@
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
-(global-set-key (kbd "C-x O") (lambda ()
+;; Desconecto binding original para 'other-window'
+(global-unset-key (kbd "C-x o"))
+(global-set-key (kbd "C-.") #'other-window)
+(global-set-key (kbd "C-,") (lambda ()
                                 (interactive)
                                 (other-window -1))) ;; back one
 (global-set-key (kbd "C-q") 'comment-line)
@@ -221,12 +224,12 @@
 ;; ------
 ;; Editor
 ;; ------
+(setq-default show-trailing-whitespace t)
 ;; (setq-default fill-column 80)
 ;; (require 'whitespace)
 ;; (setq whitespace-line-column 79)
 ;; (setq whitespace-style '(face lines-tail))
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
-(setq-default show-trailing-whitespace t)
 ;;(setq-default indicate-empty-lines t)
 ;; -------------------
 ;; variables Globlales
