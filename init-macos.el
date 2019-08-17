@@ -142,8 +142,8 @@
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 ;; Desconecto binding original para 'other-window'
 (global-unset-key (kbd "C-x o"))
-(global-set-key (kbd "C-.") #'other-window)
-(global-set-key (kbd "C-,") (lambda ()
+(global-set-key (kbd "s-,") #'other-window)
+(global-set-key (kbd "s-/") (lambda ()
 			      (interactive)
 			      (other-window -1)))
 (global-set-key (kbd "C-q") 'comment-line)
@@ -234,9 +234,7 @@
       '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 ;; Para gramática
-(require 'langtool)
-(setq langtool-java-classpath "/usr/local/bin"
-      ;; langtool-language-tool-jar "/usr/local/bin/languagetool-server"
+(setq langtool-java-classpath "/usr/loca/bin/languagetool:/Users/nando/Downloads/LanguageTool-4.6-stable/*"
       langtool-mother-tongue "es"
       langtool-default-language "es"
       ;; langtool-disabled-rules '("WHITESPACE_RULE"
@@ -244,7 +242,7 @@
                                 ;; "COMMA_PARENTHESIS_WHITESPACE"
                                 ;; "EN_QUOTES")
       )
-(require 'langtool)
+
 ;; ---
 ;; Ivy
 ;; ---
