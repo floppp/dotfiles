@@ -27,6 +27,7 @@ export PATH="/home/nando/.gem/ruby/2.4.0/bin:$PATH"
 export PATH="/home/nando/Software/utils:$PATH"
 export PATH="/home/nando/Software/scripts:$PATH"
 export PATH="/home/nando/miniconda3/bin:$PATH"
+export PATH="/home/nando/flutter/bin:$PATH"
 
 export ANDROID_HOME=$HOME/Android/Sdk
 

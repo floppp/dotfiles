@@ -146,7 +146,7 @@
 ;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; -----------
 ;; KEYBINDINGS
@@ -597,7 +597,7 @@
  '(company-show-numbers t)
  '(company-tooltip-align-annotations t)
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes nil)
  '(custom-safe-themes
    (quote
     ("c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
@@ -605,7 +605,7 @@
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#383838")
  '(global-company-mode t)
- '(global-linum-mode t)
+ '(global-linum-mode nil)
  '(hl-todo-keyword-faces
    (quote
     (("TODO" . "#dc752f")

@@ -171,6 +171,8 @@ exec --no-startup-id feh --bg-scale /home/nando/Imagenes/wallpapers/mountain-ran
 exec --no-startup-id ~/workspaces/dotfiles/xrandr_screens_control.sh
 exec --no-startup-id ~/.dropbox-dist/dropboxd
 #exec --no-startup-id emacs --daemon
+# Para lanzar el script que a su vez ejecuta compton para tener transparencia en las
+# ventanas que no estoy usando.
 exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 
 
