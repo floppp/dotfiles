@@ -11,11 +11,9 @@
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/.local/bin"))
-;; (setq exec-path (append exec-path '("/usr/local/bin/tern")))
 (setq exec-path (append exec-path '("/Users/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
 (setq exec-path (append exec-path '("/usr/local/bin")))
-;; (add-to-list 'exec-path "/usr/local/bin")
 
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -116,6 +114,11 @@
 ;; --------------------
 ;; (desktop-save-mode 1)
 
+;; Hide permissions and owners to make file lists less noisy (from Xah Lee’s blog)
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (dired-hide-details-mode 1)))
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Cambiamos el comportamiento por defecto de la shell.
 (remove-hook 'eshell-output-filter-functions
@@ -178,7 +181,9 @@
 (electric-pair-mode 1)
 ;; El valor va en 1/10pt, así que 100 será 10pt...
 (set-face-attribute 'default nil :height 140)
-(setq visible-bell 1)
+;; you really only need one of these
+(setq visible-bell nil)
+;; (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
 (menu-bar-mode 1)
 (if window-system (scroll-bar-mode -1))
@@ -219,6 +224,27 @@
 ;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ---------------------------------------
+
+;; Forzamos a que se cargue hunspell
+;; (setq-default ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
+(setq ispell-program-name "hunspell")
+(setq ispell-local-dictionary "es")
+(setq ispell-local-dictionary-alist
+      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+
+;; Para gramática
+(require 'langtool)
+(setq langtool-java-classpath "/usr/local/bin"
+      ;; langtool-language-tool-jar "/usr/local/bin/languagetool-server"
+      langtool-mother-tongue "es"
+      langtool-default-language "es"
+      ;; langtool-disabled-rules '("WHITESPACE_RULE"
+                                ;; "EN_UNPAIRED_BRACKETS"
+                                ;; "COMMA_PARENTHESIS_WHITESPACE"
+                                ;; "EN_QUOTES")
+      )
+(require 'langtool)
 ;; ---
 ;; Ivy
 ;; ---
@@ -435,7 +461,37 @@
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (setq web-mode-css-indent-offset 2)
 
+;; ---------
+;; Escritura
+;; ---------
+;; (typo-global-mode 1)
+(add-hook 'text-mode-hook 'typo-mode)
+(add-hook 'text-mode-hook
+               (lambda ()
+		 (variable-pitch-mode 1)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+(set-face-attribute 'default nil :family "Monaco" :height 130)
+(set-face-attribute 'fixed-pitch nil :family "Monaco" :height 130)
+(set-face-attribute 'variable-pitch nil :family "Go Mono")
+
+;; --------
+;; Org-mode
+;; --------
+(setq org-hide-emphasis-markers t)
+(setq org-bullets-bullet-list
+      '("◉" "○"))
+(setq org-fontify-whole-heading-line t)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-bullets-mode 1)
+            (org-indent-mode t)))
+
+;; --------
 ;; Markdown
+;; --------
 (use-package markdown-mode
 	     :ensure t)
 
@@ -486,10 +542,10 @@
  '(company-tooltip-align-annotations t)
  '(compilation-message-face (quote default))
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (espresso)))
+ '(custom-enabled-themes (quote (poet)))
  '(custom-safe-themes
    (quote
-    ("1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
+    ("f8067b7d0dbffb29a79e0843797efabdf5e1cf326639874d8b407e9b034136a4" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "f8fb7488faa7a70aee20b63560c36b3773bd0e4c56230a97297ad54ff8263930" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
  '(elpy-rpc-timeout 10)
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#3C3D37")
@@ -524,13 +580,14 @@
      ("\\?\\?\\?+" . "#dc752f"))))
  '(js-indent-level 2)
  '(line-number-mode nil)
+ '(line-spacing 0.2)
  '(magit-diff-use-overlays nil)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
