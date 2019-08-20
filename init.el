@@ -10,9 +10,6 @@
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
-(setq-default indent-tabs-mode nil)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
 
 ;; Incluyo en el PATH tanto donde está el jdk, como donde miniconda, para que
 ;; pueda encontrar los paquetes allí instalados.
@@ -43,21 +40,34 @@
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
 
-
 ;; ---------
 ;; FUNCIONES
 ;; ---------
-;; (defun spell-buffer-spanish ()
-;;   "Buffer in spanish."
-;;   (interactive)
-;;   (ispell-change-dictionary "es")
-;;   (flyspell-buffer))
+(defun packages-install (&rest packages)
+  "Function to install those PACKAGES which aren't."
+  (message "running packages-install")
+  (mapc (lambda (package)
+          (let ((name (car package))
+                (repo (cdr package)))
+            (when (not (package-installed-p name))
+              (let ((package-archives (list repo)))
+                (package-initialize)
+                (package-install name)))))
+        packages)
+  (package-initialize)
+  (delete-other-windows))
 
-;; (defun spell-buffer-english ()
-;;   "Buffer in english."
-;;   (interactive)
-;;   (ispell-change-dictionary "en_US")
-;;   (flyspell-buffer))
+(defun spell-buffer-spanish ()
+  "Buffer in spanish."
+  (interactive)
+  (ispell-change-dictionary "es_ANY")
+  (flyspell-buffer))
+
+(defun spell-buffer-english ()
+  "Buffer in english."
+  (interactive)
+  (ispell-change-dictionary "en_US")
+  (flyspell-buffer))
 
 (defun bjm/kill-this-buffer ()
   "Para matar el buffer actual."
@@ -96,16 +106,6 @@
 	(delq (current-buffer)
 	      (remove-if-not 'buffer-file-name (buffer-list)))))
 
-(defun move-line-up (n)
-  "Move the current line up by N lines."
-  (interactive "p")
-  (move-line (if (null n) -1 (- n))))
-
-(defun move-line-down (n)
-  "Move the current line down by N lines."
-  (interactive "p")
-  (move-line (if (null n) 1 n)))
-
 (defun move-line (n)
   "Move the current line up or down by N lines."
   (interactive "p")
@@ -119,33 +119,36 @@
     (forward-line -1)
     (forward-char col)))
 
-(defun packages-install (&rest packages)
-  "Function to install those PACKAGES which aren't."
-  (message "running packages-install")
-  (mapc (lambda (package)
-          (let ((name (car package))
-                (repo (cdr package)))
-            (when (not (package-installed-p name))
-              (let ((package-archives (list repo)))
-                (package-initialize)
-                (package-install name)))))
-        packages)
-  (package-initialize)
-  (delete-other-windows))
+(defun move-line-up (n)
+  "Move the current line up by N lines."
+  (interactive "p")
+  (move-line (if (null n) -1 (- n))))
+
+(defun move-line-down (n)
+  "Move the current line down by N lines."
+  (interactive "p")
+  (move-line (if (null n) 1 n)))
+
 ;; --------------------
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
 ;; (desktop-save-mode 1)
-
+(setq-default indent-tabs-mode nil)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
-;; Cambiamos el comportamiento por defecto de la shell.
-(remove-hook 'eshell-output-filter-functions
-	     'eshell-postoutput-scroll-to-bottom)
 (setq make-backup-files nil)
 (setq inhibit-splash-screen t)
 ;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (dired-hide-details-mode 1)))
+;; Cambiamos el comportamiento por defecto de la shell.
+(remove-hook 'eshell-output-filter-functions
+	     'eshell-postoutput-scroll-to-bottom)
+;; Para evitar problemas con MarkDown
 ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; -----------
@@ -166,7 +169,6 @@
 (global-set-key (kbd "C-q") 'comment-line)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
-
 ;; Multiple-cursors
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -174,7 +176,6 @@
 (global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-<up>") 'move-line-up)
 (global-set-key (kbd "M-<down>") 'move-line-down)
-
 ;; Undo y Redo
 ;; (global-unset-key "C-z")
 (global-set-key (kbd "C-z") 'advertised-undo)
@@ -183,7 +184,6 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
-
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -242,14 +242,37 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-;; ========================================
 ;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ----------------------------------------
-;; ========================================
+
+;; Forzamos a que se cargue hunspell
+(setq ispell-really-hunspell t)
+(setq ispell-program-name "hunspell")
+(setq ispell-local-dictionary "es_ANY")
+(setq ispell-local-dictionary-alist
+      '(("es_ANY" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+
+(use-package ispell
+  :config
+  (setq-default ispell-program-name "hunspell")
+  (setq ispell-really-hunspell t)
+  :bind (("C-c s" . spell-buffer-spanish)
+         ("C-c e" . spell-buffer-english)))
+
+;; Para gramática
+(setq langtool-java-classpath "/home/nando/Software/LanguageTool-4.6-stable/*"
+      langtool-mother-tongue "es"
+      langtool-default-language "es"
+      ;; langtool-disabled-rules '("WHITESPACE_RULE"
+                                ;; "EN_UNPAIRED_BRACKETS"
+                                ;; "COMMA_PARENTHESIS_WHITESPACE"
+                                ;; "EN_QUOTES")
+      )
+
 ;; ---
 ;; Ivy
-;; ---
+;; --- 
 
 ;; Ivy está formado por:
 ;;    - ivy: un mecanismo genérico de completado de emacs
@@ -269,7 +292,7 @@
   (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
   (setq ivy-initial-inputs-alist nil) ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
   (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
   (setq ivy-re-builders-alist
     '((ivy-switch-buffer . ivy--regex-plus)
       (read-file-name-internal . ivy--regex-plus)
@@ -417,13 +440,6 @@
   :ensure t
   :defer t)
 
-;; (use-package ispell
-;;   :config
-;;   (setq-default ispell-program-name "hunspell")
-;;   (setq ispell-really-hunspell t)
-;;   :bind (("C-c s" . spell-buffer-spanish)
-;;          ("C-c e" . spell-buffer-english)))
-
 (use-package highlight-parentheses
   :ensure t)
 
@@ -456,15 +472,6 @@
 ;; TODO: C me está usando un completado y errores muy buenos... y no recuero qué paquete instalé. Investigarlo.
 ;; (setq-default c-basic-offset 4)
 (add-hook 'c-mode '(enable-tabs 4))
-
-;; -----
-;; LaTex
-;; -----
-;; (use-package tex
-  ;; :defer t
-  ;; :ensure auctex
-  ;; :config
-  ;; (setq TeX-auto-save t))
 
 ;; ----------
 ;; TypeScript
@@ -510,12 +517,6 @@
 (setq web-mode-css-indent-offset 2)
 
 ;;(setq web-mode-code-indent-offset 4)
-
-;; --------
-;; Markdown
-;; --------
-(use-package markdown-mode
-	     :ensure t)
 
 ;; ------------------------
 ;; Clojure (y algo de Lisp)
@@ -576,6 +577,52 @@
   :ensure t
   :pin melpa-stable)
 (add-hook 'ensime-mode 'electric-pair-mode)
+
+
+
+;; ------------------------------------
+;; Escritura: Org-mode, MarkDown, Latex
+;; ------------------------------------
+
+;; (typo-global-mode 1)
+(add-hook 'text-mode-hook 'typo-mode)
+(add-hook 'text-mode-hook
+               (lambda ()
+		 (variable-pitch-mode 1)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+(set-face-attribute 'default nil :family "Source Code Pro") ;; :height 100
+(set-face-attribute 'fixed-pitch nil :family "Source Code Pro");;  :height 100
+(set-face-attribute 'variable-pitch nil :family "Go Mono")
+
+;; --------
+;; Org-mode
+;; --------
+(setq org-hide-emphasis-markers t)
+(setq org-bullets-bullet-list
+      '("◉" "○"))
+(setq org-fontify-whole-heading-line t)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-bullets-mode 1)
+            (org-indent-mode t)))
+
+;; --------
+;; Markdown
+;; --------
+(use-package markdown-mode
+	     :ensure t)
+
+;; -----
+;; LaTex
+;; -----
+;; (use-package tex
+  ;; :defer t
+  ;; :ensure auctex
+  ;; :config
+  ;; (setq TeX-auto-save t))
 
 ;; ------------------------------------------
 ;; Configuración incluida por emacs, no tocar
