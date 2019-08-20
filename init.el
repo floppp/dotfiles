@@ -250,8 +250,15 @@
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "es_ANY")
-(setq ispell-local-dictionary-alist
-      '(("es_ANY" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+(setq ispell-local-dictionary-alist '((
+                                       "es_ANY"
+                                       "[[:alpha:]]"
+                                       "[^[:alpha:]]"
+                                       "[']"
+                                       nil
+                                       nil
+                                       nil
+                                       utf-8)))
 
 (use-package ispell
   :config
