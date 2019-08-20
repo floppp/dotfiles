@@ -13,11 +13,13 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v96/sys/os/glnxa64
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v96/extern/bin/glnxa64
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/runtime/glnxa64
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/bin/glnxa64
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/sys/os/glnxa64
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/runtime/glnxa64
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/bin/glnxa64
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/MATLAB/MATLAB_Runtime/v91/sys/os/glnxa64
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/qt/plugins/platforms
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/qt/plugins/platforms
+
+export ANDROID_HOME=$HOME/Android/Sdk
 
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/platform-tools
@@ -29,12 +31,9 @@ export PATH="/home/nando/Software/scripts:$PATH"
 export PATH="/home/nando/miniconda3/bin:$PATH"
 export PATH="/home/nando/flutter/bin:$PATH"
 
-export ANDROID_HOME=$HOME/Android/Sdk
-
 export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"
 
 alias connect_server="ssh -i /home/nando/Documentos/imm/20190206_fernando/id_rsa fernando@167.114.242.135 -p2345"
-
 # Directorios actualmente en uso (IR LIMPIANDO REGULARMENTE)
 alias tcbelt-web="/home/nando/workspaces/imm/tc-belt-nebular/web"
 alias cubicdron-web="/home/nando/workspaces/imm/cubicdron/web"
