@@ -142,8 +142,8 @@
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 ;; Desconecto binding original para 'other-window'
 (global-unset-key (kbd "C-x o"))
-(global-set-key (kbd "s-,") #'other-window)
-(global-set-key (kbd "s-/") (lambda ()
+(global-set-key (kbd "C-,") #'other-window)
+(global-set-key (kbd "C-.") (lambda ()
 			      (interactive)
 			      (other-window -1)))
 (global-set-key (kbd "C-q") 'comment-line)
@@ -463,7 +463,7 @@
 ;; Escritura
 ;; ---------
 ;; (typo-global-mode 1)
-(add-hook 'text-mode-hook 'typo-mode)
+;; (add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
 		 (variable-pitch-mode 1)))
@@ -471,8 +471,8 @@
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . light))
 
-(set-face-attribute 'default nil :family "Monaco" :height 130)
-(set-face-attribute 'fixed-pitch nil :family "Monaco" :height 130)
+(set-face-attribute 'default nil :family "Monaco")
+(set-face-attribute 'fixed-pitch nil :family "Monaco")
 (set-face-attribute 'variable-pitch nil :family "Go Mono")
 
 ;; --------
@@ -585,7 +585,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern js2-mode web-mode labburn-theme zenburn-theme which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors monokai-theme markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
