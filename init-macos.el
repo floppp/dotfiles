@@ -11,11 +11,13 @@
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/.local/bin"))
+(setenv "PAHT" (concat (getenv "PATH") ":/Users/nando/bin"))
 (setq exec-path (append exec-path '("/Users/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
 (setq exec-path (append exec-path '("/usr/local/bin")))
+(setq exec-path (append exec-path '("/Users/nando/bin")))
 
-(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+(defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
@@ -26,7 +28,9 @@
 (add-to-list 'package-archives org-elpa t)
 
 (package-initialize)
-
+;; (setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
+                         ;; ("melpa" . "https://melpa.org/packages/")
+                         ;; ("org" . "http://orgmode.org/elpa/")))
 (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
@@ -84,7 +88,7 @@
   (packages-install
    ;; Since use-package this is the only entry here
    ;; ALWAYS try to use use-package!
-   (cons 'use-package melpa-stable)))
+   (cons 'use-package melpa)))
 
 (defun move-line (n)
   "Move the current line up or down by N lines."
@@ -202,17 +206,6 @@
 ;; Editor
 ;; ------
 (setq-default show-trailing-whitespace t)
-;;(setq-default indicate-empty-lines t)
-
-;; (setq-default fill-column 80)
-;; (require 'whitespace)
-;; (setq whitespace-line-column 79)
-;; (setq whitespace-style '(face lines-tail))
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
-;; (global-hl-line-mode 1)
-;; (require 'ido)
-;; (ido-mode t)
-;; (global-display-line-numbers-mode 1)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
@@ -343,18 +336,6 @@
   :ensure t
   :config (treemacs-icons-dired-mode))
 
-;; --------
-;; lsp-mode
-;; --------
-(use-package lsp-mode
-  :commands lsp
-  :hook (sh-mode . lsp)) ;; Configuración para funcionar con BASH
-
-;; Integración con otros paquetes
-(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
-(use-package company-lsp :commands company-lsp)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
 ;; -------
 ;; Company
 ;; -------
@@ -420,13 +401,29 @@
 ;; -----------------------
 ;; Configuración lenguajes
 ;; -----------------------
-;; Bash
-;; Está definido ya en lsp-mode.
+;; --------
+;; lsp-mode
+;; --------
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  ;;:hook (sh-mode . lsp)) ;; Configuración para funcionar con BASH
+  :init
+  (setq lsp-enable-indentation nil)
+  (add-hook 'sh-mode #'lsp))
+
+;; Integración con otros paquetes
+(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
+(use-package company-lsp :commands company-lsp)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
 ;; ---------------------
 ;; TypeScript/JavaScript
 ;; ---------------------
 (defun setup-tide-mode ()
+  "Función que nos lanza el modo y lo configura.
+No uso use-package, porque si lo hago así,
+solamente carga el modo para el primer archivo."
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
@@ -436,19 +433,9 @@
   (tide-hl-identifier-mode +1)
   (company-mode +1))
 
-;; Si uso use-package solo me carga tide en el prime archivo que abro
-;;(use-package tide
-;;  :ensure t
-;;  :after (typescript-mode company flycheck)
-;;  :bind (("M-." . tide-jump-to-definition)
-;;         ("M-," . tide-jump-back))
-;;  :config (setup-tide-mode)
-;;  :hook ((typescript-mode . tide-setup)
-;;         (typescript-mode . tide-hl-identifier-mode)))
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
 (add-hook 'typescript-mode '(disable-tabs 2))
-;;(add-hook 'js2-mode-hook #'setup-tide-mode)
 (add-hook 'js-mode-hook #'setup-tide-mode)
 
 ;; --------
@@ -491,13 +478,44 @@
 ;; Markdown
 ;; --------
 (use-package markdown-mode
-	     :ensure t)
+  :ensure t)
 
+;; ------------------------
+;; Clojure (y algo de Lisp)
+;; ------------------------
+(use-package clojure-snippets
+  :ensure t)
+(use-package cider
+  :ensure t
+  :pin melpa-stable
+  :init
+  (setq cider-lein-command "/usr/local/bin/lein")
+  :config
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
+
+;;(use-package flycheck-clojure) ;; Mejor instalarlo a mano
+
+;; me gustan kibit y eastwood, pero me dan problemas cada cierto tiempo (que no
+;; sé arreglar) así que uso joker (que ya uso en sublime/vscode).
+(require 'flycheck-joker)
+(require 'flycheck-tip)
+(use-package clj-refactor
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook (lambda ()
+                                 (clj-refactor-mode 1)
+                                 ;; insert keybinding setup here
+                                 ))
+  (cljr-add-keybindings-with-prefix "C-c C-m")
+  (setq cljr-warn-on-eval nil))
+
+;; ------
 ;; Python
+;; ------
 (use-package elpy
   :ensure t)
 (elpy-enable)
-
 (setq ;;elpy-rpc-python-command "/Users/nando/miniconda3/bin/python"
       python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
@@ -585,7 +603,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
@@ -593,6 +611,7 @@
  '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
  '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
  '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
+ '(send-mail-function (quote mailclient-send-it))
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(vc-annotate-background nil)
