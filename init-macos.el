@@ -281,10 +281,9 @@
 (use-package swiper
   :ensure t)
 
-  ;; ----------
-  ;; Projectile
-  ;; ----------
-
+;; ----------
+;; Projectile
+;; ----------
 (use-package projectile
   :ensure t
   :pin melpa-stable
@@ -339,7 +338,6 @@
 ;; -------
 ;; Company
 ;; -------
-
 (use-package company
   :defer 0.5
   :delight
@@ -372,7 +370,9 @@
 
 (use-package aggressive-indent
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
 (use-package ispell
   :config
@@ -393,9 +393,9 @@
 (use-package rainbow-delimiters
   :ensure t
   :config
-  (add-hook 'lisp-mode-hook
-            (lambda()
-              (rainbow-delimiters-mode))))
+  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+
 (global-highlight-parentheses-mode)
 
 ;; -----------------------
@@ -410,12 +410,42 @@
   ;;:hook (sh-mode . lsp)) ;; Configuración para funcionar con BASH
   :init
   (setq lsp-enable-indentation nil)
-  (add-hook 'sh-mode #'lsp))
+  (add-hook 'sh-mode #'lsp)
+  (add-hook 'c-mode-hook #'lsp)
+  :config
+  (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
+)
 
 ;; Integración con otros paquetes
-(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
-(use-package company-lsp :commands company-lsp)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+(use-package lsp-ui
+  :requires lsp-mode flycheck
+  :commands lsp-ui-mode
+  :ensure t
+  :config
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-use-childframe t
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-include-signature t
+        lsp-ui-sideline-enable nil
+        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-list-position 'right
+        lsp-ui-flycheck-live-reporting t
+        lsp-ui-peek-enable t
+        lsp-ui-peek-list-width 60
+        lsp-ui-peek-peek-height 25)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)) ; flycheck y tips en popups
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list :ensure t)
+(use-package company-lsp
+  :commands company-lsp
+  :config (push 'company-lsp company-backends))
+
+;; -----
+;; c c++
+;; -----
+(use-package lsp-mode
+  :config
+  ;; `-background-index' requires clangd v8+!
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
 
 ;; ---------------------
 ;; TypeScript/JavaScript
