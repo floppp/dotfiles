@@ -144,6 +144,7 @@
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
+(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
 ;; Desconecto binding original para 'other-window'
 (global-unset-key (kbd "C-x o"))
 (global-set-key (kbd "C-,") #'other-window)
@@ -184,7 +185,7 @@
 ;; Autocierre de paréntesis, llaves, corchetes, etc
 (electric-pair-mode 1)
 ;; El valor va en 1/10pt, así que 100 será 10pt...
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 120)
 ;; you really only need one of these
 (setq visible-bell nil)
 ;; (setq ring-bell-function 'ignore)
@@ -217,6 +218,9 @@
 ;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ---------------------------------------
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 
 ;; Forzamos a que se cargue hunspell
 ;; (setq-default ispell-program-name "hunspell")
@@ -350,6 +354,11 @@
   (global-company-mode t))
 
 ;; -----
+;; Tramp
+;; -----
+(setq tramp-default-method "ssh")
+
+;; -----
 ;; Otros
 ;; -----
 (use-package which-key
@@ -474,7 +483,19 @@ solamente carga el modo para el primer archivo."
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
-(setq web-mode-css-indent-offset 2)
+(add-hook 'web-mode-hook 'emmet-mode)
+
+;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
+(defun custom-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (set (make-local-variable 'company-backends)
+       '(company-css company-web-html company-yasnippet company-files)))
+(add-hook 'web-mode-hook 'custom-web-mode-hook)
+(setq web-mode-enable-current-column-highlight t)
+(setq web-mode-enable-current-element-highlight t)
 
 ;; ---------
 ;; Escritura
@@ -588,7 +609,7 @@ solamente carga el modo para el primer archivo."
  '(company-tooltip-align-annotations t)
  '(compilation-message-face (quote default))
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (poet)))
+ '(custom-enabled-themes (quote (espresso)))
  '(custom-safe-themes
    (quote
     ("f8067b7d0dbffb29a79e0843797efabdf5e1cf326639874d8b407e9b034136a4" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "f8fb7488faa7a70aee20b63560c36b3773bd0e4c56230a97297ad54ff8263930" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
@@ -633,7 +654,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (emmet-mode magit org-bullets cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
