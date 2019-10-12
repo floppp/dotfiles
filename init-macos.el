@@ -74,8 +74,8 @@
   "Para eliminar el resto de buffers salvo el activo."
   (interactive)
   (mapc 'kill-buffer
-	(delq (current-buffer)
-	      (remove-if-not 'buffer-file-name (buffer-list)))))
+        (delq (current-buffer)
+              (remove-if-not 'buffer-file-name (buffer-list)))))
 
 (defun bjm/kill-this-buffer ()
   "Para matar el buffer actual."
@@ -126,7 +126,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Cambiamos el comportamiento por defecto de la shell.
 (remove-hook 'eshell-output-filter-functions
-	     'eshell-postoutput-scroll-to-bottom)
+             'eshell-postoutput-scroll-to-bottom)
 (setq make-backup-files nil)
 (setq inhibit-splash-screen t)
 ;; Scroll suave con el ratón
@@ -149,8 +149,8 @@
 (global-unset-key (kbd "C-x o"))
 (global-set-key (kbd "C-,") #'other-window)
 (global-set-key (kbd "C-.") (lambda ()
-			      (interactive)
-			      (other-window -1)))
+                              (interactive)
+                              (other-window -1)))
 (global-set-key (kbd "C-q") 'comment-line)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -266,9 +266,9 @@
   ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
   ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
   (setq ivy-re-builders-alist
-	'((ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
-	  (read-file-name-internal . ivy--regex-plus)
-	  (t . ivy--regex-fuzzy)))
+        '((ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
+          (read-file-name-internal . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)))
   (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
   (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
@@ -364,6 +364,17 @@
 ;; -----
 ;; Otros
 ;; -----
+
+;; crux -> useful functions from bbatsov
+(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+(global-set-key [(shift return)] #'crux-smart-open-line)
+(global-set-key [(control shift return)] #'crux-smart-open-line-above)
+(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
+(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c I") #'crux-find-user-init-file)
+(global-set-key (kbd "s-r") #'crux-recentf-find-file)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
 
 ;; Speedbar in buffer
 (require 'sr-speedbar)
@@ -530,7 +541,7 @@ solamente carga el modo para el primer archivo."
 ;; (add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
-		 (variable-pitch-mode 1)))
+                 (variable-pitch-mode 1)))
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . light))
@@ -680,7 +691,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (visual-regexp sr-speedbar dashboard page-break-lines emmet-mode magit org-bullets cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (crux visual-regexp sr-speedbar dashboard page-break-lines emmet-mode magit org-bullets cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
