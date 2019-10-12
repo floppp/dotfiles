@@ -169,6 +169,8 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f8] 'align-regexp)
+(define-key global-map [f9] 'sort-lines)
 (global-set-key (kbd "<f11>") 'global-linum-mode)
 
 ;; Atajos para ivy y todo lo relacionado.
@@ -207,6 +209,7 @@
 ;; Editor
 ;; ------
 (setq-default show-trailing-whitespace t)
+(setq-default indent-tabs-mode nil)
 
 ;; Instalamos paquetes que faltan.
 (condition-case nil
@@ -361,6 +364,29 @@
 ;; -----
 ;; Otros
 ;; -----
+
+;; Speedbar in buffer
+(require 'sr-speedbar)
+
+;; Visual-regexp, allow to see regexp substitution in real-time when typing
+(require 'visual-regexp)
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+;; if you use multiple-cursors, this is for you:
+(define-key global-map (kbd "C-c m") 'vr/mc-mark)
+
+;; highlight symbol. With mode active symbol at cursor is auto highlighted
+(require 'highlight-symbol)
+
+;; Dashboard on emacs startup.
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+(setq dashboard-items '((projects . 5)
+                        (recents . 10)
+                        (bookmarks . 5)))
+
 (use-package which-key
   :ensure t
   :config
@@ -609,7 +635,7 @@ solamente carga el modo para el primer archivo."
  '(company-tooltip-align-annotations t)
  '(compilation-message-face (quote default))
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (espresso)))
+ '(custom-enabled-themes (quote (spacemacs-light)))
  '(custom-safe-themes
    (quote
     ("f8067b7d0dbffb29a79e0843797efabdf5e1cf326639874d8b407e9b034136a4" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "f8fb7488faa7a70aee20b63560c36b3773bd0e4c56230a97297ad54ff8263930" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "7e7c9639e7b83c3271e427becc0336b85116cee201b11b7b8e9e9474c812633d" "84890723510d225c45aaff941a7e201606a48b973f0121cb9bcb0b9399be8cba" "5f27195e3f4b85ac50c1e2fac080f0dd6535440891c54fcfa62cdcefedf56b1b" default)))
@@ -654,7 +680,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (emmet-mode magit org-bullets cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
+    (visual-regexp sr-speedbar dashboard page-break-lines emmet-mode magit org-bullets cider flycheck-clojure clojure-mode langtool typo poet-theme rainbow-mode espresso-theme centered-window spacemacs-theme auctex popup-imenu tide lsp-treemacs company-lsp lsp-ui lsp-mode php-mode treemacs-icons-dired treemacs-projectile treemacs counsel-projectile company-tern web-mode which-key use-package spaceline rainbow-delimiters py-autopep8 projectile paredit multiple-cursors markdown-mode highlight-parentheses flycheck expand-region ensime elpy clojure-snippets aggressive-indent)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
