@@ -133,7 +133,6 @@
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
 ;; (desktop-save-mode 1)
-(setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -160,6 +159,8 @@
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
+(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+
 ;; Desconecto binding original para 'other-window'
 (global-unset-key (kbd "C-x o"))
 (global-set-key (kbd "C-.") #'other-window)
@@ -184,6 +185,10 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f8] 'align-regexp)
+(define-key global-map [f9] 'sort-lines)
+(global-set-key (kbd "<f11>") 'global-linum-mode)
+
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -191,7 +196,6 @@
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
 
 ;; ------------------
 ;; Modificaciones GUI
@@ -225,6 +229,7 @@
 ;; ------
 ;; Editor
 ;; ------
+(setq-default indent-tabs-mode nil)
 (setq-default show-trailing-whitespace t)
 ;; (setq-default fill-column 80)
 ;; (require 'whitespace)
@@ -246,6 +251,9 @@
 ;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ----------------------------------------
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 
 ;; Forzamos a que se cargue hunspell
 (setq ispell-really-hunspell t)
@@ -417,8 +425,46 @@
   ;; (global-company-mode))
 
 ;; -----
+;; Tramp
+;; -----
+(setq tramp-default-method "ssh")
+
+;; -----
 ;; Otros
 ;; -----
+;; crux -> useful functions from bbatsov
+(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+(global-set-key [(shift return)] #'crux-smart-open-line)
+(global-set-key [(control shift return)] #'crux-smart-open-line-above)
+(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
+(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c I") #'crux-find-user-init-file)
+(global-set-key (kbd "s-r") #'crux-recentf-find-file)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+
+;; Speedbar in buffer
+(require 'sr-speedbar)
+
+;; Visual-regexp, allow to see regexp substitution in real-time when typing
+(require 'visual-regexp)
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+;; if you use multiple-cursors, this is for you:
+(define-key global-map (kbd "C-c m") 'vr/mc-mark)
+
+;; highlight symbol. With mode active symbol at cursor is auto highlighted
+(require 'highlight-symbol)
+
+;; Dashboard on emacs startup.
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+(setq dashboard-items '((projects . 5)
+                        (recents . 10)
+                        (bookmarks . 5)))
+
 (use-package paredit
   :ensure t
   :config
@@ -471,7 +517,7 @@
 
 ;; ----
 ;; Bash
-;; ----
+;; ----1
 ;; Está definido ya en lsp-mode.
 
 ;; -----
@@ -515,9 +561,34 @@ solamente carga el modo para el primer archivo."
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
-(setq web-mode-css-indent-offset 2)
 
-;;(setq web-mode-code-indent-offset 4)
+;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
+(defun custom-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (set (make-local-variable 'company-backends)
+       '(company-css company-web-html company-yasnippet company-files)))
+(add-hook 'web-mode-hook 'custom-web-mode-hook)
+(setq web-mode-enable-current-column-highlight t)
+(setq web-mode-enable-current-element-highlight t)
+
+;; ---------
+;; Escritura
+;; ---------
+;; (typo-global-mode 1)
+;; (add-hook 'text-mode-hook 'typo-mode)
+(add-hook 'text-mode-hook
+               (lambda ()
+                 (variable-pitch-mode 1)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+(set-face-attribute 'default nil :family "Source Code Pro")
+(set-face-attribute 'fixed-pitch nil :family "Source Code Pro")
+(set-face-attribute 'variable-pitch nil :family "Go Mono")
 
 ;; ------------------------
 ;; Clojure (y algo de Lisp)
@@ -539,7 +610,6 @@ solamente carga el modo para el primer archivo."
 ;; me gustan kibit y eastwood, pero me dan problemas cada cierto tiempo (que no
 ;; sé arreglar) así que uso joker (que ya uso en sublime/vscode).
 (require 'flycheck-joker)
-
 (require 'flycheck-tip)
 
 (use-package clj-refactor
@@ -579,13 +649,10 @@ solamente carga el modo para el primer archivo."
   :pin melpa-stable)
 (add-hook 'ensime-mode 'electric-pair-mode)
 
-
-
 ;; ------------------------------------
 ;; Escritura: Org-mode, MarkDown, Latex
 ;; ------------------------------------
 
-;; (typo-global-mode 1)
 (add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
@@ -618,11 +685,11 @@ solamente carga el modo para el primer archivo."
 ;; -----
 ;; LaTex
 ;; -----
-;; (use-package tex
-  ;; :defer t
-  ;; :ensure auctex
-  ;; :config
-  ;; (setq TeX-auto-save t))
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t))
 
 ;; ------------------------------------------
 ;; Configuración incluida por emacs, no tocar
@@ -678,7 +745,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(sublimity-mode t)
  '(tool-bar-mode nil)
