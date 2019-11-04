@@ -133,7 +133,6 @@
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
 ;; (desktop-save-mode 1)
-(setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -160,6 +159,8 @@
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
+(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+
 ;; Desconecto binding original para 'other-window'
 (global-unset-key (kbd "C-x o"))
 (global-set-key (kbd "C-.") #'other-window)
@@ -184,6 +185,10 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f8] 'align-regexp)
+(define-key global-map [f9] 'sort-lines)
+(global-set-key (kbd "<f11>") 'global-linum-mode)
+
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -224,6 +229,7 @@
 ;; ------
 ;; Editor
 ;; ------
+(setq-default indent-tabs-mode nil)
 (setq-default show-trailing-whitespace t)
 ;; (setq-default fill-column 80)
 ;; (require 'whitespace)
@@ -245,6 +251,9 @@
 ;; ----------------------------------------
 ;; Paquetes Generales (para más de un modo)
 ;; ----------------------------------------
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 
 ;; Forzamos a que se cargue hunspell
 (setq ispell-really-hunspell t)
@@ -279,7 +288,7 @@
 
 ;; ---
 ;; Ivy
-;; --- 
+;; ---
 
 ;; Ivy está formado por:
 ;;    - ivy: un mecanismo genérico de completado de emacs
@@ -416,8 +425,46 @@
   ;; (global-company-mode))
 
 ;; -----
+;; Tramp
+;; -----
+(setq tramp-default-method "ssh")
+
+;; -----
 ;; Otros
 ;; -----
+;; crux -> useful functions from bbatsov
+(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+(global-set-key [(shift return)] #'crux-smart-open-line)
+(global-set-key [(control shift return)] #'crux-smart-open-line-above)
+(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
+(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c I") #'crux-find-user-init-file)
+(global-set-key (kbd "s-r") #'crux-recentf-find-file)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+
+;; Speedbar in buffer
+(require 'sr-speedbar)
+
+;; Visual-regexp, allow to see regexp substitution in real-time when typing
+(require 'visual-regexp)
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+;; if you use multiple-cursors, this is for you:
+(define-key global-map (kbd "C-c m") 'vr/mc-mark)
+
+;; highlight symbol. With mode active symbol at cursor is auto highlighted
+(require 'highlight-symbol)
+
+;; Dashboard on emacs startup.
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+(setq dashboard-items '((projects . 5)
+                        (recents . 10)
+                        (bookmarks . 5)))
+
 (use-package paredit
   :ensure t
   :config
@@ -470,7 +517,7 @@
 
 ;; ----
 ;; Bash
-;; ----
+;; ----1
 ;; Está definido ya en lsp-mode.
 
 ;; -----
@@ -484,6 +531,9 @@
 ;; TypeScript
 ;; ----------
 (defun setup-tide-mode ()
+  "Función que nos lanza el modo y lo configura.
+No uso use-package, porque si lo hago así,
+solamente carga el modo para el primer archivo."
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
@@ -493,19 +543,9 @@
   (tide-hl-identifier-mode +1)
   (company-mode +1))
 
-;; Si uso use-package solo me carga tide en el prime archivo que abro
-;;(use-package tide
-;;  :ensure t
-;;  :after (typescript-mode company flycheck)
-;;  :bind (("M-." . tide-jump-to-definition)
-;;         ("M-," . tide-jump-back))
-;;  :config (setup-tide-mode)
-;;  :hook ((typescript-mode . tide-setup)
-;;         (typescript-mode . tide-hl-identifier-mode)))
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
 (add-hook 'typescript-mode '(disable-tabs 2))
-;;(add-hook 'js2-mode-hook #'setup-tide-mode)
 (add-hook 'js-mode-hook #'setup-tide-mode)
 
 ;; ---
@@ -519,11 +559,36 @@
 ;; web-mode
 ;; --------
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
-(setq web-mode-css-indent-offset 2)
 
-;;(setq web-mode-code-indent-offset 4)
+;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
+(defun custom-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (set (make-local-variable 'company-backends)
+       '(company-css company-web-html company-yasnippet company-files)))
+(add-hook 'web-mode-hook 'custom-web-mode-hook)
+(setq web-mode-enable-current-column-highlight t)
+(setq web-mode-enable-current-element-highlight t)
+
+;; ---------
+;; Escritura
+;; ---------
+;; (typo-global-mode 1)
+;; (add-hook 'text-mode-hook 'typo-mode)
+(add-hook 'text-mode-hook
+               (lambda ()
+                 (variable-pitch-mode 1)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+(set-face-attribute 'default nil :family "Source Code Pro")
+(set-face-attribute 'fixed-pitch nil :family "Source Code Pro")
+(set-face-attribute 'variable-pitch nil :family "Go Mono")
 
 ;; ------------------------
 ;; Clojure (y algo de Lisp)
@@ -545,7 +610,6 @@
 ;; me gustan kibit y eastwood, pero me dan problemas cada cierto tiempo (que no
 ;; sé arreglar) así que uso joker (que ya uso en sublime/vscode).
 (require 'flycheck-joker)
-
 (require 'flycheck-tip)
 
 (use-package clj-refactor
@@ -585,13 +649,10 @@
   :pin melpa-stable)
 (add-hook 'ensime-mode 'electric-pair-mode)
 
-
-
 ;; ------------------------------------
 ;; Escritura: Org-mode, MarkDown, Latex
 ;; ------------------------------------
 
-;; (typo-global-mode 1)
 (add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
@@ -608,8 +669,7 @@
 ;; Org-mode
 ;; --------
 (setq org-hide-emphasis-markers t)
-(setq org-bullets-bullet-list
-      '("◉" "○"))
+(setq org-bullets-bullet-list '("◉" "○"))
 (setq org-fontify-whole-heading-line t)
 (add-hook 'org-mode-hook
           (lambda ()
@@ -625,11 +685,11 @@
 ;; -----
 ;; LaTex
 ;; -----
-;; (use-package tex
-  ;; :defer t
-  ;; :ensure auctex
-  ;; :config
-  ;; (setq TeX-auto-save t))
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t))
 
 ;; ------------------------------------------
 ;; Configuración incluida por emacs, no tocar
@@ -651,10 +711,10 @@
  '(company-show-numbers t)
  '(company-tooltip-align-annotations t)
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes nil)
+ '(custom-enabled-themes (quote (espresso)))
  '(custom-safe-themes
    (quote
-    ("c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(dumb-jump-mode t)
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#383838")
@@ -685,7 +745,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(sublimity-mode t)
  '(tool-bar-mode nil)
