@@ -387,7 +387,7 @@
 (define-key global-map (kbd "C-c m") 'vr/mc-mark)
 
 ;; highlight symbol. With mode active symbol at cursor is auto highlighted
-(require 'highlight-symbol)
+;; instalarlo, no usar `require'
 
 ;; Dashboard on emacs startup.
 (use-package dashboard
@@ -620,10 +620,13 @@ solamente carga el modo para el primer archivo."
 ;; -----
 ;; Al usar versión estable, se instalan automáticamente tanto sbt-mode como scala-mode.
 ;; Si queremos versiones no estables, si hay que instalar ambos modos por separado.
-(use-package ensime
-  :ensure t
-  :pin melpa-stable)
-(add-hook 'ensime-mode 'electric-pair-mode)
+;; (use-package ensime
+  ;; :ensure t
+  ;; :pin melpa-stable)
+;; (add-hook 'ensime-mode 'electric-pair-mode)
+
+;; ENSIME HA CERRADO... A PARTIR DE AHORA METALS,
+;; PERO NO CON EMACS, SINO CON VSCODE.
 
 ;; ------------------------------------------
 ;; Configuración incluida por emacs, no tocar
