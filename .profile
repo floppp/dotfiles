@@ -37,3 +37,6 @@ alias connect_server="ssh -i /home/nando/Documentos/imm/20190206_fernando/id_rsa
 # Directorios actualmente en uso (IR LIMPIANDO REGULARMENTE)
 alias tcbelt-web="/home/nando/workspaces/imm/tc-belt-nebular/web"
 alias cubicdron-web="/home/nando/workspaces/imm/cubicdron/web"
+alias ws-master="cd /home/nando/workspaces/master-apps-moviles/1-android-fundamentos/proyectos"
+alias emacs-eos='XLIB_SKIP_ARGB_VISUALS=1 emacs'
+

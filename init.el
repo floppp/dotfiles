@@ -4,7 +4,7 @@
 ;;   + Python     -> Elpy
 ;;   + Typescript -> Tide
 ;;   + Latex      -> Auctex
-;;   + Scala      -> Ensime
+;;   + Scala      -> Metals
 
 ;;; Code:
 (setq user-full-name "Fernando López")
@@ -439,7 +439,7 @@
 (global-set-key [(control shift return)] #'crux-smart-open-line-above)
 (global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
 (global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-c I") #'crux-find-user-init-file)
+(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
 (global-set-key (kbd "s-r") #'crux-recentf-find-file)
 (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
 
@@ -642,12 +642,7 @@ solamente carga el modo para el primer archivo."
 ;; -----
 ;; Scala
 ;; -----
-;; Al usar versión estable, se instalan automáticamente tanto sbt-mode como scala-mode.
-;; Si queremos versiones no estables, si hay que instalar ambos modos por separado.
-(use-package ensime
-  :ensure t
-  :pin melpa-stable)
-(add-hook 'ensime-mode 'electric-pair-mode)
+
 
 ;; ------------------------------------
 ;; Escritura: Org-mode, MarkDown, Latex

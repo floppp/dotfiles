@@ -98,3 +98,5 @@ source ~/.profile
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/nando/.sdkman"
 [[ -s "/home/nando/.sdkman/bin/sdkman-init.sh" ]] && source "/home/nando/.sdkman/bin/sdkman-init.sh"
+source /usr/share/powerlevel9k/powerlevel9k.zsh-theme
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
