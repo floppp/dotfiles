@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 (setq gc-cons-threshold 10000000)
 
+=======
+;;; package --- Summary
+;; Configuración de Emacs para programar con:
+;;   + Clojure    -> Cider
+;;   + Python     -> Elpy
+;;   + Typescript -> Tide
+;;   + Latex      -> Auctex
+;;   + Scala      -> Metals
+
+;;; Code:
+>>>>>>> 9ca5b2d0918bc490cb70b916e512dd2de34c6781
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
@@ -288,7 +300,7 @@ Some common clean setup configuration.
 (global-set-key [(control shift return)] #'crux-smart-open-line-above)
 (global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
 (global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-c I") #'crux-find-user-init-file)
+(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
 (global-set-key (kbd "s-r") #'crux-recentf-find-file)
 (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
 
@@ -488,3 +500,143 @@ solamente carga el modo para el primer archivo."
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
+<<<<<<< HEAD
+=======
+
+;; -----
+;; Scala
+;; -----
+
+
+;; ------------------------------------
+;; Escritura: Org-mode, MarkDown, Latex
+;; ------------------------------------
+
+(add-hook 'text-mode-hook 'typo-mode)
+(add-hook 'text-mode-hook
+               (lambda ()
+		 (variable-pitch-mode 1)))
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . light))
+
+(set-face-attribute 'default nil :family "Source Code Pro") ;; :height 100
+(set-face-attribute 'fixed-pitch nil :family "Source Code Pro");;  :height 100
+(set-face-attribute 'variable-pitch nil :family "Go Mono")
+
+;; --------
+;; Org-mode
+;; --------
+(setq org-hide-emphasis-markers t)
+(setq org-bullets-bullet-list '("◉" "○"))
+(setq org-fontify-whole-heading-line t)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-bullets-mode 1)
+            (org-indent-mode t)))
+
+;; --------
+;; Markdown
+;; --------
+(use-package markdown-mode
+	     :ensure t)
+
+;; -----
+;; LaTex
+;; -----
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t))
+
+;; ------------------------------------------
+;; Configuración incluida por emacs, no tocar
+;; ------------------------------------------
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
+ '(company-begin-commands (quote (self-insert-command)))
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 2)
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(company-show-numbers t)
+ '(company-tooltip-align-annotations t)
+ '(counsel-projectile-mode t nil (counsel-projectile))
+ '(custom-enabled-themes (quote (espresso)))
+ '(custom-safe-themes
+   (quote
+    ("1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+ '(dumb-jump-mode t)
+ '(elpy-syntax-check-command "pylint")
+ '(fci-rule-color "#383838")
+ '(global-company-mode t)
+ '(global-linum-mode nil)
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#42ae2c")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
+ '(line-number-mode nil)
+ '(linum-format " %7i ")
+ '(menu-bar-mode nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+ '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
+ '(sublimity-mode t)
+ '(tool-bar-mode nil)
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
+
+(provide 'init)
+;;; init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 98 :width normal)))))
+>>>>>>> 9ca5b2d0918bc490cb70b916e512dd2de34c6781
