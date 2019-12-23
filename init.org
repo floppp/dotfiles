@@ -2,23 +2,31 @@
 * General configuration
 ** When i don't use Emacs
 I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
-Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use SublimeText when i would use emacs.
-Next i put when i don't use it at all, and which alternatives i use for coding in those languages/frameworks:
-+ Angular        -> VSCode (although i have emacs configured properly, Angular/TypeScript in VSCode is too good to use anything else, even when ~Tide~ does the job very well)
+Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
+And, finally but maybe the most important thing, in the future maybe, only maybe, i will make final transition to /VSCode/. I don't love it like i do with /Emacs/ and /Sublime/, but it just works, for every language, and debugger works almost perfect, at least for my needs. I'm slower with it, it is very greedy with resources, but its continuous evolution and improvement is hard to be forgotten.
+
+Next i put when i don't use /Emacs/ at all, and which alternatives i use for coding in those languages/frameworks:
+#+begin_src
++ Angular        -> VSCode (although i have emacs configured properly, Angular/TypeScript in VSCode is too good to use anything else, even when Tide does the job very well)
 + VueJS          -> VSCode
-+ Scala/Ammonite -> i used to use ~ensime~, but now it is /closed/, i'm trying with IntelliJ
-+ Latex          -> i can't work with emacs, but usually i use Sublime + LatexTools
++ PHP            -> Sublime/VSCode
++ Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
++ Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
 + Android        -> AndroidStudio, either for Kotlin and Java
 + iOS            -> only tried it for educational purpose, XCode obviously
 + Flutter        -> only tried it for educational purpose, VSCode
+#+end_src
+I know, to many technologies, i'm not focused... is not my fault, is this fucking programming, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
 
 ** Manual installation
 Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
 + ~crux~
 + ~spaceline~
++ ~org-bullets~
++ ~spaceline~
 
 ** GC size increment to speed up startup.
-Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB).
+Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
 #+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold 10000000)
 #+END_SRC
@@ -31,7 +39,7 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 #+END_SRC
 
 ** PATH definition
-Here we set path values for miniconda (python) and whatever other package system we use. Formerly i use SDKman in macos.
+Here we set path values for ~Miniconda~ and whatever other package system we use. Formerly i used ~SDKman~ in /MacOS/, now /brew/ is enough for me.
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
@@ -185,8 +193,7 @@ Editor
 #+END_SRC
 
 * Keybindings
-Some keybindings are defined in their places:
-+ projectile
+There are more keybindings in other places. I will try in the future to put them all in this section.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
@@ -262,7 +269,7 @@ We have to download the executable for our OS.
 #+END_SRC
 
 ** Projects and search and autocomplete mode.
-~Ivy~ and ~Projectile~ are both a must in we want work in Emacs to be fast.
+~Ivy~ and ~Projectile~ are both a must in we want that coding in Emacs would be fast.
 *** Ivy
 Ivy has three components:
 + ivy     : a generic autocomplete mechanism
@@ -502,7 +509,7 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
 #+END_SRC
 
 *** TypeScript/JavaScript
-~Tide~ is for /TypeScript/ and /Angular/,  but it works for /JavaScript/ too, and its configuration is so easy i don't won't to test anything else.
+~Tide~ is for ~TypeScript~ and ~Angular~,  but it works for /JavaScript/ too, and its configuration is so easy i don't won't to test anything else.
 #+BEGIN_SRC emacs-lisp
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
@@ -584,7 +591,7 @@ For vue, but actually i use VSCode for code it.
 #+END_SRC
 
 *** Clojure
-Maybe my favorite programming language, even when i'm an absolute beginner and i'm only use it for educational reasons or toy projects.
+Maybe my favorite programming language, even when i'm an absolute beginner and i only use it for educational reasons or toy projects.
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-snippets
   :ensure t)
