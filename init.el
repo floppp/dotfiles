@@ -251,7 +251,8 @@ Some common clean setup configuration.
   :ensure t
   :pin melpa-stable
   :config
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  ;; Quito por problema con elementary os.
+  ;; (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
 
@@ -531,7 +532,7 @@ solamente carga el modo para el primer archivo."
 (setq org-bullets-bullet-list '("◉" "○"))
 (setq org-fontify-whole-heading-line t)
 (add-hook 'org-mode-hook
-          (lambda ()
+          (lambda () 
             (org-bullets-mode 1)
             (org-indent-mode t)))
 

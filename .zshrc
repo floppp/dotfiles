@@ -66,6 +66,10 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 source ~/.profile
 
+#source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
+
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -98,5 +102,4 @@ source ~/.profile
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/nando/.sdkman"
 [[ -s "/home/nando/.sdkman/bin/sdkman-init.sh" ]] && source "/home/nando/.sdkman/bin/sdkman-init.sh"
-source /usr/share/powerlevel9k/powerlevel9k.zsh-theme
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
