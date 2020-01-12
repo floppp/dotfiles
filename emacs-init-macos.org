@@ -16,7 +16,7 @@ Next i put when i don't use /Emacs/ at all, and which alternatives i use for cod
 + iOS            -> only tried it for educational purpose, XCode obviously
 + Flutter        -> only tried it for educational purpose, VSCode
 #+end_src
-I know, to many technologies, i'm not focused... is not my fault, is this fucking programming, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
+I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
 
 ** Manual installation
 Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
@@ -159,10 +159,12 @@ Some common clean setup configuration.
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq make-backup-files nil)
+(setq-default indent-tabs-mode nil) ;; fuera tabs
 (setq inhibit-splash-screen t)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
 (global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
+(global-hl-line-mode +1)
 #+END_SRC
 
 ** GUI modifications
@@ -289,7 +291,7 @@ Configuration based on that found at /daemons.it/, without some stuffs that i do
   (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
   (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
   (setq ivy-wrap t)                    ;; Dar la vuelta a los candidatos
-  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
   ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
   (setq ivy-re-builders-alist
         '((ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
@@ -506,6 +508,12 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
 (use-package company-lsp
   :commands company-lsp
   :config (push 'company-lsp company-backends))
+#+END_SRC
+
+*** C/C++
+#+BEGIN_SRC emacs-lisp
+(require 'ccls)
+(setq ccls-executable "/usr/local/bin/ccls")
 #+END_SRC
 
 *** TypeScript/JavaScript
