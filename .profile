@@ -40,3 +40,8 @@ alias cubicdron-web="/home/nando/workspaces/imm/cubicdron/web"
 alias ws-master="cd /home/nando/workspaces/master-apps-moviles/1-android-fundamentos/proyectos"
 alias emacs-eos='XLIB_SKIP_ARGB_VISUALS=1 emacs'
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+

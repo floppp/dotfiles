@@ -187,7 +187,7 @@
 (define-key global-map [f6] 'menu-bar-mode)
 (define-key global-map [f8] 'align-regexp)
 (define-key global-map [f9] 'sort-lines)
-(global-set-key (kbd "<f11>") 'global-linum-mode)
+(define-key global-map [f12] 'global-linum-mode)
 
 ;; Atajos para ivy y todo lo relacionado.
 (global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
@@ -310,9 +310,12 @@
   (setq ivy-wrap t) ;; Dar la vuelta a los candidatos
   ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
   (setq ivy-re-builders-alist
-    '((ivy-switch-buffer . ivy--regex-plus)
-      (read-file-name-internal . ivy--regex-plus)
-      (t . ivy--regex-fuzzy)))
+        '(
+          ;; (ivy-switch-buffer . ivy--regex-plus)
+          ;; (read-file-name-internal . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)
+          )
+        )
   (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
   (setq ivy-use-selectable-prompt t) ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
@@ -529,9 +532,23 @@
 (add-hook 'c-mode '(enable-tabs 4))
 (require 'ccls)
 (setq ccls-executable "/usr/bin/ccls")
+;; (use-package cc-mode
+;;   :config
+;;   ;; Available C style:
+;;   ;; "gnu": The default style for GNU projects
+;;   ;; "k&r": What Kernighan and Ritchie, the authors of C used in their book
+;;   ;; "bsd": What BSD developers use, aka "Allman style" after Eric Allman.
+;;   ;; "whitesmith": Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+;;   ;; "stroustrup": What Stroustrup, the author of C++ used in his book
+;;   ;; "ellemtel": Popular C++ coding standards as defined by "Programming in C++, Rules and Recommendations," Erik Nyquist and Mats Henricson, Ellemtel
+;;   ;; "linux": What the Linux developers use for kernel development
+;;   ;; "python": What Python developers use for extension modules
+;;   ;; "java": The default style for java-mode (see below)
+;;   ;; "user": When you want to define your own style
+;;   (setq c-default-style "linux"))
 
 ;; ----------
-;; TypeScript
+;; Typescript
 ;; ----------
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
@@ -709,10 +726,10 @@ solamente carga el modo para el primer archivo."
  '(company-show-numbers t)
  '(company-tooltip-align-annotations t)
  '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes
    (quote
-    ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+    ("1c7eb2c55f9b9af59ba96e9c803ffa2a28e63edd43bcbb775397a4b9ef0457d6" "a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
  '(dumb-jump-mode t)
  '(elpy-syntax-check-command "pylint")
  '(fci-rule-color "#383838")
@@ -744,7 +761,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (monokai-theme ox-gfm vue-mode dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (neotree monokai-theme ox-gfm vue-mode dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(sublimity-mode t)
  '(tool-bar-mode nil)

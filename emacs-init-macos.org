@@ -3,19 +3,33 @@
 ** When i don't use Emacs
 I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
 Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
-And, finally but maybe the most important thing, in the future maybe, only maybe, i will make final transition to /VSCode/. I don't love it like i do with /Emacs/ and /Sublime/, but it just works, for every language, and debugger works almost perfect, at least for my needs. I'm slower with it, it is very greedy with resources, but its continuous evolution and improvement is hard to be forgotten.
+And, finally but maybe the most important thing, in the future maybe, only maybe, i will make final transition to /VSCode/. I don't love it like i do with /Emacs/ and /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, but its continuous evolution and improvement is hard to be forgotten.
 
-Next i put when i don't use /Emacs/ at all, and which alternatives i use for coding in those languages/frameworks:
+Next i put when i use and where i don't use /Emacs/, and which alternatives i use for coding in those languages/frameworks:
+
 #+begin_src
-+ Angular        -> VSCode (although i have emacs configured properly, Angular/TypeScript in VSCode is too good to use anything else, even when Tide does the job very well)
-+ VueJS          -> VSCode
-+ PHP            -> Sublime/VSCode
+Using Emacs
++ At work
+    - Vainilla JS Web development
+    - Angular
+    - Vue
+    ‐ PHP
+    – Python
+    - Org-mode
++ At home / hobby
+    - Clojure
+    - C (debugging with Visual Studio Code)
+#+end_src
+
+#+begin_src
+Don’t using it at all
 + Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
 + Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
 + Android        -> AndroidStudio, either for Kotlin and Java
 + iOS            -> only tried it for educational purpose, XCode obviously
 + Flutter        -> only tried it for educational purpose, VSCode
 #+end_src
+
 I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
 
 ** Manual installation
