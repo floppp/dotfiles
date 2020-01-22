@@ -323,17 +323,19 @@
         lsp-ui-doc-use-childframe t
         lsp-ui-doc-position 'top
         lsp-ui-doc-include-signature t
-        lsp-ui-sideline-enable nil
+        lsp-ui-sideline-enable t
         lsp-ui-flycheck-enable t
         lsp-ui-flycheck-list-position 'right
         lsp-ui-flycheck-live-reporting t
-        lsp-ui-peek-enable t
-        lsp-ui-peek-list-width 60
-        lsp-ui-peek-peek-height 25)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)) ; flycheck y tips en popups
-(use-package lsp-treemacs 
-:commands lsp-treemacs-errors-list 
-:ensure t)
+        ;;lsp-ui-peek-enable t
+        ;;lsp-ui-peek-list-width 60
+        ;;lsp-ui-peek-peek-height 25
+        )
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (add-hook 'c-mode-hook #'lsp)) ; flycheck y tips en popups
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list
+  :ensure t)
 
 (use-package company-lsp
   :commands company-lsp
@@ -355,7 +357,10 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(require 'ccls)
+;;(require 'ccls)
+(use-package ccls
+  :hook ((c-mode c++-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
 (setq ccls-executable "/usr/bin/ccls")
 
 (defun setup-tide-mode ()
