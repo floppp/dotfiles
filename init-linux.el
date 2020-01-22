@@ -1,28 +1,28 @@
 ;;; package --- Summary
-;; Configuración de Emacs para programar con:
-;;   + Clojure    -> Cider
-;;   + Python     -> Elpy
-;;   + Typescript -> Tide
-;;   + Latex      -> Auctex
-;;   + Scala      -> Metals
+
+
+
 
 ;;; Code:
+(package-initialize)
+(setq gc-cons-threshold 10000000)
+
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
 
 ;; Incluyo en el PATH tanto donde está el jdk, como donde miniconda, para que
 ;; pueda encontrar los paquetes allí instalados.
-(setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/java/current/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":/home/nando/miniconda3/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":/home/nando/.local/bin"))
-(setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
+;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/java/current/bin"))
+;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/miniconda3/bin"))
+;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
+;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.local/bin"))
+;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
 
 (setq exec-path (append exec-path '("~/.nvm/versions/node/v13.6.0/bin")))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/home/nando/.local/bin")))
-(setq exec-path (append exec-path '("/home/nando/.sdkman/candidates/sbt/current/bin")))
+;; (setq exec-path (append exec-path '("/home/nando/.sdkman/candidates/sbt/current/bin")))
 
 ;; Repositorios donde buscar paquetes.
 (defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
@@ -42,22 +42,26 @@
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
 
+;; Para evitar problemas a la hora de poner acentos y comillas cuando trabajamos con gui,
+;; solo me pasa en ElementaryOS
+(require 'iso-transl)
+
 ;; ---------
 ;; FUNCIONES
 ;; ---------
-(defun packages-install (&rest packages)
-  "Function to install those PACKAGES which aren't."
-  (message "running packages-install")
-  (mapc (lambda (package)
-          (let ((name (car package))
-                (repo (cdr package)))
-            (when (not (package-installed-p name))
-              (let ((package-archives (list repo)))
-                (package-initialize)
-                (package-install name)))))
-        packages)
-  (package-initialize)
-  (delete-other-windows))
+;; (defun packages-install (&rest packages)
+;;   "Function to install those PACKAGES which aren't."
+;;   (message "running packages-install")
+;;   (mapc (lambda (package)
+;;           (let ((name (car package))
+;;                 (repo (cdr package)))
+;;             (when (not (package-installed-p name))
+;;               (let ((package-archives (list repo)))
+;;                 (package-initialize)
+;;                 (package-install name)))))
+;;         packages)
+;;   (package-initialize)
+;;   (delete-other-windows))
 
 (defun spell-buffer-spanish ()
   "Buffer in spanish."
@@ -93,20 +97,20 @@
   (setq indent-tabs-mode t)
   (setq tab-width n))
 
-(defun init--install-packages ()
-  "Instalación de paquetes no instalados."
-  (message "Lets install some packages")
-  (packages-install
-   ;; Since use-package this is the only entry here
-   ;; ALWAYS try to use use-package!
-   (cons 'use-package melpa-stable)))
+;; (defun init--install-packages ()
+;;   "Instalación de paquetes no instalados."
+;;   (message "Lets install some packages")
+;;   (packages-install
+;;    ;; Since use-package this is the only entry here
+;;    ;; ALWAYS try to use use-package!
+;;    (cons 'use-package melpa-stable)))
 
 (defun kill-other-buffers ()
   "Para eliminar el resto de buffers salvo el activo."
   (interactive)
   (mapc 'kill-buffer
-	(delq (current-buffer)
-	      (remove-if-not 'buffer-file-name (buffer-list)))))
+        (delq (current-buffer)
+              (remove-if-not 'buffer-file-name (buffer-list)))))
 
 (defun move-line (n)
   "Move the current line up or down by N lines."
@@ -135,22 +139,28 @@
 ;; CONFIGURACIÓN GLOBAL
 ;; --------------------
 ;; (desktop-save-mode 1)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq make-backup-files nil)
+(setq auto-save-default nil)
 (setq inhibit-splash-screen t)
-;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
+(setq visible-bell nil)
 (setq global-hl-line-mode t)
+(setq-default show-trailing-whitespace t)
+(global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
+(electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
+(set-face-attribute 'default nil :height 100) ;; El valor va en 1/10pt, así que 100 será 10pt...
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(if window-system (scroll-bar-mode -1))
 
 (add-hook 'dired-mode-hook
           (lambda ()
             (dired-hide-details-mode 1)))
 ;; Cambiamos el comportamiento por defecto de la shell.
 (remove-hook 'eshell-output-filter-functions
-	     'eshell-postoutput-scroll-to-bottom)
+             'eshell-postoutput-scroll-to-bottom)
 ;; Para evitar problemas con MarkDown
 ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -164,9 +174,7 @@
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 (global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
-
-;; Desconecto binding original para 'other-window'
-(global-unset-key (kbd "C-x o"))
+(global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
 (global-set-key (kbd "C-.") #'other-window)
 (global-set-key (kbd "C-,") (lambda ()
                                 (interactive)
@@ -202,17 +210,26 @@
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
 
+;; crux
+(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+(global-set-key [(shift return)] #'crux-smart-open-line)
+(global-set-key [(control shift return)] #'crux-smart-open-line-above)
+(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
+(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
+(global-set-key (kbd "s-r") #'crux-recentf-find-file)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+
+;; visual-regexp
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+(define-key global-map (kbd "C-c m") 'vr/mc-mark)
+
 ;; ------------------
-;; Modificaciones GUI
+;; Theme
 ;; ------------------
-;; Autocierre de paréntesis, llaves, corchetes, etc
-(electric-pair-mode 1)
-;; El valor va en 1/10pt, así que 100 será 10pt...
-(set-face-attribute 'default nil :height 100)
-(setq visible-bell 1)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(if window-system (scroll-bar-mode -1))
+
 ;; Ponemos la apariencia de spacemacs. Tienen que ir en este orden,
 ;; primero spaceline y luego spacemacs, sino se lían y el aspecto queda
 ;; horrible.
@@ -232,49 +249,8 @@
 (global-prettify-symbols-mode 1)
 
 ;; ------
-;; Editor
+;; ispell
 ;; ------
-(setq-default indent-tabs-mode nil)
-(setq-default show-trailing-whitespace t)
-;; (setq-default fill-column 80)
-;; (require 'whitespace)
-;; (setq whitespace-line-column 79)
-;; (setq whitespace-style '(face lines-tail))
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
-;;(setq-default indicate-empty-lines t)
-
-;; -------------------
-;; variables Globlales
-;; -------------------
-
-;; Instalamos paquetes que faltan.
-(condition-case nil
-    (init--install-packages)
-  (error
-   (package-refresh-contents)
-   (init--install-packages)))
-
-;; ----------------------------------------
-;; Paquetes Generales (para más de un modo)
-;; ----------------------------------------
-(require 'emmet-mode)
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-
-;; Forzamos a que se cargue hunspell
-(setq ispell-really-hunspell t)
-(setq ispell-program-name "hunspell")
-(setq ispell-local-dictionary "es_ANY")
-(setq ispell-local-dictionary-alist '((
-                                       "es_ANY"
-                                       "[[:alpha:]]"
-                                       "[^[:alpha:]]"
-                                       "[']"
-                                       nil
-                                       nil
-                                       nil
-                                       utf-8)))
-
 (use-package ispell
   :config
   (setq-default ispell-program-name "hunspell")
@@ -335,9 +311,9 @@
   :ensure t)
 
 (use-package counsel
-	 :config
-	 (setq counsel-find-file-at-point t)
-	 :ensure t)
+         :config
+         (setq counsel-find-file-at-point t)
+         :ensure t)
 
 (use-package swiper
   :ensure t)
@@ -354,16 +330,10 @@
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   ;; Aunque por defecto es el usado, por si acaso acabo usando también Emacs en Windows,
   ;; donde por defecto no se usa.
+  (setq projectile-completion-system 'ivy)
   (setq projectile-indexing-method 'alien)
   (setq projectile-switch-project-action #'projectile-dired)
   (projectile-mode +1))
-
-;; -------
-;; neotree
-;; -------
-(require 'neotree)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-
 
 ;; --------
 ;; treemacs
@@ -408,6 +378,17 @@
   :ensure t
   :config (treemacs-icons-dired-mode))
 
+;; -------
+;; neotree
+;; -------
+;; Hay que instalar all-the-icons para tener el theme icons,
+;; y después sus fuentes con
+;; M-x all-the-icons-install-fonts
+(use-package all-the-icons)
+(require 'neotree)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(setq-default neo-show-hidden-files t)
+
 ;; --------
 ;; lsp-mode
 ;; --------
@@ -434,13 +415,6 @@
   (company-tooltip-align-annotations 't)
   (global-company-mode t))
 
-;; configuración antigua
-;; (use-package company
-  ;; :ensure t
-  ;; ;; :bind (("C-c /". company-complete)) ;; con esto solo se muestran de forma manual, no automática
-  ;; :config
-  ;; (global-company-mode))
-
 ;; -----
 ;; Tramp
 ;; -----
@@ -450,28 +424,19 @@
 ;; Otros
 ;; -----
 ;; crux -> useful functions from bbatsov
-(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
-(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
-(global-set-key [(shift return)] #'crux-smart-open-line)
-(global-set-key [(control shift return)] #'crux-smart-open-line-above)
-(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
-(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
-(global-set-key (kbd "s-r") #'crux-recentf-find-file)
-(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
-
-;; Speedbar in buffer
-(require 'sr-speedbar)
 
 ;; Visual-regexp, allow to see regexp substitution in real-time when typing
 (require 'visual-regexp)
-(define-key global-map (kbd "C-c r") 'vr/replace)
-(define-key global-map (kbd "C-c q") 'vr/query-replace)
-;; if you use multiple-cursors, this is for you:
-(define-key global-map (kbd "C-c m") 'vr/mc-mark)
 
 ;; highlight symbol. With mode active symbol at cursor is auto highlighted
 (require 'highlight-symbol)
+
+(use-package windmove
+  :bind
+  ("C-c <up>" . windmove-up)
+  ("C-c <down>" . windmove-down)
+  ("C-c <left>" . windmove-left)
+  ("C-c <right>" . windmove-right))
 
 ;; Dashboard on emacs startup.
 (use-package dashboard
@@ -498,8 +463,9 @@
   (which-key-mode))
 
 (use-package flycheck
-  :ensure t)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package expand-region
   :ensure t)
@@ -555,7 +521,7 @@ solamente carga el modo para el primer archivo."
   (tide-setup)
   (flycheck-mode +1)
   ;;(setq tide-tsserver-process-environment '("TSS_LOG=-level verbose -file /tmp/tss.log"))
-  ;;(setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1))
@@ -568,13 +534,57 @@ solamente carga el modo para el primer archivo."
 ;; ---
 ;; PHP
 ;; ---
-;;(use-package php-mode
-;;  :ensure t)
-;;(add-hook 'php-mode '(enable-tabs 4))
+(use-package php-mode
+  :mode
+  (("\\.php\\'" . php-mode))
+  :config
+  (add-hook 'php-mode-hook
+	    '(lambda ()
+               ;; auto-complete
+               ;; (require 'ac-php)
+               ;; (define-key php-mode-map (kbd "M-]")
+                 ;; 'ac-php-find-symbol-at-point)
+               ;; (define-key php-mode-map (kbd "M-[")
+                 ;; 'ac-php-location-stack)
+
+               ;; company
+               (require 'company-php)
+	       (company-mode t)
+	       ;; (add-to-list 'company-backends 'company-ac-php-backend)
+               (ac-php-core-eldoc-setup)
+
+               (set (make-local-variable 'company-backends)
+                    '((company-ac-php-backend company-dabbrev-code) company-capf company-files))
+
+               ;; Jump to definition (optional)
+               (define-key php-mode-map (kbd "M-]") 'ac-php-find-symbol-at-point)
+
+               ;; Return back (optional)
+               (define-key php-mode-map (kbd "M-[") 'ac-php-location-stack-back)
+               )
+            )
+  )
 
 ;; --------
-;; web-mode
+;; web-mode/emmet
 ;; --------
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+
+;; Forzamos a que se cargue hunspell
+(setq ispell-really-hunspell t)
+(setq ispell-program-name "hunspell")
+(setq ispell-local-dictionary "es_ANY")
+(setq ispell-local-dictionary-alist '(("es_ANY"
+                                       "[[:alpha:]]"
+                                       "[^[:alpha:]]"
+                                       "[']"
+                                       nil
+                                       nil
+                                       nil
+                                       utf-8)))
+
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
@@ -656,11 +666,6 @@ solamente carga el modo para el primer archivo."
 ;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
 
-;; -----
-;; Scala
-;; -----
-
-
 ;; ------------------------------------
 ;; Escritura: Org-mode, MarkDown, Latex
 ;; ------------------------------------
@@ -668,7 +673,7 @@ solamente carga el modo para el primer archivo."
 (add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
-		 (variable-pitch-mode 1)))
+                 (variable-pitch-mode 1)))
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . light))
@@ -684,7 +689,7 @@ solamente carga el modo para el primer archivo."
 (setq org-bullets-bullet-list '("◉" "○"))
 (setq org-fontify-whole-heading-line t)
 (add-hook 'org-mode-hook
-          (lambda () 
+          (lambda ()
             (org-bullets-mode 1)
             (org-indent-mode t)))
 
@@ -692,7 +697,7 @@ solamente carga el modo para el primer archivo."
 ;; Markdown
 ;; --------
 (use-package markdown-mode
-	     :ensure t)
+             :ensure t)
 
 ;; -----
 ;; LaTex

@@ -1,7 +1,11 @@
 (require 'org)
 (org-babel-load-file
- (expand-file-name "emacs-init-org.org"
-                   user-emacs-directory))
+ (if (eq system-type 'darwin)
+     (expand-file-name "macos-init.org" user-emacs-directory)
+   (expand-file-name "linux-init.org" user-emacs-directory)))
+;; (expand-file-name "emacs-init-org.org"
+                   ;; user-emacs-directory))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
