@@ -18,6 +18,8 @@
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.local/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
+
+(setq exec-path (append exec-path '("~/.nvm/versions/node/v13.6.0/bin")))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/home/nando/.local/bin")))
 (setq exec-path (append exec-path '("/home/nando/.sdkman/candidates/sbt/current/bin")))
@@ -141,6 +143,8 @@
 ;; Scroll suave con el ratón
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
+(setq global-hl-line-mode t)
+
 (add-hook 'dired-mode-hook
           (lambda ()
             (dired-hide-details-mode 1)))
@@ -185,6 +189,7 @@
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
 (define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f7] 'neotree-toggle)
 (define-key global-map [f8] 'align-regexp)
 (define-key global-map [f9] 'sort-lines)
 (define-key global-map [f12] 'global-linum-mode)
@@ -237,6 +242,7 @@
 ;; (setq whitespace-style '(face lines-tail))
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
 ;;(setq-default indicate-empty-lines t)
+
 ;; -------------------
 ;; variables Globlales
 ;; -------------------
@@ -351,6 +357,13 @@
   (setq projectile-indexing-method 'alien)
   (setq projectile-switch-project-action #'projectile-dired)
   (projectile-mode +1))
+
+;; -------
+;; neotree
+;; -------
+(require 'neotree)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
 
 ;; --------
 ;; treemacs
@@ -527,25 +540,9 @@
 ;; -----
 ;; C CPP
 ;; -----
-;; TODO: C me está usando un completado y errores muy buenos... y no recuero qué paquete instalé. Investigarlo.
-;; (setq-default c-basic-offset 4)
 (add-hook 'c-mode '(enable-tabs 4))
 (require 'ccls)
 (setq ccls-executable "/usr/bin/ccls")
-;; (use-package cc-mode
-;;   :config
-;;   ;; Available C style:
-;;   ;; "gnu": The default style for GNU projects
-;;   ;; "k&r": What Kernighan and Ritchie, the authors of C used in their book
-;;   ;; "bsd": What BSD developers use, aka "Allman style" after Eric Allman.
-;;   ;; "whitesmith": Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-;;   ;; "stroustrup": What Stroustrup, the author of C++ used in his book
-;;   ;; "ellemtel": Popular C++ coding standards as defined by "Programming in C++, Rules and Recommendations," Erik Nyquist and Mats Henricson, Ellemtel
-;;   ;; "linux": What the Linux developers use for kernel development
-;;   ;; "python": What Python developers use for extension modules
-;;   ;; "java": The default style for java-mode (see below)
-;;   ;; "user": When you want to define your own style
-;;   (setq c-default-style "linux"))
 
 ;; ----------
 ;; Typescript
@@ -761,7 +758,7 @@ solamente carga el modo para el primer archivo."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (neotree monokai-theme ox-gfm vue-mode dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
+    (all-the-icons neotree monokai-theme ox-gfm vue-mode dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
  '(sublimity-mode t)
  '(tool-bar-mode nil)
