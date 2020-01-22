@@ -1,31 +1,66 @@
-;;; package --- Summary
+* General Configuration
+** When i don use Emacs
+I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
+Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
+And, finally but maybe the most important thing, in the future i’m pretty sure i will make the final transition to /VSCode/. I don't love it like i do with /Emacs/ and/or /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, even with a 4th gen i7 laptop with 16GB (it should be enough  althoug it is 6 years old), but its continuous evolution and improvement is hard to be forgotten, and from time to time i give it a new chance.
 
+Next i put when i use and where i don't use /Emacs/, and which alternatives i use for coding in those languages/frameworks:
 
+#+begin_src
+Using Emacs
++ At work
+    - Vainilla JS Web development
+    - Angular
+    - Vue
+    ‐ PHP
+    – Python
+    - Org-mode
++ At home / hobby
+    - Clojure
+    - C (debugging with Visual Studio Code)
+    - Web/WebApps development
+#+end_src
 
+#+begin_src
+Don’t using it at all
++ Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
++ Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
++ Android        -> AndroidStudio, either for Kotlin and Java
++ iOS            -> only tried it for educational purpose, XCode obviously
++ Flutter        -> only tried it for educational purpose, VSCode
+#+end_src
 
-;;; Code:
-(package-initialize)
+I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
+** Manual installation
+Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
++ ~crux~
++ ~spaceline~
++ ~org-bullets~
++ ~spaceline~
+** GC size increment to speed up startup
+Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
+#+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold 10000000)
+#+END_SRC
 
+** Personal info
+#+BEGIN_SRC emacs-lisp
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
+#+END_SRC
 
-;; Incluyo en el PATH tanto donde está el jdk, como donde miniconda, para que
-;; pueda encontrar los paquetes allí instalados.
-;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/java/current/bin"))
-;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/miniconda3/bin"))
-;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/scala/current/bin"))
-;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.local/bin"))
-;; (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/sbt/current/bin"))
-
+** PATH definition
+Here we set path values for ~Miniconda~ and whatever other package system we use. Formerly i used ~SDKman~ in /MacOS/, now /brew/ is enough for me.
+#+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '("~/.nvm/versions/node/v13.6.0/bin")))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/home/nando/.local/bin")))
-;; (setq exec-path (append exec-path '("/home/nando/.sdkman/candidates/sbt/current/bin")))
+#+END_SRC
 
-;; Repositorios donde buscar paquetes.
-(defvar gnu '("gnu" . "https://elpa.gnu.org/packages/"))
+** Repositories and mirrors
+#+BEGIN_SRC emacs-lisp
+(defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
@@ -34,36 +69,16 @@
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
 (add-to-list 'package-archives org-elpa t)
-
 (package-initialize)
-
 (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
+#+END_SRC
+** Custom functions
 
-;; Para evitar problemas a la hora de poner acentos y comillas cuando trabajamos con gui,
-;; solo me pasa en ElementaryOS
-(require 'iso-transl)
-
-;; ---------
-;; FUNCIONES
-;; ---------
-;; (defun packages-install (&rest packages)
-;;   "Function to install those PACKAGES which aren't."
-;;   (message "running packages-install")
-;;   (mapc (lambda (package)
-;;           (let ((name (car package))
-;;                 (repo (cdr package)))
-;;             (when (not (package-installed-p name))
-;;               (let ((package-archives (list repo)))
-;;                 (package-initialize)
-;;                 (package-install name)))))
-;;         packages)
-;;   (package-initialize)
-;;   (delete-other-windows))
-
-(defun spell-buffer-spanish ()
+#+BEGIN_SRC emacs-lisp
+ (defun spell-buffer-spanish ()
   "Buffer in spanish."
   (interactive)
   (ispell-change-dictionary "es_ANY")
@@ -97,14 +112,6 @@
   (setq indent-tabs-mode t)
   (setq tab-width n))
 
-;; (defun init--install-packages ()
-;;   "Instalación de paquetes no instalados."
-;;   (message "Lets install some packages")
-;;   (packages-install
-;;    ;; Since use-package this is the only entry here
-;;    ;; ALWAYS try to use use-package!
-;;    (cons 'use-package melpa-stable)))
-
 (defun kill-other-buffers ()
   "Para eliminar el resto de buffers salvo el activo."
   (interactive)
@@ -135,10 +142,9 @@
   (interactive "p")
   (move-line (if (null n) 1 n)))
 
-;; --------------------
-;; CONFIGURACIÓN GLOBAL
-;; --------------------
-;; (desktop-save-mode 1)
+#+END_SRC
+** Global Configuration
+#+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
@@ -162,77 +168,10 @@
 (remove-hook 'eshell-output-filter-functions
              'eshell-postoutput-scroll-to-bottom)
 ;; Para evitar problemas con MarkDown
-;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; -----------
-;; KEYBINDINGS
-;; -----------
-(global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
-(global-set-key (kbd "C-x C-b") 'buffer-menu)
-(global-set-key (kbd "C-S-k") 'kill-whole-line)
-(global-set-key (kbd "C-S-j") 'join-line)
-(global-set-key (kbd "C-x f") 'flycheck-list-errors)
-(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
-(global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
-(global-set-key (kbd "C-.") #'other-window)
-(global-set-key (kbd "C-,") (lambda ()
-                                (interactive)
-                                (other-window -1))) ;; back one
-(global-set-key (kbd "C-q") 'comment-line)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-;; Multiple-cursors
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
-(global-set-key (kbd "M-<up>") 'move-line-up)
-(global-set-key (kbd "M-<down>") 'move-line-down)
-;; Undo y Redo
-;; (global-unset-key "C-z")
-(global-set-key (kbd "C-z") 'advertised-undo)
-(defalias 'redo 'undo-tree-redo)
-(global-set-key (kbd "C-S-z") 'redo)
-(define-key global-map [f4] 'toggle-truncate-lines)
-(define-key global-map [f5] 'tool-bar-mode)
-(define-key global-map [f6] 'menu-bar-mode)
-(define-key global-map [f7] 'neotree-toggle)
-(define-key global-map [f8] 'align-regexp)
-(define-key global-map [f9] 'sort-lines)
-(define-key global-map [f12] 'global-linum-mode)
-
-;; Atajos para ivy y todo lo relacionado.
-(global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-
-;; crux
-(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
-(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
-(global-set-key [(shift return)] #'crux-smart-open-line)
-(global-set-key [(control shift return)] #'crux-smart-open-line-above)
-(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
-(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
-(global-set-key (kbd "s-r") #'crux-recentf-find-file)
-(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
-
-;; visual-regexp
-(define-key global-map (kbd "C-c r") 'vr/replace)
-(define-key global-map (kbd "C-c q") 'vr/query-replace)
-(define-key global-map (kbd "C-c m") 'vr/mc-mark)
-
-;; ------------------
-;; Theme
-;; ------------------
-
-;; Ponemos la apariencia de spacemacs. Tienen que ir en este orden,
-;; primero spaceline y luego spacemacs, sino se lían y el aspecto queda
-;; horrible.
+#+END_SRC
+* Packages
+** GUI Modifications
+#+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :demand t
   :init
@@ -240,25 +179,34 @@
   :config
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
+#+END_SRC
 
-(use-package spacemacs-theme
-  :defer t
-  ;; :ensure t
-  :init
-  (load-theme 'spacemacs-light t))
-(global-prettify-symbols-mode 1)
+Editor
+#+BEGIN_SRC emacs-lisp
+(setq-default show-trailing-whitespace t)
+(setq-default indent-tabs-mode nil)
+#+END_SRC
+** Grammar and Syntaxis for Human Languages
+*** Hunspell
+#+BEGIN_SRC emacs-lisp
+(setq ispell-really-hunspell t)
+(setq ispell-program-name "hunspell")
+(setq ispell-local-dictionary "es")
+(setq ispell-local-dictionary-alist
+      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
-;; ------
-;; ispell
-;; ------
 (use-package ispell
   :config
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t)
+  (when (executable-find "hunspell")
+    (setq-default ispell-program-name "hunspell")
+    (setq ispell-really-hunspell t))
   :bind (("C-c s" . spell-buffer-spanish)
          ("C-c e" . spell-buffer-english)))
+#+END_SRC
 
-;; Para gramática
+*** Grammar with language tool.
+We have to download the executable for our OS.
+#+BEGIN_SRC emacs-lisp
 (setq langtool-java-classpath "/home/nando/Software/LanguageTool-4.6-stable/*"
       langtool-mother-tongue "es"
       langtool-default-language "es"
@@ -266,17 +214,16 @@
                                 ;; "EN_UNPAIRED_BRACKETS"
                                 ;; "COMMA_PARENTHESIS_WHITESPACE"
                                 ;; "EN_QUOTES")
-      )
-
-;; ---
-;; Ivy
-;; ---
-
-;; Ivy está formado por:
-;;    - ivy: un mecanismo genérico de completado de emacs
-;;    - counsel: varios comandos habituales de emacs mejorados con ivy
-;;    - swiper: un isearch mejorado con ivy
-
+)
+#+END_SRC
+** Projects and Search  Modes
+~Ivy~ and ~Projectile~ are both a must in we want that coding in Emacs would be fast.
+*** Ivy
+Ivy está formado por:
+    - ivy: un mecanismo genérico de completado de emacs
+    - counsel: varios comandos habituales de emacs mejorados con ivy
+    - swiper: un isearch mejorado con ivy
+#+BEGIN_SRC emacs-lisp
 ;; Configuración a partir de daemons.it, quitándole algunas cosas que no uso
 ;; actualmente (ya veré en un futuro) y modificando otras.
 (unless (require 'ivy nil 'noerror)
@@ -317,10 +264,10 @@
 
 (use-package swiper
   :ensure t)
+  #+END_SRC
+*** Projectile
 
-;; ----------
-;; Projectile
-;; ----------
+#+BEGIN_SRC emacs-lisp
 (use-package projectile
   :ensure t
   :pin melpa-stable
@@ -334,10 +281,10 @@
   (setq projectile-indexing-method 'alien)
   (setq projectile-switch-project-action #'projectile-dired)
   (projectile-mode +1))
-
-;; --------
-;; treemacs
-;; --------
+#+END_SRC
+** Project Navigation
+=Treemacs= is so versatile and powerful. It fits very well with projectile and allows to create folders and files so easily i use it a lot instead of dired. But is heavy and it always open file in first buffer so i use =neotree= too.
+#+BEGIN_SRC emacs-lisp
 (use-package treemacs
   :ensure t
   :defer t
@@ -377,54 +324,17 @@
   :after treemacs dired
   :ensure t
   :config (treemacs-icons-dired-mode))
+#+END_SRC
 
-;; -------
-;; neotree
-;; -------
-;; Hay que instalar all-the-icons para tener el theme icons,
-;; y después sus fuentes con
-;; M-x all-the-icons-install-fonts
+Hay que instalar =all-the-icons= para tener el /theme icons/, y después sus fuentes con =M-x all-the-icons-install-fonts=.
+#+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
 (require 'neotree)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 (setq-default neo-show-hidden-files t)
-
-;; --------
-;; lsp-mode
-;; --------
-;; (use-package lsp-mode
-  ;; :commands lsp
-  ;; :hook (sh-mode . lsp))
-
-;; Integración con otros paquetes
-(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
-(use-package company-lsp :commands company-lsp)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-;; -------
-;; Company
-;; -------
-(use-package company
-  :defer 0.5
-  :delight
-  :custom
-  (company-begin-commands '(self-insert-command))
-  (company-idle-delay .1)
-  (company-minimum-prefix-length 2)
-  (company-show-numbers t)
-  (company-tooltip-align-annotations 't)
-  (global-company-mode t))
-
-;; -----
-;; Tramp
-;; -----
-;; (setq tramp-default-method "ssh")
-
-;; -----
-;; Otros
-;; -----
-;; crux -> useful functions from bbatsov
-
+#+END_SRC
+** Accesories
+#+BEGIN_SRC emacs-lisp
 ;; Visual-regexp, allow to see regexp substitution in real-time when typing
 (require 'visual-regexp)
 
@@ -487,36 +397,78 @@
             (lambda()
               (rainbow-delimiters-mode))))
 (global-highlight-parentheses-mode)
+#+END_SRC
 
-(use-package yasnippet
+** Writing code and text
+*** LSP
+TODO probar a ver la configuración de macos
+#+BEGIN_SRC emacs-lisp
+;; original de linux
+;;(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
+;;(use-package company-lsp :commands company-lsp)
+;;(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; De mac, probar a ver
+(use-package lsp-ui
+  :requires lsp-mode flycheck
+  :commands lsp-ui-mode
   :ensure t
   :config
-  (yas-global-mode 1)
-  (add-to-list 'yas-snippet-dirs (concat init-dir "snippets")))
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-use-childframe t
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-include-signature t
+        lsp-ui-sideline-enable nil
+        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-list-position 'right
+        lsp-ui-flycheck-live-reporting t
+        lsp-ui-peek-enable t
+        lsp-ui-peek-list-width 60
+        lsp-ui-peek-peek-height 25)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)) ; flycheck y tips en popups
+(use-package lsp-treemacs 
+:commands lsp-treemacs-errors-list 
+:ensure t)
 
-;; ====================================
-;; DEFINICIONES ESPECÍFICAS PARA CÓDIGO
-;; ====================================
+(use-package company-lsp
+  :commands company-lsp
+  :config (push 'company-lsp company-backends))
+#+END_SRC
 
-;; ----
-;; Bash
-;; ----1
-;; Está definido ya en lsp-mode.
+*** Company
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :defer 0.5
+  :delight
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+#+END_SRC
 
-;; -----
-;; C CPP
-;; -----
-(add-hook 'c-mode '(enable-tabs 4))
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+#+END_SRC
+*** C/CPP
+#+BEGIN_SRC emacs-lisp
 (require 'ccls)
 (setq ccls-executable "/usr/bin/ccls")
+#+END_SRC
 
-;; ----------
-;; Typescript
-;; ----------
+*** TypeScript/JavaScript
+~Tide~ is for ~TypeScript~ and ~Angular~,  but it works for /JavaScript/ too, and its configuration is so easy i don't won't to test anything else.
+#+BEGIN_SRC emacs-lisp
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
-No uso use-package, porque si lo hago así,
-solamente carga el modo para el primer archivo."
+  No uso use-package, porque si lo hago así,
+  solamente carga el modo para el primer archivo."
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
@@ -530,10 +482,10 @@ solamente carga el modo para el primer archivo."
 (add-hook 'typescript-mode 'electric-pair-mode)
 (add-hook 'typescript-mode '(disable-tabs 2))
 (add-hook 'js-mode-hook #'setup-tide-mode)
+#+END_SRC
 
-;; ---
-;; PHP
-;; ---
+*** PHP
+#+BEGIN_SRC emacs-lisp
 (use-package php-mode
   :mode
   (("\\.php\\'" . php-mode))
@@ -564,29 +516,22 @@ solamente carga el modo para el primer archivo."
                )
             )
   )
+#+END_SRC
 
-;; --------
-;; web-mode/emmet
-;; --------
+*** Web
+**** Emmet
+~Emmet~ mode, for ~html~, ~php~ and ~css-ish~ files.
+#+BEGIN_SRC emacs-lisp
 (require 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+(add-hook 'web-mode-hook 'emmet-mode)
+#+END_SRC
 
-;; Forzamos a que se cargue hunspell
-(setq ispell-really-hunspell t)
-(setq ispell-program-name "hunspell")
-(setq ispell-local-dictionary "es_ANY")
-(setq ispell-local-dictionary-alist '(("es_ANY"
-                                       "[[:alpha:]]"
-                                       "[^[:alpha:]]"
-                                       "[']"
-                                       nil
-                                       nil
-                                       nil
-                                       utf-8)))
-
+**** Web-mode
+#+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.phtml?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
@@ -600,26 +545,16 @@ solamente carga el modo para el primer archivo."
 (add-hook 'web-mode-hook 'custom-web-mode-hook)
 (setq web-mode-enable-current-column-highlight t)
 (setq web-mode-enable-current-element-highlight t)
+#+END_SRC
 
-;; ---------
-;; Escritura
-;; ---------
-;; (typo-global-mode 1)
-;; (add-hook 'text-mode-hook 'typo-mode)
-(add-hook 'text-mode-hook
-               (lambda ()
-                 (variable-pitch-mode 1)))
+**** Vue-mode
+For vue, but actually i use VSCode for code it.
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.vue?\\'" . vue-mode))
+#+END_SRC
 
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . light))
-
-(set-face-attribute 'default nil :family "Source Code Pro")
-(set-face-attribute 'fixed-pitch nil :family "Source Code Pro")
-(set-face-attribute 'variable-pitch nil :family "Go Mono")
-
-;; ------------------------
-;; Clojure (y algo de Lisp)
-;; ------------------------
+*** Clojure
+#+BEGIN_SRC emacs-lisp
 (use-package clojure-snippets
   :ensure t)
 
@@ -649,9 +584,10 @@ solamente carga el modo para el primer archivo."
   (cljr-add-keybindings-with-prefix "C-c C-m")
   (setq cljr-warn-on-eval nil))
 
-;; ------
-;; Python
-;; ------
+#+END_SRC
+
+*** Python
+#+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t)
 (elpy-enable)
@@ -666,11 +602,11 @@ solamente carga el modo para el primer archivo."
 ;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
 
-;; ------------------------------------
-;; Escritura: Org-mode, MarkDown, Latex
-;; ------------------------------------
+#+END_SRC
 
-(add-hook 'text-mode-hook 'typo-mode)
+*** Org, Latex, Markdown
+#+BEGIN_SRC emacs-lisp
+;;(add-hook 'text-mode-hook 'typo-mode)
 (add-hook 'text-mode-hook
                (lambda ()
                  (variable-pitch-mode 1)))
@@ -708,93 +644,66 @@ solamente carga el modo para el primer archivo."
   :config
   (setq TeX-auto-save t))
 
-;; ------------------------------------------
-;; Configuración incluida por emacs, no tocar
-;; ------------------------------------------
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(company-begin-commands (quote (self-insert-command)))
- '(company-idle-delay 0.1)
- '(company-minimum-prefix-length 2)
- '(company-quickhelp-color-background "#4F4F4F")
- '(company-quickhelp-color-foreground "#DCDCCC")
- '(company-show-numbers t)
- '(company-tooltip-align-annotations t)
- '(counsel-projectile-mode t nil (counsel-projectile))
- '(custom-enabled-themes (quote (monokai)))
- '(custom-safe-themes
-   (quote
-    ("1c7eb2c55f9b9af59ba96e9c803ffa2a28e63edd43bcbb775397a4b9ef0457d6" "a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "97965ccdac20cae22c5658c282544892959dc541af3e9ef8857dbf22eb70e82b" "1a1cdd9b407ceb299b73e4afd1b63d01bbf2e056ec47a9d95901f4198a0d2428" "9129c2759b8ba8e8396fe92535449de3e7ba61fd34569a488dd64e80f5041c9f" "c82d24bfba431e8104219bfd8e90d47f1ad6b80a504a7900cbee002a8f04392f" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "58c6711a3b568437bab07a30385d34aacf64156cc5137ea20e799984f4227265" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "bf390ecb203806cbe351b966a88fc3036f3ff68cd2547db6ee3676e87327b311" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "f92f181467b003a06c3aa12047428682ba5abe4b45e0fca9518496b9403cde6f" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
- '(dumb-jump-mode t)
- '(elpy-syntax-check-command "pylint")
- '(fci-rule-color "#383838")
- '(global-company-mode t)
- '(global-linum-mode nil)
- '(hl-todo-keyword-faces
-   (quote
-    (("TODO" . "#dc752f")
-     ("NEXT" . "#dc752f")
-     ("THEM" . "#2d9574")
-     ("PROG" . "#3a81c3")
-     ("OKAY" . "#3a81c3")
-     ("DONT" . "#f2241f")
-     ("FAIL" . "#f2241f")
-     ("DONE" . "#42ae2c")
-     ("NOTE" . "#b1951d")
-     ("KLUDGE" . "#b1951d")
-     ("HACK" . "#b1951d")
-     ("TEMP" . "#b1951d")
-     ("FIXME" . "#dc752f")
-     ("XXX+" . "#dc752f")
-     ("\\?\\?\\?+" . "#dc752f"))))
- '(line-number-mode nil)
- '(line-spacing 0.2)
- '(linum-format " %7i ")
- '(menu-bar-mode nil)
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
- '(package-selected-packages
-   (quote
-    (all-the-icons neotree monokai-theme ox-gfm vue-mode dashboard highlight-symbol visual-regexp crux sr-speedbar typo org-bullets espresso-theme auctex emmet-mode centered-window company-lsp lsp-ui lsp-mode php-mode counsel-projectile swiper counsel undo-tree dumb-jump web-mode ensime tide projectile spacemacs-theme zenburn-theme nimbus-theme flycheck-joker kibit-helper spaceline py-autopep8 4clojure expand-region centered-window-mode flycheck clj-refactor cider clojure-snippets yasnippet rainbow-delimiters highlight-parentheses paredit-everywhere paredit markdown-mode which-key use-package)))
- '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
- '(sublimity-mode t)
- '(tool-bar-mode nil)
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3"))
+#+END_SRC
+* Keybindings
 
-(provide 'init)
-;;; init.el ends here
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 98 :width normal)))))
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+(global-set-key (kbd "C-S-k") 'kill-whole-line)
+(global-set-key (kbd "C-S-j") 'join-line)
+(global-set-key (kbd "C-x f") 'flycheck-list-errors)
+(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+(global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
+(global-set-key (kbd "C-.") #'other-window)
+(global-set-key (kbd "C-,") (lambda ()
+                                (interactive)
+                                (other-window -1))) ;; back one
+(global-set-key (kbd "C-q") 'comment-line)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+;; Multiple-cursors
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+(global-set-key (kbd "M-<up>") 'move-line-up)
+(global-set-key (kbd "M-<down>") 'move-line-down)
+;; Undo y Redo
+;; (global-unset-key "C-z")
+(global-set-key (kbd "C-z") 'advertised-undo)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-z") 'redo)
+(define-key global-map [f4] 'toggle-truncate-lines)
+(define-key global-map [f5] 'tool-bar-mode)
+(define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f7] 'neotree-toggle)
+(define-key global-map [f8] 'align-regexp)
+(define-key global-map [f9] 'sort-lines)
+(define-key global-map [f12] 'global-linum-mode)
+
+;; Atajos para ivy y todo lo relacionado.
+(global-set-key "\C-s" 'swiper) ; de búsqueda normal a swiper
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+
+;; crux
+(global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+(global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
+(global-set-key [(shift return)] #'crux-smart-open-line)
+(global-set-key [(control shift return)] #'crux-smart-open-line-above)
+(global-set-key (kbd "C-x 4 t") #'crux-transpose-windows)
+(global-set-key (kbd "C-c d") #'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c i") #'crux-find-user-init-file)
+(global-set-key (kbd "s-r") #'crux-recentf-find-file)
+(global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
+
+;; visual-regexp
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+(define-key global-map (kbd "C-c m") 'vr/mc-mark)
+#+END_SRC
