@@ -49,6 +49,7 @@ export NVM_DIR="$HOME/.nvm"
 function gac {
     [[ $# != 1 ]] && echo 'Hay que pasarle el mensaje del commit a la función.' && return
 
+    git status
     git add .
     git commit -m $1
 
