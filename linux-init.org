@@ -34,9 +34,11 @@ I know, to many technologies, i'm not focused... is not my fault, is this fuckin
 ** Manual installation
 Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
 + ~crux~
++ ~ac-php~
 + ~spaceline~
 + ~org-bullets~
-+ ~spaceline~
++ ~spacetheme~
++ ~monokai~
 ** GC size increment to speed up startup
 Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
 #+BEGIN_SRC emacs-lisp
@@ -371,11 +373,6 @@ Hay que instalar =all-the-icons= para tener el /theme icons/, y después sus fue
   :ensure t
   :config
   (which-key-mode))
-
-(use-package flycheck
-  :ensure t
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package expand-region
   :ensure t)
