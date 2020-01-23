@@ -1,60 +1,9 @@
-
-* General configuration
-** When i don't use Emacs
-I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
-Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
-And, finally but maybe the most important thing, in the future maybe, only maybe, i will make final transition to /VSCode/. I don't love it like i do with /Emacs/ and /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, but its continuous evolution and improvement is hard to be forgotten.
-
-Next i put when i use and where i don't use /Emacs/, and which alternatives i use for coding in those languages/frameworks:
-
-#+begin_src
-Using Emacs
-+ At work
-    - Vainilla JS Web development
-    - Angular
-    - Vue
-    ‐ PHP
-    – Python
-    - Org-mode
-+ At home / hobby
-    - Clojure
-    - C (debugging with Visual Studio Code)
-#+end_src
-
-#+begin_src
-Don’t using it at all
-+ Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
-+ Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
-+ Android        -> AndroidStudio, either for Kotlin and Java
-+ iOS            -> only tried it for educational purpose, XCode obviously
-+ Flutter        -> only tried it for educational purpose, VSCode
-#+end_src
-
-I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
-
-** Manual installation
-Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
-+ ~crux~
-+ ~spaceline~
-+ ~org-bullets~
-+ ~spaceline~
-
-** GC size increment to speed up startup.
-Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
-#+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold 10000000)
-#+END_SRC
 
-** Personal info.
-#+BEGIN_SRC emacs-lisp
 (setq user-full-name "Fernando López")
 (setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
-#+END_SRC
 
-** PATH definition
-Here we set path values for ~Miniconda~ and whatever other package system we use. Formerly i used ~SDKman~ in /MacOS/, now /brew/ is enough for me.
-#+BEGIN_SRC emacs-lisp
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/miniconda3/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/.local/bin"))
@@ -63,10 +12,7 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
 (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ;; Esto me ha hecho que funcione el linting en elpy
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (setq exec-path (append exec-path '("/Users/nando/bin")))
-#+END_SRC
 
-** Repositories and mirros.
-#+BEGIN_SRC emacs-lisp
 (defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
@@ -81,11 +27,7 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
-#+END_SRC
 
-** Custom functions
-*** Spelling errors in spanish and / or english.
-#+BEGIN_SRC emacs-lisp
 (defun spell-buffer-spanish ()
   "Buffer in spanish."
   (interactive)
@@ -97,11 +39,7 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
   (interactive)
   (ispell-change-dictionary "en_US")
   (flyspell-buffer))
-#+END_SRC
 
-*** Functions to manage buffers
-Closing every other buffers, close all and close current without asking.
-#+BEGIN_SRC emacs-lisp
 (defun close-all-buffers ()
   "Para eliminar todos los buffers."
   (interactive)
@@ -118,11 +56,7 @@ Closing every other buffers, close all and close current without asking.
   "Para matar el buffer actual."
   (interactive)
   (kill-buffer (current-buffer)))
-#+END_SRC
 
-
-*** Line navigation.
-#+BEGIN_SRC emacs-lisp
 (defun move-line (n)
   "Move the current line up or down by N lines."
   (interactive "p")
@@ -145,10 +79,7 @@ Closing every other buffers, close all and close current without asking.
   "Move the current line down by N lines."
   (interactive "p")
   (move-line (if (null n) 1 n)))
-#+END_SRC
 
-*** To avoid tramp to stuck at beginning.
-#+BEGIN_SRC emacs-lisp
 (defun ido-remove-tramp-from-cache nil
     "Remove any TRAMP entries from `ido-dir-file-cache'.
     This stops tramp from trying to connect to remote hosts on emacs startup,
@@ -159,18 +90,11 @@ Closing every other buffers, close all and close current without asking.
 	   (lambda (x)
 	     (string-match "/\\(rsh\\|ssh\\|telnet\\|su\\|sudo\\|sshx\\|krlogin\\|ksu\\|rcp\\|scp\\|rsync\\|scpx\\|fcp\\|nc\\|ftp\\|smb\\|adb\\):" (car x)))
 	   ido-dir-file-cache)))
-#+END_SRC
 
-** Global configuration
-Hide permissions and owners to make file lists less noisy (from Xah Lee’s blog)
-#+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook
           (lambda ()
             (dired-hide-details-mode 1)))
-#+END_SRC
 
-Some common clean setup configuration.
-#+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq make-backup-files nil)
 (setq-default indent-tabs-mode nil) ;; fuera tabs
@@ -179,31 +103,22 @@ Some common clean setup configuration.
 (setq mouse-wheel-progressive-speed nil)
 (global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
 (global-hl-line-mode +1)
-#+END_SRC
 
-** GUI modifications
-#+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
 (set-face-attribute 'default nil :height 120) ;; El valor va en 1/10pt, así que 100 será 10pt...
 (setq visible-bell nil)
 (tool-bar-mode -1)
 (menu-bar-mode 1)
 (if window-system (scroll-bar-mode -1))
-#+END_SRC
 
-Spacemacs looks. They should be in that order for working properly.
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package spaceline
-    ;; :demand t
-    ;; :init
-    ;; (setq powerline-default-separator 'arrow-fade)
-    ;; :config
-    ;; (require 'spaceline-config)
-    ;; (spaceline-spacemacs-theme))
-#+END_SRC
+;; (use-package spaceline
+  ;; :demand t
+  ;; :init
+  ;; (setq powerline-default-separator 'arrow-fade)
+  ;; :config
+  ;; (require 'spaceline-config)
+  ;; (spaceline-spacemacs-theme))
 
-Doom-themes
-#+BEGIN_SRC emacs-lisp
 (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
@@ -216,17 +131,10 @@ Doom-themes
 (doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
 (require 'doom-modeline)
 (doom-modeline-mode 1)
-#+END_SRC
 
-Editor
-#+BEGIN_SRC emacs-lisp
 (setq-default show-trailing-whitespace t)
 (setq-default indent-tabs-mode nil)
-#+END_SRC
 
-* Keybindings
-There are more keybindings in other places. I will try in the future to put them all in this section.
-#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
@@ -266,12 +174,7 @@ There are more keybindings in other places. I will try in the future to put them
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
-#+END_SRC
 
-* Packages
-** Grammar and syntaxis for human languages
-*** Hunspell
-#+BEGIN_SRC emacs-lisp
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "es")
@@ -285,11 +188,7 @@ There are more keybindings in other places. I will try in the future to put them
     (setq ispell-really-hunspell t))
   :bind (("C-c s" . spell-buffer-spanish)
          ("C-c e" . spell-buffer-english)))
-#+END_SRC
 
-*** Grammar with language tool.
-We have to download the executable for our OS.
-#+BEGIN_SRC emacs-lisp
 (setq langtool-java-classpath "/usr/loca/bin/languagetool:/Users/nando/Downloads/LanguageTool-4.6-stable/*"
       langtool-mother-tongue "es"
       langtool-default-language "es"
@@ -298,18 +197,7 @@ We have to download the executable for our OS.
                                 ;; "COMMA_PARENTHESIS_WHITESPACE"
                                 ;; "EN_QUOTES")
 )
-#+END_SRC
 
-** Projects and search and autocomplete mode.
-~Ivy~ and ~Projectile~ are both a must in we want that coding in Emacs would be fast.
-*** Ivy
-Ivy has three components:
-+ ivy     : a generic autocomplete mechanism
-+ counsel : some useful emacs commands improved by ivy
-+ swiper  : isearch also improved with ivy
-
-Configuration based on that found at /daemons.it/, without some stuffs that i don't use.
-#+BEGIN_SRC emacs-lisp
 (unless (require 'ivy nil 'noerror)
   (sleep-for 5))
 
@@ -345,11 +233,7 @@ Configuration based on that found at /daemons.it/, without some stuffs that i do
 
 (use-package swiper
   :ensure t)
-#+END_SRC
 
-*** Projectile
-For project management. Shortcuts are defined here.
-#+BEGIN_SRC emacs-lisp
 (use-package projectile
   :ensure t
   :pin melpa-stable
@@ -357,12 +241,7 @@ For project management. Shortcuts are defined here.
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode +1))
-#+END_SRC
 
-** Accesories
-*** Treemacs
-To show sidebuffer with projects either from projectile or git. We can use speedbar too.
-#+BEGIN_SRC emacs-lisp
 (use-package treemacs
   :ensure t
   :defer t
@@ -396,19 +275,12 @@ To show sidebuffer with projects either from projectile or git. We can use speed
 (use-package treemacs-projectile
   :after treemacs projectile
   :ensure t)
-#+END_SRC
 
-To use treemacs icons in dired mode.
-#+BEGIN_SRC emacs-lisp
 (use-package treemacs-icons-dired
   :after treemacs dired
   :ensure t
   :config (treemacs-icons-dired-mode))
-#+END_SRC
 
-*** Crux
-Very useful functions from bbatsov
-#+BEGIN_SRC emacs-lisp
 (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
 (global-set-key (kbd "C-c n") #'crux-cleanup-buffer-or-region)
 (global-set-key [(shift return)] #'crux-smart-open-line)
@@ -418,34 +290,20 @@ Very useful functions from bbatsov
 (global-set-key (kbd "C-c I") #'crux-find-user-init-file)
 (global-set-key (kbd "s-r") #'crux-recentf-find-file)
 (global-set-key (kbd "C-<backspace>") #'crux-kill-line-backwards)
-#+END_SRC
 
-*** Speedbuffer
-Sidebar. Simpler than treemacs, very useful with frames/folders views.
-#+BEGIN_SRC emacs-lisp
 (require 'sr-speedbar)
-#+END_SRC
 
-*** Visual-regexp
-Allow to see regexp substitution in real-time when typing
-#+BEGIN_SRC emacs-lisp
 (require 'visual-regexp)
 (define-key global-map (kbd "C-c r") 'vr/replace)
 (define-key global-map (kbd "C-c q") 'vr/query-replace)
 ;; if you use multiple-cursors, this is for you:
 (define-key global-map (kbd "C-c m") 'vr/mc-mark)
-#+END_SRC
 
-*** Which-key
-#+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
-#+END_SRC
 
-*** A lot of small packages, split them and make some explanations
-#+BEGIN_SRC emacs-lisp
 (use-package expand-region
   :ensure t)
 
@@ -473,12 +331,7 @@ Allow to see regexp substitution in real-time when typing
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (global-highlight-parentheses-mode)
-#+END_SRC
 
-** Writing code, text, etc.
-*** Company
-Completition package, almost for any language i use.
-#+BEGIN_SRC emacs-lisp
 (use-package company
   :defer 0.5
   :delight
@@ -489,20 +342,12 @@ Completition package, almost for any language i use.
   (company-show-numbers t)
   (company-tooltip-align-annotations 't)
   (global-company-mode t))
-#+END_SRC
 
-*** Flycheck
-Syntax control
-#+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
-#+END_SRC
 
-*** LSP-Mode
-To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
-#+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :ensure t
   :commands lsp
@@ -538,17 +383,10 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
 (use-package company-lsp
   :commands company-lsp
   :config (push 'company-lsp company-backends))
-#+END_SRC
 
-*** C/C++
-#+BEGIN_SRC emacs-lisp
 (require 'ccls)
 (setq ccls-executable "/usr/local/bin/ccls")
-#+END_SRC
 
-*** TypeScript/JavaScript
-~Tide~ is for ~TypeScript~ and ~Angular~,  but it works for /JavaScript/ too, and its configuration is so easy i don't won't to test anything else.
-#+BEGIN_SRC emacs-lisp
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
 No uso use-package, porque si lo hago así,
@@ -566,20 +404,12 @@ solamente carga el modo para el primer archivo."
 (add-hook 'typescript-mode 'electric-pair-mode)
 (add-hook 'typescript-mode '(disable-tabs 2))
 (add-hook 'js-mode-hook #'setup-tide-mode)
-#+END_SRC
 
-*** Web
-**** Emmet
-~Emmet~ mode, for ~html~, ~php~ and ~css-ish~ files.
-#+BEGIN_SRC emacs-lisp
 (require 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'web-mode-hook 'emmet-mode)
-#+END_SRC
 
-**** Web-mode
-#+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
@@ -594,16 +424,9 @@ solamente carga el modo para el primer archivo."
 (add-hook 'web-mode-hook 'custom-web-mode-hook)
 (setq web-mode-enable-current-column-highlight t)
 (setq web-mode-enable-current-element-highlight t)
-#+END_SRC
 
-**** Vue-mode
-For vue, but actually i use VSCode for code it.
-#+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . vue-mode))
-#+END_SRC
 
-*** Packages and config for write text in latex, markdown, org, etc
-#+BEGIN_SRC emacs-lisp
 (add-hook 'text-mode-hook
                (lambda ()
                  (variable-pitch-mode 1)))
@@ -626,11 +449,7 @@ For vue, but actually i use VSCode for code it.
 
 (use-package markdown-mode
   :ensure t)
-#+END_SRC
 
-*** Clojure
-Maybe my favorite programming language, even when i'm an absolute beginner and i only use it for educational reasons or toy projects.
-#+BEGIN_SRC emacs-lisp
 (use-package clojure-snippets
   :ensure t)
 (use-package cider
@@ -657,11 +476,7 @@ Maybe my favorite programming language, even when i'm an absolute beginner and i
                                  ))
   (cljr-add-keybindings-with-prefix "C-c C-m")
   (setq cljr-warn-on-eval nil))
-#+END_SRC
 
-*** Python
-For me, ~elpy~ is the best python package. I tried some others but they don't work so fine like this.
-#+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t)
 (elpy-enable)
@@ -675,4 +490,3 @@ For me, ~elpy~ is the best python package. I tried some others but they don't wo
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
-#+END_SRC
