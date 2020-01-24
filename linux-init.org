@@ -174,20 +174,31 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
 * Packages
 ** GUI Modifications
 #+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :demand t
-  :init
-  (setq powerline-default-separator 'arrow-fade)
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+  ;; (use-package spaceline
+    ;; :demand t
+    ;; :init
+    ;; (setq powerline-default-separator 'arrow-fade)
+    ;; :config
+    ;; (require 'spaceline-config)
+    ;; (spaceline-spacemacs-theme))
 #+END_SRC
 
-Editor
+Doom-themes
 #+BEGIN_SRC emacs-lisp
-(setq-default show-trailing-whitespace t)
-(setq-default indent-tabs-mode nil)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each
+;; theme may have their own settings.
+(load-theme 'doom-dark+ t)
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+;; Enable custom neotree theme
+(doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+(require 'doom-modeline)
+(doom-modeline-mode 1)
 #+END_SRC
+
 ** Grammar and Syntaxis for Human Languages
 *** Hunspell
 #+BEGIN_SRC emacs-lisp
