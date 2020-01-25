@@ -11,12 +11,12 @@
 (defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
+;;(defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa-stable t)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-(add-to-list 'package-archives org-elpa t)
+;;(add-to-list 'package-archives org-elpa t)
 (package-initialize)
 (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
@@ -111,16 +111,26 @@
              'eshell-postoutput-scroll-to-bottom)
 ;; Para evitar problemas con MarkDown
 
-(use-package spaceline
-  :demand t
-  :init
-  (setq powerline-default-separator 'arrow-fade)
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+;; (use-package spaceline
+  ;; :demand t
+  ;; :init
+  ;; (setq powerline-default-separator 'arrow-fade)
+  ;; :config
+  ;; (require 'spaceline-config)
+  ;; (spaceline-spacemacs-theme))
 
-(setq-default show-trailing-whitespace t)
-(setq-default indent-tabs-mode nil)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each
+;; theme may have their own settings.
+(load-theme 'doom-dark+ t)
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+;; Enable custom neotree theme
+(doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+(require 'doom-modeline)
+(doom-modeline-mode 1)
 
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
@@ -281,11 +291,6 @@
   :ensure t
   :config
   (which-key-mode))
-
-(use-package flycheck
-  :ensure t
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package expand-region
   :ensure t)
