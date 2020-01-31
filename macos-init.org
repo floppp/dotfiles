@@ -1,36 +1,4 @@
 * General configuration
-** When i don't use Emacs
-I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
-Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
-And, finally but maybe the most important thing, in the future maybe, only maybe, i will make final transition to /VSCode/. I don't love it like i do with /Emacs/ and /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, but its continuous evolution and improvement is hard to be forgotten.
-
-Next i put when i use and where i don't use /Emacs/, and which alternatives i use for coding in those languages/frameworks:
-
-#+begin_src
-Using Emacs
-+ At work
-    - Vainilla JS Web development
-    - Angular
-    - Vue
-    ‐ PHP
-    – Python
-    - Org-mode
-+ At home / hobby
-    - Clojure
-    - C (debugging with Visual Studio Code)
-#+end_src
-
-#+begin_src
-Don’t using it at all
-+ Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
-+ Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
-+ Android        -> AndroidStudio, either for Kotlin and Java
-+ iOS            -> only tried it for educational purpose, XCode obviously
-+ Flutter        -> only tried it for educational purpose, VSCode
-#+end_src
-
-I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
-
 ** Manual installation
 Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
 + ~crux~
@@ -224,51 +192,6 @@ Editor
 (setq-default show-trailing-whitespace t)
 (setq-default indent-tabs-mode nil)
 #+END_SRC
-
-* Keybindings
-There are more keybindings in other places. I will try in the future to put them all in this section.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
-(global-set-key (kbd "C-x C-b") 'buffer-menu)
-(global-set-key (kbd "C-S-k") 'kill-whole-line)
-(global-set-key (kbd "C-S-j") 'join-line)
-(global-set-key (kbd "C-x f") 'flycheck-list-errors)
-(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
-(global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
-(global-set-key (kbd "C-,") #'other-window)
-(global-set-key (kbd "C-.") (lambda ()
-                              (interactive)
-                              (other-window -1)))
-(global-set-key (kbd "C-q") 'comment-line)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-;; mc -> multiple-cursors
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
-(global-set-key (kbd "M-<up>") 'move-line-up)
-(global-set-key (kbd "M-<down>") 'move-line-down)
-;; undo and redo
-(global-set-key (kbd "C-z") 'advertised-undo)
-(defalias 'redo 'undo-tree-redo)
-(global-set-key (kbd "C-S-z") 'redo)
-(define-key global-map [f4] 'toggle-truncate-lines)
-(define-key global-map [f5] 'tool-bar-mode)
-(define-key global-map [f6] 'menu-bar-mode)
-(define-key global-map [f8] 'align-regexp)
-(define-key global-map [f9] 'sort-lines)
-(global-set-key (kbd "<f11>") 'global-linum-mode)
-;; ivy's shortcuts
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-#+END_SRC
-
 * Packages
 ** Grammar and syntaxis for human languages
 *** Hunspell
@@ -311,41 +234,44 @@ Ivy has three components:
 
 Configuration based on that found at /daemons.it/, without some stuffs that i don't use.
 #+BEGIN_SRC emacs-lisp
-(unless (require 'ivy nil 'noerror)
-  (sleep-for 5))
+  (unless (require 'ivy nil 'noerror)
+    (sleep-for 5))
 
-(use-package ivy
-  :init
-  (setq ivy-use-virtual-buffers t)     ;; Añade los buffers de bookmarks y de recentf
-  (setq ivy-count-format "(%d/%d) ")   ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-  (setq ivy-height 15)                 ;; número de resultados a mostrar
-  (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
-  (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
-  (setq ivy-wrap t)                    ;; Dar la vuelta a los candidatos
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
-  ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
-  (setq ivy-re-builders-alist
-        '((ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
-          (read-file-name-internal . ivy--regex-plus)
-          (t . ivy--regex-fuzzy)))
-  (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
-  (setq ivy-use-selectable-prompt t)  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
+  (use-package ivy
+    :init
+    (setq ivy-use-virtual-buffers t)     ;; Añade los buffers de bookmarks y de recentf
+    (setq ivy-count-format "(%d/%d) ")   ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
+    (setq ivy-height 15)                 ;; número de resultados a mostrar
+    (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
+    (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
+    (setq ivy-wrap t)                    ;; Dar la vuelta a los candidatos
+    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+    ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
+    (setq ivy-re-builders-alist
+          '(
+            ;; (ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
+            ;; (read-file-name-internal . ivy--regex-plus)
+            (t . ivy--regex-fuzzy)
+           ))
+    (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
+    (setq ivy-use-selectable-prompt t)  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
-  ;; Asegurarse de que están smex, flx
-  (use-package smex :ensure t)
-  (use-package flx :ensure t)
-  :config (ivy-mode 1)
-  :config (counsel-mode 1)
-  :diminish ivy-mode
-  :ensure t)
+    ;; Asegurarse de que están smex, flx
+    (use-package smex :ensure t)
+    (use-package flx :ensure t)
 
-(use-package counsel
-  :config
-  (setq counsel-find-file-at-point t)
-  :ensure t)
+    :config (ivy-mode 1)
+    :config (counsel-mode 1)
+    :diminish ivy-mode
+    :ensure t)
 
-(use-package swiper
-  :ensure t)
+  (use-package counsel
+    :config
+    (setq counsel-find-file-at-point t)
+    :ensure t)
+
+  (use-package swiper
+    :ensure t)
 #+END_SRC
 
 *** Projectile
@@ -357,6 +283,9 @@ For project management. Shortcuts are defined here.
   :config
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (setq projectile-completion-system 'ivy)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-switch-project-action #'projectile-dired)
   (projectile-mode +1))
 #+END_SRC
 
@@ -699,3 +628,47 @@ For me, ~elpy~ is the best python package. I tried some others but they don't wo
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
    (setq sbt:program-options '("-Dsbt.supershell=false")))
 #+end_src
+
+* Keybindings
+There are more keybindings in other places. I will try in the future to put them all in this section.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-x k") 'bjm/kill-this-buffer)
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+(global-set-key (kbd "C-S-k") 'kill-whole-line)
+(global-set-key (kbd "C-S-j") 'join-line)
+(global-set-key (kbd "C-x f") 'flycheck-list-errors)
+(global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+(global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
+(global-set-key (kbd "C-,") #'other-window)
+(global-set-key (kbd "C-.") (lambda ()
+                              (interactive)
+                              (other-window -1)))
+(global-set-key (kbd "C-q") 'comment-line)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+;; mc -> multiple-cursors
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this)
+(global-set-key (kbd "M-<up>") 'move-line-up)
+(global-set-key (kbd "M-<down>") 'move-line-down)
+;; undo and redo
+(global-set-key (kbd "C-z") 'advertised-undo)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-z") 'redo)
+(define-key global-map [f4] 'toggle-truncate-lines)
+(define-key global-map [f5] 'tool-bar-mode)
+(define-key global-map [f6] 'menu-bar-mode)
+(define-key global-map [f8] 'align-regexp)
+(define-key global-map [f9] 'sort-lines)
+(global-set-key (kbd "<f11>") 'global-linum-mode)
+;; ivy's shortcuts
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+#+END_SRC
