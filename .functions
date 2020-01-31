@@ -1,0 +1,29 @@
+
+function gac {
+    [[ $# != 1 ]] && echo 'Hay que pasarle el mensaje del commit a la función.' && return
+
+    git status
+    git add .
+    git commit -m $1
+
+    echo "===>>> Commit realizado."
+}
+
+function gacp {
+    echo "3 formas de invocar"
+    echo "gacp mensaje-commit                                 === gacp mensaje-commit origin master"
+    echo "gacp mensaje-commit rama-a-subir                    === gacp mensaje-commit origin rama-a-subir"
+    echo "gacp mensaje-commit repositorio-remoto rama-a-subir"
+    echo ""
+
+    [[ $# == 1 ]] && gac $1 && echo "===>>> Subiendo rama master al repositorio origin."  && git push origin master && return
+
+    [[ $# == 2 ]] && gac $1 && echo "===>>> Subiendo rama $2 al repositorio origin."      && git push origin $2     && return
+
+    [[ $# != 3 ]] && echo "Hace falta mensaje de commit, rama que subir y repositorio al que subir." && return
+
+    echo "===>>> Subiendo rama $3 al repositorio $2." &&
+
+    gac $1
+    git push $2 $3
+}
