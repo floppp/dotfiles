@@ -147,6 +147,7 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 ** Global Configuration
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
+(setq compilation-read-command nil) ;; avoiding compiling confirmation
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq inhibit-splash-screen t)
@@ -672,6 +673,7 @@ For vue, but actually i use VSCode for code it.
 (global-set-key (kbd "C-,") (lambda ()
                                 (interactive)
                                 (other-window -1))) ;; back one
+(global-set-key (kbd "C-x c") 'compile)
 (global-set-key (kbd "C-q") 'comment-line)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
