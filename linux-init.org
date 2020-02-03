@@ -416,6 +416,13 @@ TODO probar a ver la configuración de macos
 ;;(use-package company-lsp :commands company-lsp)
 ;;(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
+
+;; De la configuración de scala-metals
+(use-package lsp-mode
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook (scala-mode . lsp)
+  :config (setq lsp-prefer-flymake nil))
+
 ;; De mac, probar a ver
 (use-package lsp-ui
   :requires lsp-mode flycheck
@@ -457,6 +464,7 @@ TODO probar a ver la configuración de macos
   (company-show-numbers t)
   (company-tooltip-align-annotations 't)
   (global-company-mode t))
+;;(setq company-lsp-enable-snippet nil)
 #+END_SRC
 
 *** Flycheck
@@ -656,6 +664,112 @@ For vue, but actually i use VSCode for code it.
   :ensure auctex
   :config
   (setq TeX-auto-save t))
+
+#+END_SRC
+*** Scala
+
+#+BEGIN_SRC emacs-lisp
+;; Enable scala-mode and sbt-mode
+(use-package scala-mode
+:mode "\\.s\\(cala\\|bt\\)$")
+
+(use-package sbt-mode
+:commands sbt-start sbt-command
+:config
+;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+;; allows using SPACE when in the minibuffer
+(substitute-key-definition
+'minibuffer-complete-word
+'self-insert-command
+minibuffer-local-completion-map)
+;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+(setq sbt:program-options '("-Dsbt.supershell=false"))
+)
+
+;; Enable nice rendering of diagnostics like compile errors.
+;; (use-package flycheck
+;; :init (global-flycheck-mode))
+
+(use-package lsp-mode
+;; Optional - enable lsp-mode automatically in scala files
+:hook (scala-mode . lsp)
+:config (setq lsp-prefer-flymake nil))
+
+#+END_SRC
+** Company + Yasnippet
+Here there are some functions and related keybindings to make work almost perfectly together yasnippet and company. The code comes from [[https://emacs.stackexchange.com/a/7925][here]], with one line modification to call =ivy-partial-or-done= instead of =minibuffer-completion=. I put them here instead of in their places because it is important to be aware they are closely related.
+#+BEGIN_SRC emacs-lisp
+(defun check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
+    (backward-char 1)
+    (if (looking-at "->") t nil)))))
+
+(defun do-yas-expand ()
+  (let ((yas/fallback-behavior 'return-nil))
+    (yas/expand)))
+
+(defun tab-indent-or-complete ()
+  (interactive)
+  (cond
+   ((minibufferp)
+    (ivy-partial-or-done))
+   (t
+    (indent-for-tab-command)
+    (if (or (not yas/minor-mode)
+        (null (do-yas-expand)))
+    (if (check-expansion)
+        (progn
+          (company-manual-begin)
+          (if (null company-candidates)
+          (progn
+            (company-abort)
+            (indent-for-tab-command)))))))))
+
+(defun tab-complete-or-next-field ()
+  (interactive)
+  (if (or (not yas/minor-mode)
+      (null (do-yas-expand)))
+      (if company-candidates
+      (company-complete-selection)
+    (if (check-expansion)
+      (progn
+        (company-manual-begin)
+        (if (null company-candidates)
+        (progn
+          (company-abort)
+          (yas-next-field))))
+      (yas-next-field)))))
+
+(defun expand-snippet-or-complete-selection ()
+  (interactive)
+  (if (or (not yas/minor-mode)
+      (null (do-yas-expand))
+      (company-abort))
+      (company-complete-selection)))
+
+(defun abort-company-or-yas ()
+  (interactive)
+  (if (null company-candidates)
+      (yas-abort-snippet)
+    (company-abort)))
+
+(global-set-key [tab] 'tab-indent-or-complete)
+(global-set-key (kbd "TAB") 'tab-indent-or-complete)
+(global-set-key [(control return)] 'company-complete-common)
+
+(define-key company-active-map [tab] 'expand-snippet-or-complete-selection)
+(define-key company-active-map (kbd "TAB") 'expand-snippet-or-complete-selection)
+
+(define-key yas-minor-mode-map [tab] nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+
+(define-key yas-keymap [tab] 'tab-complete-or-next-field)
+(define-key yas-keymap (kbd "TAB") 'tab-complete-or-next-field)
+(define-key yas-keymap [(control tab)] 'yas-next-field)
+(define-key yas-keymap (kbd "C-g") 'abort-company-or-yas)
 
 #+END_SRC
 * Keybindings
