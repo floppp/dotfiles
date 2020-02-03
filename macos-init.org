@@ -441,9 +441,8 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
     (setq lsp-enable-indentation nil)
     (add-hook 'sh-mode #'lsp)
     (add-hook 'c-mode-hook #'lsp)
+    (add-hook 'scala-mode-hook #'lsp)
     ;; (add-hook 'scala-mode-hook #'lsp)
-    :hook
-    (scala-mode . lsp)
     :config
     (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
     (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
@@ -627,8 +626,88 @@ For me, ~elpy~ is the best python package. I tried some others but they don't wo
    minibuffer-local-completion-map)
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
    (setq sbt:program-options '("-Dsbt.supershell=false")))
-#+end_src
 
+(use-package lsp-mode
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook (scala-mode . lsp))
+  ;; :config (setq lsp-prefer-flymake nil)))
+#+end_src
+** Company + Yasnippet
+Here there are some functions and related keybindings to make work almost perfectly together yasnippet and company. The code comes from [[https://emacs.stackexchange.com/questions/7908/how-to-make-yasnippet-and-company-work-nicer/7925#7925][here]], with one line modification to call ivy-partial-or-done instead of minibuffer-completion. I put them here instead of in their places because it is important to be aware they are closely related.
+
+#+BEGIN_SRC emacs-lisp
+(defun check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
+    (backward-char 1)
+    (if (looking-at "->") t nil)))))
+
+(defun do-yas-expand ()
+  (let ((yas/fallback-behavior 'return-nil))
+    (yas/expand)))
+
+(defun tab-indent-or-complete ()
+  (interactive)
+  (cond
+   ((minibufferp)
+    (ivy-partial-or-done))
+   (t
+    (indent-for-tab-command)
+    (if (or (not yas/minor-mode)
+        (null (do-yas-expand)))
+    (if (check-expansion)
+        (progn
+          (company-manual-begin)
+          (if (null company-candidates)
+          (progn
+            (company-abort)
+            (indent-for-tab-command)))))))))
+
+(defun tab-complete-or-next-field ()
+  (interactive)
+  (if (or (not yas/minor-mode)
+      (null (do-yas-expand)))
+      (if company-candidates
+      (company-complete-selection)
+    (if (check-expansion)
+      (progn
+        (company-manual-begin)
+        (if (null company-candidates)
+        (progn
+          (company-abort)
+          (yas-next-field))))
+      (yas-next-field)))))
+
+(defun expand-snippet-or-complete-selection ()
+  (interactive)
+  (if (or (not yas/minor-mode)
+      (null (do-yas-expand))
+      (company-abort))
+      (company-complete-selection)))
+
+(defun abort-company-or-yas ()
+  (interactive)
+  (if (null company-candidates)
+      (yas-abort-snippet)
+    (company-abort)))
+
+(global-set-key [tab] 'tab-indent-or-complete)
+(global-set-key (kbd "TAB") 'tab-indent-or-complete)
+(global-set-key [(control return)] 'company-complete-common)
+
+(define-key company-active-map [tab] 'expand-snippet-or-complete-selection)
+(define-key company-active-map (kbd "TAB") 'expand-snippet-or-complete-selection)
+
+(define-key yas-minor-mode-map [tab] nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+
+(define-key yas-keymap [tab] 'tab-complete-or-next-field)
+(define-key yas-keymap (kbd "TAB") 'tab-complete-or-next-field)
+(define-key yas-keymap [(control tab)] 'yas-next-field)
+(define-key yas-keymap (kbd "C-g") 'abort-company-or-yas)
+#+END_SRC
 * Keybindings
 There are more keybindings in other places. I will try in the future to put them all in this section.
 #+BEGIN_SRC emacs-lisp
