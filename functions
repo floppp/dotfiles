@@ -1,3 +1,32 @@
+function watch-folder-and-exec-function {
+    [[ $# != 1 ]] && echo "La función necesita qué ha de ejecutar cuando los archivos cambien\n"
+
+    echo "ejecutamos:      $1"
+    while inotifywait -r -e modify,create,move,delete --exclude '.git' ./; do
+        eval $1
+        echo "\n"
+    done
+}
+
+function watch-and-upload {
+    [[ $# != 3 ]] && echo "La función necesita tres parámetros:\n  - directorio local\n  - directorio remoto\n  - archivo en directorio local con elementos a excluir de la sincronización" && return
+    # rsync flags
+    #     a => archive mode == rlptgoD (recursivo, conserva permisos, enlaces simbólicos, etc)
+    #     v => verbose
+    #     z => compress
+    #     P => progress
+    # inotifywait flags
+    #     m => eschucar continuamente
+    #     e => eventos a escuchar
+    # inotifywait -r -m -e modify,create,move,delete $1 | while read file; do
+    echo "origen: $1"
+    echo "destino: $2"
+    echo "excluimos:" && cat $1/$3
+    while inotifywait -r -e modify,create,move,delete --exclude '.git' $1; do
+        rsync -avzP --exclude-from="$1$3" -e "ssh -i /xxx/xxx/xxx/xxx/id_rsa -p xxxx" $1 fernando@xxx.xxx.xxx.xxx:$2
+        echo "\n"
+    done
+}
 
 function gac {
     [[ $# != 1 ]] && echo 'Hay que pasarle el mensaje del commit a la función.' && return
