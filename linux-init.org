@@ -206,7 +206,7 @@ Doom-themes
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "es")
 (setq ispell-local-dictionary-alist
-      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "es_ANY") t utf-8)))
 
 (use-package ispell
   :config
