@@ -1,5 +1,5 @@
 * General Configuration
-** When i don use Emacs
+** When i use Emacs
 I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
 Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
 And, finally but maybe the most important thing, in the future i’m pretty sure i will make the final transition to /VSCode/. I don't love it like i do with /Emacs/ and/or /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, even with a 4th gen i7 laptop with 16GB (it should be enough  althoug it is 6 years old), but its continuous evolution and improvement is hard to be forgotten, and from time to time i give it a new chance.
@@ -9,21 +9,26 @@ Next i put when i use and where i don't use /Emacs/, and which alternatives i us
 #+begin_src
 Using Emacs
 + At work
-    - Vainilla JS Web development
-    - Angular
-    - Vue
-    ‐ PHP
-    – Python
+    - Client side:
+        - Vainilla JS Web development
+        - Angular
+        - Vue
+    - Backend
+        ‐ PHP
+        - JS (Express)
+    – Python (scripting + data science)
     - Org-mode
+    - Matlab (i'll put my config here)
+    - Scala/Ammonite
 + At home / hobby
     - Clojure
     - C (debugging with Visual Studio Code)
     - Web/WebApps development
+    - Scala
 #+end_src
 
 #+begin_src
 Don’t using it at all
-+ Scala/Ammonite -> i used to use ensime, but now it is archived, i'm trying with IntelliJ
 + Latex          -> i can work with emacs, but usually i use Sublime + LatexTools
 + Android        -> AndroidStudio, either for Kotlin and Java
 + iOS            -> only tried it for educational purpose, XCode obviously
@@ -31,6 +36,8 @@ Don’t using it at all
 #+end_src
 
 I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am. I use more technologies actually, even i'm regularly forced to work with ~Matlab~ and ~Microsoft Office~.
+
+For debugging, i always use Visual Studio Code.
 ** Manual installation
 Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
 + ~crux~
@@ -169,7 +176,6 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 ;; Cambiamos el comportamiento por defecto de la shell.
 (remove-hook 'eshell-output-filter-functions
              'eshell-postoutput-scroll-to-bottom)
-;; Para evitar problemas con MarkDown
 #+END_SRC
 * Packages
 ** GUI Modifications
@@ -206,7 +212,7 @@ Doom-themes
 (setq ispell-program-name "hunspell")
 (setq ispell-local-dictionary "es")
 (setq ispell-local-dictionary-alist
-      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "es_ANY") t utf-8)))
 
 (use-package ispell
   :config
@@ -674,26 +680,25 @@ For vue, but actually i use VSCode for code it.
 :mode "\\.s\\(cala\\|bt\\)$")
 
 (use-package sbt-mode
-:commands sbt-start sbt-command
-:config
-;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-;; allows using SPACE when in the minibuffer
-(substitute-key-definition
-'minibuffer-complete-word
-'self-insert-command
-minibuffer-local-completion-map)
-;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-(setq sbt:program-options '("-Dsbt.supershell=false"))
-)
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+    'minibuffer-complete-word
+    'self-insert-command
+    minibuffer-local-completion-map)
+    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+    (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 ;; Enable nice rendering of diagnostics like compile errors.
 ;; (use-package flycheck
 ;; :init (global-flycheck-mode))
 
 (use-package lsp-mode
-;; Optional - enable lsp-mode automatically in scala files
-:hook (scala-mode . lsp)
-:config (setq lsp-prefer-flymake nil))
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook (scala-mode . lsp))
+  ;;  :config (setq lsp-prefer-flymake nil))
 
 #+END_SRC
 ** Company + Yasnippet
