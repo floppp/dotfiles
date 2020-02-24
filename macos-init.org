@@ -606,6 +606,7 @@ For me, ~elpy~ is the best python package. I tried some others but they don't wo
 (pyvenv-mode 1)
 
 (require 'py-autopep8)
+(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
 #+END_SRC
