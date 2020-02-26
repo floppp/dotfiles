@@ -153,29 +153,30 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 #+END_SRC
 ** Global Configuration
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
-(setq compilation-read-command nil) ;; avoiding compiling confirmation
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq inhibit-splash-screen t)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
-(setq mouse-wheel-progressive-speed nil)
-(setq visible-bell nil)
-(setq global-hl-line-mode t)
-(setq-default show-trailing-whitespace t)
-(global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
-(electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
-(set-face-attribute 'default nil :height 100) ;; El valor va en 1/10pt, así que 100 será 10pt...
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(if window-system (scroll-bar-mode -1))
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq compilation-read-command nil) ;; avoiding compiling confirmation
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq inhibit-splash-screen t)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+  (setq mouse-wheel-progressive-speed nil)
+  (setq visible-bell nil)
+  (setq global-hl-line-mode t)
+  (setq-default show-trailing-whitespace t)
+  (global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
+  (electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
+  (set-face-attribute 'default nil :height 100) ;; El valor va en 1/10pt, así que 100 será 10pt...
+  ;; (set-default line-spacing 5)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (if window-system (scroll-bar-mode -1))
 
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (dired-hide-details-mode 1)))
-;; Cambiamos el comportamiento por defecto de la shell.
-(remove-hook 'eshell-output-filter-functions
-             'eshell-postoutput-scroll-to-bottom)
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (dired-hide-details-mode 1)))
+  ;; Cambiamos el comportamiento por defecto de la shell.
+  (remove-hook 'eshell-output-filter-functions
+               'eshell-postoutput-scroll-to-bottom)
 #+END_SRC
 * Packages
 ** GUI Modifications

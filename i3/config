@@ -153,13 +153,12 @@ bindsym XF86AudioLowerVolume exec "amixer -q sset Master,0 3%- unmute"
 bindsym XF86AudioMute exec        "amixer -q sset Master,0 toggle"
 
 # applications shortcuts
-bindsym $mod+shift+Return exec gnome-terminal
 bindsym $mod+Return exec konsole
-bindsym $mod+shift+n exec caja
-bindsym $mod+n exec nautilus
+bindsym $mod+n exec dolphin
 bindsym $mod+f exec firefox
-bindsym $mod+b exec subl
-bindsym $mod+Shift+b exec /home/nando/bin/studio.sh
+bindsym $mod+b exec emacs
+bindsym $mod+Shift+b exec subl
+#bindsym $mod+Shift+b exec /home/nando/bin/studio.sh
 bindsym $mod+i exec /home/nando/bin/idea.sh
 
 # Mover workspaces entre pantallas
@@ -182,8 +181,8 @@ exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 workspace 1 output eDP1
 
 # Gaps
-#gaps inner 4
-#gaps outer 0
+gaps inner 4
+gaps outer 0
 
 # Borders
 #for_window [class="^.*"] border pixel 0
