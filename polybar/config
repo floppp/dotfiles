@@ -58,9 +58,9 @@ font-0 = "FiraCode:pixelsize=10;1"
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
-modules-left = i3 spotify
+modules-left = i3
 ;modules-center = mpd
-modules-right = cpu memory filesystem xbacklight pulseaudio xkeyboard wlan eth battery temperature date powermenu
+modules-right = cpu memory filesystem xbacklight pulseaudio xkeyboard wlan battery temperature date powermenu
 
 tray-position = right
 tray-padding = 2
