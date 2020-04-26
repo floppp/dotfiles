@@ -46,6 +46,14 @@ Some packages are controlled by ~use-package~, some others don't. These need to 
 + ~org-bullets~
 + ~spacetheme~
 + ~monokai~
++ ~visual-regexp~
++ ~ccls~
++ ~sr-speedbar~
++ py-autopep8
++ flycheck-joker
++ flycheck-tip
++ emmet-mode
++ 
 ** GC size increment to speed up startup
 Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
 #+BEGIN_SRC emacs-lisp
