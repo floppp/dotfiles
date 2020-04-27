@@ -1,11 +1,4 @@
 * General configuration
-** Manual installation
-Some packages are controlled by ~use-package~, some others don't. These need to be installed to run this configuration file properly. They are listed below:
-+ ~crux~
-+ ~spaceline~
-+ ~org-bullets~
-+ ~spaceline~
-
 ** GC size increment to speed up startup.
 Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
 #+BEGIN_SRC emacs-lisp
@@ -27,7 +20,7 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
   ;; (setenv "PATH" (concat (getenv "PATH") ":/Users/nando/.local/bin"))
   ;; (setenv "PAHT" (concat (getenv "PATH") ":/Users/nando/bin"))
   ;; (setenv "PATH" (concat (getenv "PATH") ":/usr/local/opt/openjdk@11/bin"))
-  (setenv "JAVA_HOME" "/usr/local/opt/openjdk@11")
+  (setenv "JAVA_HOME" "/usr/local/opt/openjdk")
 
   ;; (setq exec-path (append exec-path '("/Users/nando/miniconda3/bin")))
   (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ;; Esto me ha hecho que funcione el linting en elpy
@@ -36,7 +29,7 @@ Here we set path values for ~Miniconda~ and whatever other package system we use
   ;; (setq exec-path (append exec-path '("/usr/local/opt/openjdk@11/bin")))
 #+END_SRC
 
-** Repositories and mirros.
+** Repositories and mirrors.
 #+BEGIN_SRC emacs-lisp
 (defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
@@ -90,8 +83,6 @@ Closing every other buffers, close all and close current without asking.
   (interactive)
   (kill-buffer (current-buffer)))
 #+END_SRC
-
-
 *** Line navigation.
 #+BEGIN_SRC emacs-lisp
 (defun move-line (n)
@@ -117,7 +108,6 @@ Closing every other buffers, close all and close current without asking.
   (interactive "p")
   (move-line (if (null n) 1 n)))
 #+END_SRC
-
 *** To avoid tramp to stuck at beginning.
 #+BEGIN_SRC emacs-lisp
 (defun ido-remove-tramp-from-cache nil
@@ -131,8 +121,38 @@ Closing every other buffers, close all and close current without asking.
 	     (string-match "/\\(rsh\\|ssh\\|telnet\\|su\\|sudo\\|sshx\\|krlogin\\|ksu\\|rcp\\|scp\\|rsync\\|scpx\\|fcp\\|nc\\|ftp\\|smb\\|adb\\):" (car x)))
 	   ido-dir-file-cache)))
 #+END_SRC
+** First Actions and Global Configurations
+First of all, installing some packages and some basic configs.
+#+BEGIN_SRC emacs-lisp
+(package-install 'use-package)
+(require 'use-package)
+(condition-case nil
+  (require 'use-package)
+    (file-error
+      (require 'package)
+      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+      (package-initialize)
+      (package-refresh-contents)
+      (package-install 'use-package)
+      (require 'use-package)
+      (require crux)
+      (require org-bullets)
+      (require spaceline)
+      (require crux)
+      (require ac-php)
+      (require spaceline)
+      (require org-bullets)
+      (require spacetheme)
+      (require monokai)
+      (require visual-regexp)
+      (require ccls)
+      (require sr-speedbar)
+      (require py-autopep8)
+      (require flycheck-joker)
+      (require flycheck-tip)
+      (require emmet-mode)))
+#+END_SRC
 
-** Global configuration
 Hide permissions and owners to make file lists less noisy (from Xah Lee’s blog)
 #+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook
@@ -154,7 +174,7 @@ Some common clean setup configuration.
 
 ** GUI modifications
 #+BEGIN_SRC emacs-lisp
-(electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
+(electric-pair-mode 1) ;; Autocierre de paréntesis, llaves, corchetes, etc
 (set-face-attribute 'default nil :height 120) ;; El valor va en 1/10pt, así que 100 será 10pt...
 (setq visible-bell nil)
 (tool-bar-mode -1)
@@ -164,27 +184,13 @@ Some common clean setup configuration.
 
 Spacemacs looks. They should be in that order for working properly.
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package spaceline
-    ;; :demand t
-    ;; :init
-    ;; (setq powerline-default-separator 'arrow-fade)
-    ;; :config
-    ;; (require 'spaceline-config)
-    ;; (spaceline-spacemacs-theme))
-#+END_SRC
-
-Doom-themes
-#+BEGIN_SRC emacs-lisp
-(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-      doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each
-;; theme may have their own settings.
-(load-theme 'doom-dark+ t)
-(doom-themes-visual-bell-config) ;; Enable flashing mode-line on errors
-(doom-themes-neotree-config) ;; Enable custom neotree theme
-(require 'doom-modeline)
-(doom-modeline-mode 1)
+(use-package spaceline
+  :demand t
+  :init
+  (setq powerline-default-separator 'arrow-fade)
+  :config
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme))
 #+END_SRC
 
 Editor
@@ -291,7 +297,7 @@ For project management. Shortcuts are defined here.
 
 ** Accesories
 *** Treemacs
-To show sidebuffer with projects either from projectile or git. We can use speedbar too.
+To show sidebuffer with projects either from projectile or git. We can use neotree or speedbar too.
 #+BEGIN_SRC emacs-lisp
 (use-package treemacs
   :ensure t
@@ -406,6 +412,10 @@ Allow to see regexp substitution in real-time when typing
 #+END_SRC
 
 ** Writing code, text, etc.
+*** Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet :ensure t)
+#+END_SRC
 *** Company
 Completition package, almost for any language i use.
 #+BEGIN_SRC emacs-lisp
@@ -441,8 +451,9 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
     (setq lsp-enable-indentation nil)
     (add-hook 'sh-mode #'lsp)
     (add-hook 'c-mode-hook #'lsp)
+    (add-hook 'c++-mode-hook #'lsp)
     (add-hook 'scala-mode-hook #'lsp)
-    ;; (add-hook 'scala-mode-hook #'lsp)
+    (add-hook 'java-mode-hook #'lsp)
     :config
     (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
     (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
@@ -470,13 +481,32 @@ To use with LSP protocol. Currently only used for ~C~ and ~Tide~.
 
   (use-package company-lsp
     :commands company-lsp
-    :config (push 'company-lsp company-backends))
+    :config (push 'company-lsp company-backends)
+    :ensure t)
 #+END_SRC
 
 *** C/C++
 #+BEGIN_SRC emacs-lisp
-(require 'ccls)
-(setq ccls-executable "/usr/local/bin/ccls")
+  ;; (require 'ccls)
+  (use-package google-c-style
+    :ensure t
+    :defer t
+    :commands
+    (google-set-c-style))
+
+  (use-package clang-format
+    :ensure t
+    :defer t
+    :commands
+    (clang-format clang-format-buffer))
+
+  (use-package ccls
+    :ensure t
+    :custom
+    (indent-tabs-mode nil)
+    (tab-width 2)
+    (c-basic-offset 2))
+  (setq ccls-executable "/usr/local/bin/ccls")
 #+END_SRC
 
 *** TypeScript/JavaScript
@@ -572,7 +602,9 @@ Maybe my favorite programming language, even when i'm an absolute beginner and i
   :init
   (setq cider-lein-command "/usr/local/bin/lein")
   :config
+  (add-hook 'cider-mode-hook #'clj-refactor-mode)
   (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
 
 ;;(use-package flycheck-clojure) ;; Mejor instalarlo a mano
@@ -609,6 +641,41 @@ For me, ~elpy~ is the best python package. I tried some others but they don't wo
 (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (add-hook 'elpy-mode-hook 'electric-pair-mode)
+#+END_SRC
+*** SQL
+From https://mopemope.com/emacs-config/, blog of /emacs-meghanada/ mode.
+#+BEGIN_SRC emacs-lisp
+(use-package sql
+  :defer t
+  :hook
+  (sql-mode . (lambda ()
+                (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+  :commands
+  (sql-mode)
+  :mode
+  ("\\.sql$" . sql-mode)
+  :custom
+  (sql-indent-offset 2)
+  (indent-tabs-mode nil)
+  (tab-width 2)
+  (c-basic-offset 2)
+  (sql-mysql-options '("--prompt=mysql> "))
+  :config
+  (use-package sql-indent
+    :ensure t))
+#+END_SRC
+*** Java
+There are two main options: [[https://github.com/mopemope/meghanada-emacs][meghanada]] and [[https://github.com/emacs-lsp/lsp-java][lsp-java]]. The first one seems easier and more stable, has mor stars  and watchs (20/04/26), but the second looks more promising, has a visual debugger and (less important) it is not a personal project.
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-java :ensure t)
+
+(use-package dap-mode
+  :ensure t :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+
+(use-package dap-java :after (lsp-java))
 #+END_SRC
 *** Scala
 /Ensime/ was fantastic, i hope /Metals/ gives me the same true happiness.
