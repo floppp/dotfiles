@@ -68,7 +68,7 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 
 ** Repositories and mirrors
 #+BEGIN_SRC emacs-lisp
-(defvar gnu '("gnu" . "http://mirrors.163.com/elpa/gnu/"))
+(defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
 ;;(defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
@@ -82,6 +82,9 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
+;;(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+;;                         ("marmalade" . "http://marmalade-repo.org/packages/")
+;;                         ("melpa" . "http://melpa.org/packages/")))
 #+END_SRC
 ** Custom functions
 
@@ -162,6 +165,8 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
   (setq mouse-wheel-progressive-speed nil)
   (setq visible-bell nil)
   (setq global-hl-line-mode t)
+  ;; Me gusta más tabulador, peeeero, para formatear, para compartir con otros... al final mejor espacios.
+  (setq-default indent-tabs-mode nil)
   (setq-default show-trailing-whitespace t)
   (global-auto-revert-mode t) ;; To refresh buffer in we change it in other editor.
   (electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
@@ -356,6 +361,11 @@ Hay que instalar =all-the-icons= para tener el /theme icons/, y después sus fue
 (setq-default neo-show-hidden-files t)
 #+END_SRC
 ** Accesories
+Changind /docview/ to move to next page begin from previous page.
+
+#+BEGIN_SRC emacs-lisp
+(setq doc-view-continuous t)
+#+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; Visual-regexp, allow to see regexp substitution in real-time when typing
 (require 'visual-regexp)
@@ -478,10 +488,11 @@ TODO probar a ver la configuración de macos
 
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :ensure t
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+;; comento porque me da muchos problemas con python, mete python-mypy porque sí
+  ;; (use-package flycheck
+    ;; :ensure t
+    ;; :config
+    ;; (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
 *** C/CPP
 #+BEGIN_SRC emacs-lisp
@@ -510,7 +521,7 @@ TODO probar a ver la configuración de macos
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
-(add-hook 'typescript-mode '(disable-tabs 2))
+;;(add-hook 'typescript-mode '(disable-tabs 2))
 (add-hook 'js-mode-hook #'setup-tide-mode)
 #+END_SRC
 
@@ -563,6 +574,8 @@ TODO probar a ver la configuración de macos
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.phtml?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
+;; I prefer web-mode for vue than vue-mode
+(add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
 
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
 (defun custom-web-mode-hook ()
@@ -575,12 +588,6 @@ TODO probar a ver la configuración de macos
 (add-hook 'web-mode-hook 'custom-web-mode-hook)
 (setq web-mode-enable-current-column-highlight t)
 (setq web-mode-enable-current-element-highlight t)
-#+END_SRC
-
-**** Vue-mode
-For vue, but actually i use VSCode for code it.
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.vue?\\'" . vue-mode))
 #+END_SRC
 
 *** Clojure
@@ -704,6 +711,21 @@ For vue, but actually i use VSCode for code it.
   ;;  :config (setq lsp-prefer-flymake nil))
 
 #+END_SRC
+*** Matlab
+Matlab configuration to have lint and also matlab repl in emacs.
+
+#+BEGIN_SRC emacs-lisp
+;;; Matlab
+(autoload 'matlab-mode "matlab" "Matlab Editing Mode" t)
+(add-to-list
+  'auto-mode-alist
+  '("\\.m$" . matlab-mode))
+(setq matlab-indent-function t)
+(setq matlab-shell-command "matlab")
+(matlab-cedet-setup)
+(add-hook 'matlab-mode 'flycheck-mode)
+#+END_SRC
+
 ** Company + Yasnippet
 Here there are some functions and related keybindings to make work almost perfectly together yasnippet and company. The code comes from [[https://emacs.stackexchange.com/a/7925][here]], with one line modification to call =ivy-partial-or-done= instead of =minibuffer-completion=. I put them here instead of in their places because it is important to be aware they are closely related.
 #+BEGIN_SRC emacs-lisp

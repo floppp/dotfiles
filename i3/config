@@ -154,12 +154,12 @@ bindsym XF86AudioMute exec        "amixer -q sset Master,0 toggle"
 
 # applications shortcuts
 bindsym $mod+Return exec konsole
-bindsym $mod+n exec dolphin
+bindsym $mod+n exec pcmanfm # dolphin
 bindsym $mod+f exec firefox
 bindsym $mod+b exec emacs
 bindsym $mod+Shift+b exec subl
 #bindsym $mod+Shift+b exec /home/nando/bin/studio.sh
-bindsym $mod+i exec /home/nando/bin/idea.sh
+#bindsym $mod+i exec /home/nando/bin/idea.sh
 
 # Mover workspaces entre pantallas
 bindsym $mod+Control+h move workspace to output left
@@ -178,7 +178,7 @@ exec_always --no-startup-id ~/workspaces/dotfiles/compton_init.sh
 # Definition of workspaces
 #workspace  1 output VGA1
 #workspace 10 output eDP1
-workspace 1 output eDP1
+workspace 1 output VGA1
 
 # Gaps
 gaps inner 4
