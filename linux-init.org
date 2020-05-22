@@ -55,7 +55,7 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 
 ** PATH definition
 #+BEGIN_SRC emacs-lisp
-(setq exec-path (append exec-path '("~/.nvm/versions/node/v13.6.0/bin")))
+(setq exec-path (append exec-path '("~/.nvm/versions/node/v14.2.0/bin")))
 (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
 (setq exec-path (append exec-path '("/home/nando/.local/bin")))
 #+END_SRC
@@ -240,11 +240,14 @@ Editor
 #+BEGIN_SRC emacs-lisp
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
-(setq ispell-local-dictionary "es")
+(setq ispell-local-dictionary "es_ANY")
 (setq ispell-local-dictionary-alist
-      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "es_ANY") t utf-8)))
+      '(("es_ANY" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "es_ANY") t utf-8)))
 
 (use-package ispell
+  :hook
+  ((text-mode . flyspell-mode)
+   (prog-mode . flyspell-prog-mode))
   :config
   (when (executable-find "hunspell")
     (setq-default ispell-program-name "hunspell")
