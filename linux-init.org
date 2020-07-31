@@ -163,6 +163,7 @@ First of all, installing some packages and some basic configs.
       (package-install 'use-package)
       (require 'use-package)
       (require crux)
+      (require posframe)
       (require org-bullets)
       (require spaceline)
       (require crux)
@@ -189,6 +190,7 @@ Hide permissions and owners to make file lists less noisy (from Xah Lee’s blog
 
 Some common clean setup configuration.
 #+BEGIN_SRC emacs-lisp
+(setq create-lockfiles nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq make-backup-files nil)
 (setq-default indent-tabs-mode nil) ;; fuera tabs
@@ -230,7 +232,7 @@ Spacemacs.
 Editor
 #+BEGIN_SRC emacs-lisp
 (setq-default show-trailing-whitespace t)
-(setq global-hl-line-mode t)
+(global-hl-line-mode 1)
 (setq-default indent-tabs-mode nil)
 
 #+END_SRC
@@ -246,8 +248,10 @@ Editor
 
 (use-package ispell
   :hook
-  ((text-mode . flyspell-mode)
-   (prog-mode . flyspell-prog-mode))
+  (
+    (text-mode . flyspell-mode)
+    ;; (prog-mode . flyspell-prog-mode) ;; flyspell-prog-mode checks in comments, but also in strings, and this is annoying.
+  )
   :config
   (when (executable-find "hunspell")
     (setq-default ispell-program-name "hunspell")
@@ -584,6 +588,10 @@ TODO probar a ver la configuración de macos
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
+;; (add-hook 'typescript-mode-hook
+      ;; (lambda ()
+      ;;    (setq indent-tabs-mode t)
+      ;;    (setq tab-width 2)))
 ;;(add-hook 'typescript-mode '(disable-tabs 2))
 (add-hook 'js-mode-hook #'setup-tide-mode)
 #+END_SRC
@@ -816,14 +824,18 @@ From https://mopemope.com/emacs-config/, blog of emacs-meghanada mode.
 There are two main options: [[https://github.com/mopemope/meghanada-emacs][meghanada]] and [[https://github.com/emacs-lsp/lsp-java][lsp-java]]. The first one seems easier and more stable, has mor stars and watchs (20/04/26), but the second looks more promising, has a visual debugger and (less important) it is not a personal project.
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-java :ensure t)
-
+(use-package dap-java :after (lsp-java))
+#+END_SRC
+*** Debugger
+#+BEGIN_SRC emacs-lisp
 (use-package dap-mode
   :ensure t :after lsp-mode
   :config
   (dap-mode t)
   (dap-ui-mode t))
-
-(use-package dap-java :after (lsp-java))
+(use-package posframe
+  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+  )
 #+END_SRC
 ** Company + Yasnippet
 Here there are some functions and related keybindings to make work almost perfectly together yasnippet and company. The code comes from [[https://emacs.stackexchange.com/a/7925][here]], with one line modification to call =ivy-partial-or-done= instead of =minibuffer-completion=. I put them here instead of in their places because it is important to be aware they are closely related.
