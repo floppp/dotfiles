@@ -21,7 +21,6 @@ Using Emacs
     - Matlab
     - Scala/Ammonite
 + At home / hobby
-    - Clojure
     - C (debugging with Visual Studio Code)
     - Web/WebApps development
     - Scala
@@ -463,12 +462,6 @@ Changind /docview/ to move to next page begin from previous page.
 *** LSP
 TODO probar a ver la configuración de macos
 #+BEGIN_SRC emacs-lisp
-  ;; original de linux
-  ;;(use-package lsp-ui :commands lsp-ui-mode) ; flycheck y tips en popups
-  ;;(use-package company-lsp :commands company-lsp)
-  ;;(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-
   ;; De la configuración de scala-metals
   (use-package lsp-mode
     :ensure t
@@ -507,10 +500,6 @@ TODO probar a ver la configuración de macos
           lsp-ui-peek-peek-height 25)
     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
     (add-hook 'c-mode-hook #'lsp)) ; flycheck y tips en popups
-
-  (use-package lsp-treemacs
-    :commands lsp-treemacs-errors-list
-    :ensure t)
 
   (use-package company-lsp
     :commands company-lsp
@@ -772,15 +761,7 @@ TODO probar a ver la configuración de macos
     ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
     (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-;; Enable nice rendering of diagnostics like compile errors.
-;; (use-package flycheck
-;; :init (global-flycheck-mode))
-
-;;(use-package lsp-mode
-  ;; Optional - enable lsp-mode automatically in scala files
-  ;;:hook (scala-mode . lsp))
-  ;;  :config (setq lsp-prefer-flymake nil))
-
+(use-package lsp-metals)
 #+END_SRC
 *** Matlab
 Matlab configuration to have lint and also matlab repl in emacs.
@@ -829,7 +810,11 @@ There are two main options: [[https://github.com/mopemope/meghanada-emacs][megha
 *** Debugger
 #+BEGIN_SRC emacs-lisp
 (use-package dap-mode
-  :ensure t :after lsp-mode
+  :ensure t
+  :after lsp-mode
+  :hook
+  (lsp-mode . dap-mode)
+  (lsp-mode . dap-ui-mode)
   :config
   (dap-mode t)
   (dap-ui-mode t))
@@ -923,6 +908,7 @@ Here there are some functions and related keybindings to make work almost perfec
 (global-set-key (kbd "C-S-j") 'join-line)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 (global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+(global-set-key (kbd "C-x C-y") 'counsel-ag)
 (global-unset-key (kbd "C-x o")) ;; Desconecto binding original para 'other-window'
 (global-set-key (kbd "C-.") #'other-window)
 (global-set-key (kbd "C-,") (lambda ()
@@ -975,4 +961,9 @@ Here there are some functions and related keybindings to make work almost perfec
 (define-key global-map (kbd "C-c r") 'vr/replace)
 (define-key global-map (kbd "C-c q") 'vr/query-replace)
 (define-key global-map (kbd "C-c m") 'vr/mc-mark)
+
+;; lsp y relacionados
+(global-set-key (kbd "C-c C-c i") 'lsp-metals-build-import)
+(global-set-key (kbd "C-c C-c u") 'lsp-ui-imenu)
+(global-set-key (kbd "C-c C-c k") 'lsp-ui-imenu--kill)
 #+END_SRC
