@@ -3,6 +3,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 export ANDROID_HOME=$HOME/Android/Sdk
+export USE_WOLFRAM_LD_LIBRARY_PATH=1
 
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/platform-tools

@@ -685,19 +685,20 @@ TODO probar a ver la configuración de macos
 
 *** Python
 #+BEGIN_SRC emacs-lisp
-(use-package elpy
-  :ensure t)
-(elpy-enable)
+;; TODO: usar lsp-pyls
+  ;; (use-package elpy
+  ;;   :ensure t)
+  ;; (elpy-enable)
 
-(setq ;;elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
-      python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt")
-(setenv "WORKON_HOME" "/home/nando/miniconda3/envs")
-(pyvenv-mode 1)
+  ;; (setq ;;elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
+  ;;       python-shell-interpreter "ipython"
+  ;;       python-shell-interpreter-args "-i --simple-prompt")
+  (setenv "WORKON_HOME" "/home/nando/miniconda3/envs")
+  (pyvenv-mode 1)
 
-(require 'py-autopep8)
-;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-(add-hook 'elpy-mode-hook 'electric-pair-mode)
+  ;; (require 'py-autopep8)
+  ;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+  ;; (add-hook 'elpy-mode-hook 'electric-pair-mode)
 
 #+END_SRC
 
