@@ -1,44 +1,4 @@
 * General Configuration
-** When i use Emacs
-I love emacs, but it is hard to configure, and i'm maybe a little dumb to make it work properly with every language that i use every day, or only in some projects.
-Also, i only use it for unix-like OS. In Windows, it feels sluggy for me, so i use /SublimeText/ when i would use /Emacs/.
-And, finally but maybe the most important thing, in the future i’m pretty sure i will make the final transition to /VSCode/. I don't love it like i do with /Emacs/ and/or /Sublime/, but it just works, for every language, and debugger works almost perfectly, at least for my needs. I'm slower with it, it is very greedy with resources, even with a 4th gen i7 laptop with 16GB (it should be enough  althoug it is 6 years old), but its continuous evolution and improvement is hard to be forgotten, and from time to time i give it a new chance.
-
-Next i put when i use and where i don't use /Emacs/, and which alternatives i use for coding in those languages/frameworks:
-
-#+begin_src
-Using Emacs
-+ At work
-    - Client side:
-        - Vainilla JS Web development
-        - Angular
-        - Vue
-    - Backend
-        ‐ PHP
-        - JS (Express)
-    – Python (scripting + data science)
-    - Org-mode
-    - Matlab
-    - Scala/Ammonite
-+ At home / hobby
-    - C (debugging with Visual Studio Code)
-    - Web/WebApps development
-    - Scala
-    - Java
-#+end_src
-
-#+begin_src
-Don’t using it at all
-+ Latex   -> i can work with emacs, but usually i use Sublime + LatexTools
-+ Android -> AndroidStudio, either for Kotlin and Java
-+ iOS     -> only tried it for educational purpose, XCode obviously
-+ Flutter -> only tried it for educational purpose, VSCode
-+ Xamarin -> only tried it for educational purpose, VisualStudio in MacOS
-#+end_src
-
-I know, to many technologies, i'm not focused... is not my fault, is this fucking programming world, too many temptations for a disperse guy like i am.
-
-For debugging, i always use Visual Studio Code.
 ** GC size increment to speed up startup
 Increasing size of garbage collector speed up startup time about 1s in my macbook air 2015 (i7+8GB). Not tested yet in my main machine (Manjaro i7(4700)+16GB).
 #+BEGIN_SRC emacs-lisp
@@ -48,7 +8,6 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 ** Personal info
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Fernando López")
-(setq user-mail-address "fernandolopezlaso@gmail.com")
 (setq init-dir (file-name-directory (or load-file-name (buffer-file-name))))
 #+END_SRC
 
@@ -64,20 +23,15 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
 (defvar gnu '("gnu" . "http://elpa.gnu.org/packages/"))
 (defvar melpa '("melpa" . "https://melpa.org/packages/"))
 (defvar melpa-stable '("melpa-stable" . "https://stable.melpa.org/packages/"))
-;;(defvar org-elpa '("org" . "http://orgmode.org/elpa/"))
 (setq package-archives nil)
 (add-to-list 'package-archives melpa-stable t)
 (add-to-list 'package-archives melpa t)
 (add-to-list 'package-archives gnu t)
-;;(add-to-list 'package-archives org-elpa t)
 (package-initialize)
 (unless (and (file-exists-p (concat init-dir "elpa/archives/gnu"))
              (file-exists-p (concat init-dir "elpa/archives/melpa"))
              (file-exists-p (concat init-dir "elpa/archives/melpa-stable")))
   (package-refresh-contents))
-;;(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-;;                         ("marmalade" . "http://marmalade-repo.org/packages/")
-;;                         ("melpa" . "http://melpa.org/packages/")))
 #+END_SRC
 ** Custom functions
 
@@ -117,7 +71,7 @@ Increasing size of garbage collector speed up startup time about 1s in my macboo
   (setq tab-width n))
 
 (defun kill-other-buffers ()
-  "Para eliminar el resto de buffers salvo el activo."
+  "Killing every buffer but the current one."
   (interactive)
   (mapc 'kill-buffer
         (delq (current-buffer)
@@ -210,11 +164,11 @@ Some common clean setup configuration.
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)                        ;; Autocierre de paréntesis, llaves, corchetes, etc
 (set-face-attribute 'default nil :height 100) ;; El valor va en 1/10pt, así que 100 será 10pt...
-;; (set-default line-spacing 5)
 (setq visible-bell nil)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (if window-system (scroll-bar-mode -1))
+(set-fringe-style 1)
 #+END_SRC
 
 Spacemacs.
@@ -272,12 +226,12 @@ We have to download the executable for our OS.
 )
 #+END_SRC
 ** Projects and Search  Modes
-~Ivy~ and ~Projectile~ are both a must in we want that coding in Emacs would be fast.
+~Ivy~ and ~Projectile~ are both a must if we want that coding in Emacs would be fast.
 *** Ivy
-Ivy está formado por:
-    - ivy: un mecanismo genérico de completado de emacs
-    - counsel: varios comandos habituales de emacs mejorados con ivy
-    - swiper: un isearch mejorado con ivy
+Ivy has three components:
+    - ivy: generic mechanism to emacs completition
+    - counsel: various common emacs commands improved with ivy
+    - swiper: isearch improved with ivy
 #+BEGIN_SRC emacs-lisp
 ;; Configuración a partir de daemons.it, quitándole algunas cosas que no uso
 ;; actualmente (ya veré en un futuro) y modificando otras.
@@ -389,6 +343,32 @@ Hay que instalar =all-the-icons= para tener el /theme icons/, y después sus fue
 (setq-default neo-show-hidden-files t)
 #+END_SRC
 ** Accesories
+https://people.gnome.org/~federico/blog/bringing-my-emacs-from-the-past.html
+Do not show some common modes in the modeline, to save space
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :defer 5
+  :config
+  (diminish 'org-indent-mode))
+#+END_SRC
+
+Git -> Magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status))
+#+END_SRC
+
+Move buffers between windows
+#+BEGIN_SRC emacs-lisp
+(use-package buffer-move
+  :config
+  (global-set-key (kbd "<C-S-up>")     'buf-move-up)
+  (global-set-key (kbd "<C-S-down>")   'buf-move-down)
+  (global-set-key (kbd "<C-S-left>")   'buf-move-left)
+  (global-set-key (kbd "<C-S-right>")  'buf-move-right))
+#+END_SRC
+
 Changind /docview/ to move to next page begin from previous page.
 
 #+BEGIN_SRC emacs-lisp
@@ -477,6 +457,7 @@ TODO probar a ver la configuración de macos
     (add-hook 'c++-mode-hook #'lsp)
     (add-hook 'scala-mode-hook #'lsp)
     (add-hook 'java-mode-hook #'lsp)
+    (add-hook 'python-mode-hook #'lsp)
     :config
     (setq lsp-prefer-flymake nil) ;; Prefer using lsp-ui (flycheck) over flymake.
     (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
@@ -486,11 +467,15 @@ TODO probar a ver la configuración de macos
     :requires lsp-mode flycheck
     :commands lsp-ui-mode
     :ensure t
+    :init (setq lsp-ui-doc-enable nil)
     :config
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-childframe t
-          lsp-ui-doc-position 'top
-          lsp-ui-doc-include-signature t
+    (setq ;;lsp-ui-doc-enable t
+          ;;lsp-ui-doc-enable t
+          ;;lsp-ui-doc-use-childframe t
+          ;;lsp-ui-doc-position 'bottom
+          ;;lsp-ui-doc-glance
+          ;;lsp-ui-doc-include-signature t
+          ;;lsp-ui-doc-delay 1
           lsp-ui-sideline-enable t
           lsp-ui-flycheck-enable t
           lsp-ui-flycheck-list-position 'right
@@ -524,18 +509,14 @@ TODO probar a ver la configuración de macos
 
 *** Flycheck
 #+BEGIN_SRC emacs-lisp
-;; comento porque me da muchos problemas con python, mete python-mypy porque sí
-  ;; (use-package flycheck
-    ;; :ensure t
-    ;; :config
-    ;; (add-hook 'after-init-hook #'global-flycheck-mode))
+    (use-package flycheck
+      :ensure t
+      :config
+      ;; ;; (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
+
 *** C/CPP
 #+BEGIN_SRC emacs-lisp
-  ;;(require 'ccls)
-  ;;(use-package ccls
-  ;;   :hook ((c-mode c++-mode cuda-mode) .
-  ;;          (lambda () (require 'ccls) (lsp))))
   (use-package google-c-style
     :ensure t
     :defer t
@@ -577,46 +558,7 @@ TODO probar a ver la configuración de macos
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
-;; (add-hook 'typescript-mode-hook
-      ;; (lambda ()
-      ;;    (setq indent-tabs-mode t)
-      ;;    (setq tab-width 2)))
-;;(add-hook 'typescript-mode '(disable-tabs 2))
 (add-hook 'js-mode-hook #'setup-tide-mode)
-#+END_SRC
-
-*** PHP
-#+BEGIN_SRC emacs-lisp
-(use-package php-mode
-  :mode
-  (("\\.php\\'" . php-mode))
-  :config
-  (add-hook 'php-mode-hook
-	    '(lambda ()
-               ;; auto-complete
-               ;; (require 'ac-php)
-               ;; (define-key php-mode-map (kbd "M-]")
-                 ;; 'ac-php-find-symbol-at-point)
-               ;; (define-key php-mode-map (kbd "M-[")
-                 ;; 'ac-php-location-stack)
-
-               ;; company
-               (require 'company-php)
-	       (company-mode t)
-	       ;; (add-to-list 'company-backends 'company-ac-php-backend)
-               (ac-php-core-eldoc-setup)
-
-               (set (make-local-variable 'company-backends)
-                    '((company-ac-php-backend company-dabbrev-code) company-capf company-files))
-
-               ;; Jump to definition (optional)
-               (define-key php-mode-map (kbd "M-]") 'ac-php-find-symbol-at-point)
-
-               ;; Return back (optional)
-               (define-key php-mode-map (kbd "M-[") 'ac-php-location-stack-back)
-               )
-            )
-  )
 #+END_SRC
 
 *** Web
@@ -650,56 +592,11 @@ TODO probar a ver la configuración de macos
 (setq web-mode-enable-current-element-highlight t)
 #+END_SRC
 
-*** Clojure
-#+BEGIN_SRC emacs-lisp
-(use-package clojure-snippets
-  :ensure t)
-
-(use-package cider
-  :ensure t
-  :pin melpa-stable
-  :init
-  (setq cider-lein-command "/home/nando/bin/lein")
-  :config
-  (add-hook 'cider-mode-hook #'eldoc-mode)
-  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
-
-;;(use-package flycheck-clojure) ;; Mejor instalarlo a mano
-
-;; me gustan kibit y eastwood, pero me dan problemas cada cierto tiempo (que no
-;; sé arreglar) así que uso joker (que ya uso en sublime/vscode).
-(require 'flycheck-joker)
-(require 'flycheck-tip)
-
-(use-package clj-refactor
-  :ensure t
-  :config
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (clj-refactor-mode 1)
-                                 ;; insert keybinding setup here
-                                 ))
-  (cljr-add-keybindings-with-prefix "C-c C-m")
-  (setq cljr-warn-on-eval nil))
-
-#+END_SRC
-
 *** Python
 #+BEGIN_SRC emacs-lisp
-;; TODO: usar lsp-pyls
-  ;; (use-package elpy
-  ;;   :ensure t)
-  ;; (elpy-enable)
-
-  ;; (setq ;;elpy-rpc-python-command "/home/nando/miniconda3/bin/python"
-  ;;       python-shell-interpreter "ipython"
-  ;;       python-shell-interpreter-args "-i --simple-prompt")
+;; Configuration in lsp-mode. We must install python-language-server (pyls)
   (setenv "WORKON_HOME" "/home/nando/miniconda3/envs")
   (pyvenv-mode 1)
-
-  ;; (require 'py-autopep8)
-  ;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-  ;; (add-hook 'elpy-mode-hook 'electric-pair-mode)
-
 #+END_SRC
 
 *** Org, Latex, Markdown
@@ -802,12 +699,14 @@ From https://mopemope.com/emacs-config/, blog of emacs-meghanada mode.
   (use-package sql-indent
     :ensure t))
 #+END_SRC
+
 *** Java
 There are two main options: [[https://github.com/mopemope/meghanada-emacs][meghanada]] and [[https://github.com/emacs-lsp/lsp-java][lsp-java]]. The first one seems easier and more stable, has mor stars and watchs (20/04/26), but the second looks more promising, has a visual debugger and (less important) it is not a personal project.
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-java :ensure t)
 (use-package dap-java :after (lsp-java))
 #+END_SRC
+
 *** Debugger
 #+BEGIN_SRC emacs-lisp
 (use-package dap-mode
@@ -887,8 +786,8 @@ Here there are some functions and related keybindings to make work almost perfec
 (global-set-key (kbd "TAB") 'tab-indent-or-complete)
 (global-set-key [(control return)] 'company-complete-common)
 
-(define-key company-active-map [tab] 'expand-snippet-or-complete-selection)
-(define-key company-active-map (kbd "TAB") 'expand-snippet-or-complete-selection)
+;;(define-key company-active-map [tab] 'expand-snippet-or-complete-selection)
+;;(define-key company-active-map (kbd "TAB") 'expand-snippet-or-complete-selection)
 
 (define-key yas-minor-mode-map [tab] nil)
 (define-key yas-minor-mode-map (kbd "TAB") nil)
@@ -966,5 +865,8 @@ Here there are some functions and related keybindings to make work almost perfec
 ;; lsp y relacionados
 (global-set-key (kbd "C-c C-c i") 'lsp-metals-build-import)
 (global-set-key (kbd "C-c C-c u") 'lsp-ui-imenu)
-(global-set-key (kbd "C-c C-c k") 'lsp-ui-imenu--kill)
+(global-set-key (kbd "C-c C-c d") 'lsp-ui-doc-show)
+;; No tiene sentido, hace lo mismo que C-x k, si ejecuto en otro frame,
+;; me lo cierra en vez del menú lsp-ui-imenu
+;; (global-set-key (kbd "C-c C-c k") 'lsp-ui-imenu--kill)
 #+END_SRC

@@ -13,6 +13,7 @@ export PATH="/home/nando/.gem/ruby/2.4.0/bin:$PATH"
 export PATH="/home/nando/Software/utils:$PATH"
 export PATH="/home/nando/Software/scripts:$PATH"
 export PATH="/home/nando/miniconda3/bin:$PATH"
+export PATH="$PATH:/home/nando/.local/share/coursier/bin"
 
 export PATH="/home/nando/.gem/ruby/2.7.0/bin:$PATH"
 
@@ -22,6 +23,7 @@ export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"
 # Directorios actualmente en uso (IR LIMPIANDO REGULARMENTE)
 alias i3-two-screens='xrandr --output VGA1 --left-of eDP1 --output VGA1 --primary'
 alias imm-ws='cd /run/media/nando/748e759c-f69d-46a4-93bd-dc734f5b081f/fernando/workspace/'
+alias ovh_server='ssh -i .ssh/id_rsa_outlook -p 2345 nando@51.91.157.52'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
