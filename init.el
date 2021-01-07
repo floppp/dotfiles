@@ -153,54 +153,54 @@
 ;;; built-in packages
 
 (use-package paren
-	:config
-	(show-paren-mode +1))
+  :config
+  (show-paren-mode +1))
 
 (use-package elec-pair
-	:config
-	(electric-pair-mode +1))
+  :config
+  (electric-pair-mode +1))
 
 ;; highlight the current line
 (use-package hl-line
-	:config
-	(global-hl-line-mode +1))
+  :config
+  (global-hl-line-mode +1))
 
 ;; To define snippets easily. Nice, try to use.
 (use-package abbrev
-	:config
-	(setq save-abbrevs 'silently)
-	(setq-default abbrev-mode t))
+  :config
+  (setq save-abbrevs 'silently)
+  (setq-default abbrev-mode t))
 
 ;; To make buffer names to give more information than default behaviour.
 (use-package uniquify
-	:config
-	(setq uniquify-buffer-name-style 'forward)
-	(setq uniquify-separator "/")
-	;; rename after killing uniquified
-	(setq uniquify-after-kill-buffer-p t)
-	;; don't muck with special buffers
-	(setq uniquify-ignore-buffers-re "^\\*"))
+  :config
+  (setq uniquify-buffer-name-style 'forward)
+  (setq uniquify-separator "/")
+  ;; rename after killing uniquified
+  (setq uniquify-after-kill-buffer-p t)
+  ;; don't muck with special buffers
+  (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package windmove
-	:config
-	;; use shift + arrow keys to switch between visible buffers
-	(windmove-default-keybindings))
+  :config
+  ;; use shift + arrow keys to switch between visible buffers
+  (windmove-default-keybindings))
 
 (use-package dired
-	:config
-	;; dired - reuse current buffer by pressing 'a'
-	(put 'dired-find-alternate-file 'disabled nil)
+  :config
+  ;; dired - reuse current buffer by pressing 'a'
+  (put 'dired-find-alternate-file 'disabled nil)
 
-	;; always delete and copy recursively
-	(setq dired-recursive-deletes 'always)
-	(setq dired-recursive-copies 'always)
+  ;; always delete and copy recursively
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
 
-	;; if there is a dired buffer displayed in the next window, use its
-	;; current subdir, instead of the current subdir of this dired buffer
-	(setq dired-dwim-target t)
+  ;; if there is a dired buffer displayed in the next window, use its
+  ;; current subdir, instead of the current subdir of this dired buffer
+  (setq dired-dwim-target t)
 
-	;; enable some really cool extensions like C-x C-j(dired-jump)
-	(require 'dired-x))
+  ;; enable some really cool extensions like C-x C-j(dired-jump)
+  (require 'dired-x))
 
 (require 'highlight-symbol)
 
@@ -213,146 +213,146 @@
 
 
 ;; (use-package zenburn-theme
-;; 	:ensure t
-;; 	:config
-;; 	(load-theme 'zenburn t))
+;;  :ensure t
+;;  :config
+;;  (load-theme 'zenburn t))
 
 (use-package ag
-	:ensure t)
+  :ensure t)
 
 (unless (require 'ivy nil 'noerror)
   (sleep-for 5))
 
 (use-package ivy
-	:init
-	(setq ivy-use-virtual-buffers t)     ;; Añade los buffers de bookmarks y de recentf
-	(setq ivy-count-format "(%d/%d) ")   ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
-	(setq ivy-height 15)                 ;; número de resultados a mostrar
-	(setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
-	(setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
-	(setq ivy-wrap t)                    ;; Dar la vuelta a los candidatos
-	(setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
-	;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
-	(setq ivy-re-builders-alist
-		    '(
-		      ;; (ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
-		      ;; (read-file-name-internal . ivy--regex-plus)
-		      (t . ivy--regex-fuzzy)
-		      ))
-	(setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
-	(setq ivy-use-selectable-prompt t)  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
+  :init
+  (setq ivy-use-virtual-buffers t)     ;; Añade los buffers de bookmarks y de recentf
+  (setq ivy-count-format "(%d/%d) ")   ;; Muestra las coincidencias con lo que se escribe y la posicion en estas
+  (setq ivy-height 15)                 ;; número de resultados a mostrar
+  (setq ivy-on-del-error-function nil) ;; No se sale del minibuffer si se encuentra un error
+  (setq ivy-initial-inputs-alist nil)  ;; ivy mete el simbolo ^ al ejecutar algunas ordenes, así se quita
+  (setq ivy-wrap t)                    ;; Dar la vuelta a los candidatos
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; Que el uso de fuzzy regex se use en todo, no solo en counsel-find-file
+  ;; (setq ivi-re-builders-alist '((t . ivi--regex-plus)))
+  (setq ivy-re-builders-alist
+        '(
+          ;; (ivy-switch-buffer . ivy--regex-plus) ; plus por defecto
+          ;; (read-file-name-internal . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)
+          ))
+  (setq ivy-virtual-abbreviate 'full) ;; Ver la ruta de los ficheros virtuales
+  (setq ivy-use-selectable-prompt t)  ;; Seleccionar el candidato actual (C-m en vez de C-S-m)
 
-	;; Asegurarse de que están smex, flx
-	(use-package smex :ensure t)
-	(use-package flx :ensure t)
+  ;; Asegurarse de que están smex, flx
+  (use-package smex :ensure t)
+  (use-package flx :ensure t)
 
-	:config (ivy-mode 1)
-	:config (counsel-mode 1)
-	:diminish ivy-mode
-	:ensure t)
+  :config (ivy-mode 1)
+  :config (counsel-mode 1)
+  :diminish ivy-mode
+  :ensure t)
 
 (use-package swiper
-	:ensure t
-	:config
-	(global-set-key "\C-s" 'swiper))
+  :ensure t
+  :config
+  (global-set-key "\C-s" 'swiper))
 
 (use-package counsel
-	:ensure t
-	:config
-	(global-set-key (kbd "M-x") 'counsel-M-x)
-	(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-	(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-	(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-	(global-set-key (kbd "<f1> l") 'counsel-find-library)
-	(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-	(global-set-key (kbd "C-c a") 'counsel-ag)
-	(global-set-key (kbd "C-x l") 'counsel-locate)
-	(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+  :ensure t
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "C-c a") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
 
 (use-package projectile
-	:ensure t
-	:init
-	(setq projectile-completion-system 'ivy)
-	(setq projectile-project-search-path '("~/workspace/projects/"))
-	(setq projectile-switch-project-action #'projectile-dired)
-	:config
-	(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-	(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-	(projectile-mode +1))
+  :ensure t
+  :init
+  (setq projectile-completion-system 'ivy)
+  (setq projectile-project-search-path '("~/workspace/projects/"))
+  (setq projectile-switch-project-action #'projectile-dired)
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (projectile-mode +1))
 
 (use-package which-key
-	:ensure t
-	:config
-	(which-key-mode))
+  :ensure t
+  :config
+  (which-key-mode))
 
 (use-package expand-region
-	:ensure t
-	:bind ("C-=" . er/expand-region))
+  :ensure t
+  :bind ("C-=" . er/expand-region))
 
 (use-package multiple-cursors
-	:ensure t
-	:config
-	(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-	(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-	(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-	(global-set-key (kbd "C-c C->") 'mc/mark-all-like-this))
+  :ensure t
+  :config
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C->") 'mc/mark-all-like-this))
 
 (use-package aggressive-indent
-	:ensure t
-	:defer t
-	:config
-	(add-hook 'clojure-mode-hook #'aggressive-indent-mode))
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
 (use-package highlight-parentheses
-	:ensure t)
+  :ensure t)
 (global-highlight-parentheses-mode)
 
 (use-package rainbow-mode
-	:ensure t
-	:config
-	(add-hook 'prog-mode-hook #'rainbow-mode))
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode))
 
 (use-package rainbow-delimiters
-	:ensure t
-	:config
-	(add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
-	(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+  :ensure t
+  :config
+  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 ;; for moving line or region if selected.
 (use-package move-text
-	:ensure t
+  :ensure t
   :bind
   (([(meta up)] . move-text-up)
    ([(meta down)] . move-text-down)))
 
 (use-package crux
-	:ensure t
-	:bind (("C-c o" . crux-open-with)
-		     ("M-o" . crux-smart-open-line)
-		     ("C-c n" . crux-cleanup-buffer-or-region)
-		     ("C-c f" . crux-recentf-find-file)
-		     ("C-M-z" . crux-indent-defun)
-		     ("C-c u" . crux-view-url)
-		     ("C-c e" . crux-eval-and-replace)
-		     ("C-c w" . crux-swap-windows)
+  :ensure t
+  :bind (("C-c o" . crux-open-with)
+         ("M-o" . crux-smart-open-line)
+         ("C-c n" . crux-cleanup-buffer-or-region)
+         ("C-c f" . crux-recentf-find-file)
+         ("C-M-z" . crux-indent-defun)
+         ("C-c u" . crux-view-url)
+         ("C-c e" . crux-eval-and-replace)
+         ("C-c w" . crux-swap-windows)
          ("C-c d" . crux-duplicate-current-line-or-region)
-		     ("C-c D" . crux-delete-file-and-buffer)
-		     ("C-c r" . crux-rename-buffer-and-file)
-		     ("C-c t" . crux-visit-term-buffer)
-		     ("C-c k" . crux-kill-other-buffers)
-		     ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
-		     ("C-c I" . crux-find-user-init-file)
-		     ("C-c S" . crux-find-shell-init-file)
-		     ("s-r" . crux-recentf-find-file)
-		     ("s-j" . crux-top-join-line)
-		     ("C-^" . crux-top-join-line)
-		     ("s-k" . crux-kill-whole-line)
-		     ("C-<backspace>" . crux-kill-line-backwards)
-		     ("s-o" . crux-smart-open-line-above)
-		     ([remap move-beginning-of-line] . crux-move-beginning-of-line)
-		     ([(shift return)] . crux-smart-open-line)
-		     ([(control shift return)] . crux-smart-open-line-above)
+         ("C-c D" . crux-delete-file-and-buffer)
+         ("C-c r" . crux-rename-buffer-and-file)
+         ("C-c t" . crux-visit-term-buffer)
+         ("C-c k" . crux-kill-other-buffers)
+         ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
+         ("C-c I" . crux-find-user-init-file)
+         ("C-c S" . crux-find-shell-init-file)
+         ("s-r" . crux-recentf-find-file)
+         ("s-j" . crux-top-join-line)
+         ("C-^" . crux-top-join-line)
+         ("s-k" . crux-kill-whole-line)
+         ("C-<backspace>" . crux-kill-line-backwards)
+         ("s-o" . crux-smart-open-line-above)
+         ([remap move-beginning-of-line] . crux-move-beginning-of-line)
+         ([(shift return)] . crux-smart-open-line)
+         ([(control shift return)] . crux-smart-open-line-above)
 		     ([remap kill-whole-line] . crux-kill-whole-line)
 		     ("C-c s" . crux-ispell-word-then-abbrev)))
 
