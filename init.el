@@ -140,6 +140,8 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 (global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
 
 (define-key global-map [f4] 'toggle-truncate-lines)
 (define-key global-map [f5] 'tool-bar-mode)
@@ -362,7 +364,7 @@
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
   :config
   (progn
-    ; Aquí van las opciones. Dejo una para saber dónde ponerlas.
+                                        ; Aquí van las opciones. Dejo una para saber dónde ponerlas.
     (setq treemacs-file-event-delay 4000)
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -513,9 +515,9 @@
 (defun load-scala-macos ()
   "Loading eglot.  I prefer lsp-metals, but eglot works well too."
   (use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs '(scala-mode . ("metals-emacs")))
-  :hook (scala-mode . eglot-ensure)))
+    :config
+    (add-to-list 'eglot-server-programs '(scala-mode . ("metals-emacs")))
+    :hook (scala-mode . eglot-ensure)))
 
 (use-package scala-mode
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
@@ -607,8 +609,8 @@ solamente carga el modo para el primer archivo."
 ;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
 (add-hook 'web-mode-hook 'setup-tide-mode
           (lambda () (pcase (file-name-extension buffer-file-name)
-                  ("tsx" ('setup-tide-mode))
-                  (_ (my-web-mode-hook)))))
+                       ("tsx" ('setup-tide-mode))
+                       (_ (my-web-mode-hook)))))
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (add-hook 'web-mode-hook 'company-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
@@ -627,8 +629,8 @@ solamente carga el modo para el primer archivo."
 (setq web-mode-enable-current-element-highlight t)
 (add-hook 'web-mode-hook 'setup-tide-mode
           (lambda () (pcase (file-name-extension buffer-file-name)
-                  ("tsx" ('tide-setup-hook))
-                  (_ (my-web-mode-hook)))))
+                       ("tsx" ('tide-setup-hook))
+                       (_ (my-web-mode-hook)))))
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;; para poder trabajar independientemente con los archivos php cuando son para código o son para html
