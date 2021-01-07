@@ -353,8 +353,8 @@
          ([remap move-beginning-of-line] . crux-move-beginning-of-line)
          ([(shift return)] . crux-smart-open-line)
          ([(control shift return)] . crux-smart-open-line-above)
-		     ([remap kill-whole-line] . crux-kill-whole-line)
-		     ("C-c s" . crux-ispell-word-then-abbrev)))
+         ([remap kill-whole-line] . crux-kill-whole-line)
+         ("C-c s" . crux-ispell-word-then-abbrev)))
 
 (use-package treemacs
   :ensure t
@@ -397,33 +397,33 @@
 
 
 (use-package lsp-mode
-	:hook
-	(sh-mode . lsp) ;; (c-mode . lsp)
-	(c++-mode . lsp)
-	(java-mode .lsp)
-	;; (scala-mode . lsp)
+  :hook
+  (sh-mode . lsp) ;; (c-mode . lsp)
+  (c++-mode . lsp)
+  (java-mode .lsp)
+  ;; (scala-mode . lsp)
   (lsp-mode . lsp-lens-mode)
-	:config
-	(setq lsp-prefer-flymake nil)
-	(setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
+  :config
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
 
 (use-package lsp-ui
-	:requires lsp-mode flycheck
-	:commands lsp-ui-mode
-	:ensure t
-	:config
-	(setq lsp-ui-doc-enable t
-		    lsp-ui-doc-use-childframe t
-		    lsp-ui-doc-position 'top
-		    lsp-ui-doc-include-signature t
-		    lsp-ui-sideline-enable nil
-		    lsp-ui-flycheck-enable t
-		    lsp-ui-flycheck-list-position 'right
-		    lsp-ui-flycheck-live-reporting t
-		    lsp-ui-peek-enable t
-		    lsp-ui-peek-list-width 60
-		    lsp-ui-peek-peek-height 25)
-	(add-hook 'lsp-mode-hook 'lsp-ui-mode)) ; flycheck y tips en popups
+  :requires lsp-mode flycheck
+  :commands lsp-ui-mode
+  :ensure t
+  :config
+  (setq lsp-ui-doc-enable t
+       lsp-ui-doc-use-childframe t
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-include-signature t
+        lsp-ui-sideline-enable nil
+        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-list-position 'right
+        lsp-ui-flycheck-live-reporting t
+        lsp-ui-peek-enable t
+        lsp-ui-peek-list-width 60
+        lsp-ui-peek-peek-height 25)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)) ; flycheck y tips en popups
 
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list :ensure t)
 
@@ -434,40 +434,40 @@
 
 ;; Use the Debug Adapter Protocol for running tests and debugging
 (use-package posframe
-	;; Posframe is a pop-up tool that must be manually installed for dap-mode
-	)
+  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+  )
 (use-package dap-mode
-	:hook
-	(lsp-mode . dap-mode)
-	(lsp-mode . dap-ui-mode))
+  :hook
+  (lsp-mode . dap-mode)
+  (lsp-mode . dap-ui-mode))
 
 
 ;;; clojure
 
 (use-package clojure-mode
-	:ensure t
-	:config
-	(add-hook 'clojure-mode-hook #'paredit-mode)
-	(add-hook 'clojure-mode-hook #'subword-mode)
-	(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook #'paredit-mode)
+  (add-hook 'clojure-mode-hook #'subword-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package cider
-	:ensure t
-	:config
-	(setq nrepl-log-messages t)
-	(add-hook 'cider-mode-hook #'eldoc-mode)
-	(add-hook 'cider-repl-mode-hook #'eldoc-mode)
-	(add-hook 'cider-repl-mode-hook #'paredit-mode)
-	(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
+  :ensure t
+  :config
+  (setq nrepl-log-messages t)
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package flycheck-joker
-	:ensure t)
+  :ensure t)
 
 
 ;;; python
 
 (use-package elpy
-	:ensure t)
+  :ensure t)
 (elpy-enable)
 (setq ;;elpy-rpc-python-command "/Users/nando/miniconda3/bin/python"
  python-shell-interpreter "ipython"
@@ -521,21 +521,21 @@
 
 (use-package scala-mode
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
-	:interpreter
-	("amm" . scala-mode))
+  :interpreter
+  ("amm" . scala-mode))
 
 ;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
-	:commands sbt-start sbt-command
-	:config
-	;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-	;; allows using SPACE when in the minibuffer
-	(substitute-key-definition
-	 'minibuffer-complete-word
-	 'self-insert-command
-	 minibuffer-local-completion-map)
-	;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-	(setq sbt:program-options '("-Dsbt.supershell=false")))
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 (if (eq system-type 'darwin)
     (load-scala-macos)
@@ -547,23 +547,23 @@
 
 ;; (require 'ccls)
 (use-package google-c-style
-	:ensure t
-	:defer t
-	:commands
-	(google-set-c-style))
+  :ensure t
+  :defer t
+  :commands
+  (google-set-c-style))
 
 (use-package clang-format
-	:ensure t
-	:defer t
-	:commands
-	(clang-format clang-format-buffer))
+  :ensure t
+  :defer t
+  :commands
+  (clang-format clang-format-buffer))
 
 (use-package ccls
-	:ensure t
-	:custom
-	(indent-tabs-mode nil)
-	(tab-width 2)
-	(c-basic-offset 2))
+  :ensure t
+  :custom
+  (indent-tabs-mode nil)
+  (tab-width 2)
+  (c-basic-offset 2))
 
 (setq ccls-executable (if (eq system-type 'darwin)
                           "/usr/local/bin/ccls"
@@ -646,15 +646,15 @@ solamente carga el modo para el primer archivo."
 ;; (add-hook 'web-mode-hook 'emmet-mode)
 
 ;; (use-package web-mode
-;; 	:custom
-;; 	(web-mode-markup-indent-offset 2)
-;; 	(web-mode-css-indent-offset 2)
-;; 	(web-mode-code-indent-offset 2)
-;; 	:config
-;; 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;; 	(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
-;; 	(add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
-;; 	:ensure t)
+;;  :custom
+;;  (web-mode-markup-indent-offset 2)
+;;  (web-mode-css-indent-offset 2)
+;;  (web-mode-code-indent-offset 2)
+;;  :config
+;;  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;;  (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+;;  (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
+;;  :ensure t)
 
 ;; ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
 ;; (defun custom-web-mode-hook ()
@@ -690,7 +690,7 @@ solamente carga el modo para el primer archivo."
             (org-indent-mode t)))
 
 (use-package markdown-mode
-	:ensure t)
+  :ensure t)
 
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
@@ -725,40 +725,40 @@ solamente carga el modo para el primer archivo."
 ;;; others
 
 (use-package company
-	:ensure t
-	:config
-	(setq company-idle-delay .5)
-	(setq company-show-numbers t)
-	(setq company-minimum-prefix-length 2)
-	(setq company-tooltip-limit 10)
-	(setq company-tooltip-align-annotations t)
-	;; invert the navigation direction if the the completion popup-isearch-match
-	;; is displayed on top (happens near the bottom of windows)
-	(setq company-tooltip-flip-when-above t)
-	(global-company-mode))
+  :ensure t
+  :config
+  (setq company-idle-delay .5)
+  (setq company-show-numbers t)
+  (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-limit 10)
+  (setq company-tooltip-align-annotations t)
+  ;; invert the navigation direction if the the completion popup-isearch-match
+  ;; is displayed on top (happens near the bottom of windows)
+  (setq company-tooltip-flip-when-above t)
+  (global-company-mode))
 
 
 (use-package flycheck
-	:ensure t
-	:config
-	(add-hook 'after-init-hook #'global-flycheck-mode))
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package hl-todo
-	:ensure t
-	:config
-	(setq hl-todo-highlight-punctuation ":")
-	(global-hl-todo-mode))
+  :ensure t
+  :config
+  (setq hl-todo-highlight-punctuation ":")
+  (global-hl-todo-mode))
 
 (use-package imenu-anywhere
-	:ensure t
-	:bind (("C-c i" . imenu-anywhere)
-		     ("s-i" . imenu-anywhere)))
+  :ensure t
+  :bind (("C-c i" . imenu-anywhere)
+         ("s-i" . imenu-anywhere)))
 
 (use-package ace-window
-	:ensure t
-	:config
-	(global-set-key (kbd "M-o") 'ace-window)
-	(global-set-key [remap other-window] 'ace-window))
+  :ensure t
+  :config
+  (global-set-key (kbd "M-o") 'ace-window)
+  (global-set-key [remap other-window] 'ace-window))
 
 ;; Do not show some common modes in the modeline, to save space
 ;; https://people.gnome.org/~federico/blog/bringing-my-emacs-from-the-past.html
