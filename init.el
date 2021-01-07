@@ -137,7 +137,7 @@
 (global-set-key (kbd "s-q") #'fill-paragraph)
 (global-set-key (kbd "s-x") #'execute-extended-command)
 (global-set-key (kbd "C-q") 'comment-line)
-;; (global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-x f") 'flycheck-list-errors)
 (global-set-key (kbd "C-x C-g") 'delete-trailing-whitespace)
 
