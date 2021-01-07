@@ -512,7 +512,7 @@ TODO probar a ver la configuración de macos
     (use-package flycheck
       :ensure t
       :config
-      ;; ;; (add-hook 'after-init-hook #'global-flycheck-mode))
+      (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
 
 *** C/CPP

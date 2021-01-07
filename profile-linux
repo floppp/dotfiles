@@ -24,6 +24,8 @@ export PYTHONPATH="/home/nando/Software/python_libs:$PYTHONPATH"
 alias i3-two-screens='xrandr --output VGA1 --left-of eDP1 --output VGA1 --primary'
 alias imm-ws='cd /run/media/nando/748e759c-f69d-46a4-93bd-dc734f5b081f/fernando/workspace/'
 alias ovh_server='ssh -i .ssh/id_rsa_outlook -p 2345 nando@51.91.157.52'
+alias turn_off_laptop_screen='xrandr --output eDP1 --off'
+alias turn_on_laptop_screen='xrandr --output eDP1 --right-of HDMI1 --output HDMI1 --primary'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
