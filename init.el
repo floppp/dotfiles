@@ -83,6 +83,7 @@
 (column-number-mode t)
 (size-indication-mode t)
 (scroll-bar-mode -1)
+(blink-cursor-mode 0)
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized)) ;; maximize the initial frame automatically
 
