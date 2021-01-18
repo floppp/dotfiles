@@ -6,7 +6,7 @@
 ;; - Tide for TypeScript/JavaScript.
 ;; - Plus some configurations for Org, Latex, MarkDown.
 ;; [TODO: Try built-in react support for Emacs 27.]
-;; - Rxjs for React. 
+;; - Rxjs for React.
 
 
 
@@ -26,11 +26,11 @@
 ;; - py-autopep8
 ;;
 ;; They can be installed in some automatic way, with functions that call to install them, but
-;; actually i never feel they work (my implementation, modifications made to code found 
-;; somewhere) fine. So i prefer installed them manually. Only needs to be done once obviously.
+;; actually i never feel they work (my implementation, modifications made to code found
+;; somewhere) fine.  So i prefer installed them manually.  Only needs to be done once obviously.
 ;;
 ;; Preferred themes:
-;; - light -> dichromacy and emacs default
+;; - light -> dichromacy and Emacs default
 ;; - dark  -> danneskjold
 
 
