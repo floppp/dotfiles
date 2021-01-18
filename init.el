@@ -1,25 +1,44 @@
 ;;; package -- Summary
-;; Emacs configuration for C/C++, Python, Scala, Clojure, TS/JS + React.
+;; Emacs configuration for C/C++, Python, Scala, Clojure, TS/JS, Web (+ React), Java.
+;; - LSP for Scala (lsp-metals), C/C++ (ccls), Java (lsp-java).
+;; - Elpy for python.
+;; - Cider for Clojure.
+;; - Tide for TypeScript/JavaScript.
+;; - Plus some configurations for Org, Latex, MarkDown.
+;; [TODO: Try built-in react support for Emacs 27.]
+;; - Rxjs for React. 
+
+
 
 ;;; Commentary:
-;; Back to regular init.el file.  Literate programming, even only for configuration
+;; Back to regular init.el file.  Literate programming, even only for small file configurations
 ;; like this one, is not for me.
-
-;; I'll be using my own configuration plus a lot from bbatsov.  The order I use (shortcuts,
-;; packages, etc.) is the same I found there.
+;;
+;; I'll be using my own configuration plus a lot from bbatsov.
 ;;
 ;; https://github.com/bbatsov/emacs.d/blob/master/init.el
+;;
+;; Some packages need to be installed manually:
+;; - emmet
+;; - sbt-mode
+;; - scala-mode
+;; - visual-regexp
+;; - py-autopep8
+;;
+;; They can be installed in some automatic way, with functions that call to install them, but
+;; actually i never feel they work (my implementation, modifications made to code found 
+;; somewhere) fine. So i prefer installed them manually. Only needs to be done once obviously.
+;;
+;; Preferred themes:
+;; - light -> dichromacy and emacs default
+;; - dark  -> danneskjold
 
 
 ;;; License:
-
-;; You can make whatever you want with this configuration file.
+;; You can make whatever the fuck you want with this configuration file.
 
 
 ;;; Code:
-
-;; TODO: Many things from pc at work (ElementaryOS) must be copied here.
-
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -32,12 +51,23 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+(defun load-macos-path ()
+  "Loading some paths to be able to find executables."
+  (setenv "JAVA_HOME" "/usr/local/opt/openjdk")
+  (setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ;; Esto me ha hecho que funcione el linting en elpy
+  (setq exec-path (append exec-path '("/usr/local/bin")))
+  (setq exec-path (append exec-path '("/Users/nando/bin"))))
 
-;; TODO: Variables must be set depending on OS.
-(setenv "JAVA_HOME" "/usr/local/opt/openjdk")
-(setq exec-path (append exec-path '("/Users/nando/.local/bin"))) ;; Esto me ha hecho que funcione el linting en elpy
-(setq exec-path (append exec-path '("/usr/local/bin")))
-(setq exec-path (append exec-path '("/Users/nando/bin")))
+(defun load-linux-path ()
+  "Loading for home/work paths."
+  (setq exec-path (append exec-path '("/home/fernando/miniconda3/bin")))
+  (setq exec-path (append exec-path '("/home/fernando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
+  (setq exec-path (append exec-path '("/home/fernando/.nvm/versions/node/v14.15.4/bin")))
+  (setq exec-path (append exec-path '("/home/fernando/bin"))))
+
+(if (eq system-type 'darwin)
+    (load-macos-path)
+  (load-linux-path))
 
 
 ;; ==== GLOBAL CONFIGURATION ====
@@ -56,7 +86,7 @@
 ;; Para que si tengo dos paneles abiertos, al copiar en uno, se copie directamente en el otro.
 (setq dired-dwim-target t)
 (setq tab-always-indent 'complete)  ;; smart tab behavior - indent or complete
-
+;; (setq create-lockfiles nil)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq-default fill-column 80)
@@ -78,7 +108,7 @@
 (delete-selection-mode t)
 (set-fringe-style 1)
 (tool-bar-mode -1)
-(menu-bar-mode 1)
+(menu-bar-mode -1)
 (line-number-mode t)
 (column-number-mode t)
 (size-indication-mode t)
@@ -126,6 +156,12 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
+;;; functions
+(defun close-all-buffers ()
+  "Para eliminar todos los buffers."
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+
 (defun kill-this-buffer ()
   "Para matar el buffer actual."
   (interactive)
@@ -150,6 +186,7 @@
 (define-key global-map [f9] 'sort-lines)
 (define-key global-map [f11] 'global-linum-mode)
 (define-key global-map [f12] 'global-linum-mode)
+
 
 ;;; built-in packages
 
@@ -184,8 +221,12 @@
 
 (use-package windmove
   :config
-  ;; use shift + arrow keys to switch between visible buffers
-  (windmove-default-keybindings))
+  ;; use shift + arrow keys to switch between visible buffers ;; (windmove-default-keybindings)
+  )
+(global-set-key (kbd "C-c <left>")  'windmove-left)
+(global-set-key (kbd "C-c <right>") 'windmove-right)
+(global-set-key (kbd "C-c <up>")    'windmove-up)
+(global-set-key (kbd "C-c <down>")  'windmove-down)
 
 (use-package dired
   :config
@@ -203,20 +244,15 @@
   ;; enable some really cool extensions like C-x C-j(dired-jump)
   (require 'dired-x))
 
-(require 'highlight-symbol)
 
 ;;; third-party packages
+(require 'highlight-symbol)
+
 (require 'visual-regexp)
 (define-key global-map (kbd "C-c w") 'vr/replace)
 (define-key global-map (kbd "C-c q") 'vr/query-replace)
 ;; if you use multiple-cursors, this is for you:
 (define-key global-map (kbd "C-c m") 'vr/mc-mark)
-
-
-;; (use-package zenburn-theme
-;;  :ensure t
-;;  :config
-;;  (load-theme 'zenburn t))
 
 (use-package ag
   :ensure t)
@@ -275,7 +311,7 @@
   :ensure t
   :init
   (setq projectile-completion-system 'ivy)
-  (setq projectile-project-search-path '("~/workspace/projects/"))
+  ;; (setq projectile-project-search-path '("~/workspace/projects/"))
   (setq projectile-switch-project-action #'projectile-dired)
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -346,9 +382,8 @@
          ("C-c I" . crux-find-user-init-file)
          ("C-c S" . crux-find-shell-init-file)
          ("s-r" . crux-recentf-find-file)
-         ("s-j" . crux-top-join-line)
-         ("C-^" . crux-top-join-line)
-         ("s-k" . crux-kill-whole-line)
+         ("C-S-j" . crux-top-join-line)
+         ("C-S-k" . crux-kill-whole-line)
          ("C-<backspace>" . crux-kill-line-backwards)
          ("s-o" . crux-smart-open-line-above)
          ([remap move-beginning-of-line] . crux-move-beginning-of-line)
@@ -474,7 +509,9 @@
  python-shell-interpreter "ipython"
  python-shell-interpreter-args "-i --simple-prompt")
 (setq elpy-rpc-timeout 10)
-(setenv "WORKON_HOME" "/Users/nando/miniconda3/envs")
+(if (eq system-type 'darwin)
+        (setenv "WORKON_HOME" "/Users/nando/miniconda3/envs")
+        (setenv "WORKON_HOME" "/home/fernando/miniconda3/envs"))
 (pyvenv-mode 1)
 
 (require 'py-autopep8)
@@ -570,10 +607,11 @@
                           "/usr/local/bin/ccls"
                         "/usr/bin/ccls"))
 
-;;; typescript/javascript
+;; Rjsx-mode
 (use-package rjsx-mode
   :ensure t)
 
+;;; TypeScript/JavaScript
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
 No uso use-package, porque si lo hago así,
@@ -585,7 +623,20 @@ solamente carga el modo para el primer archivo."
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  ;; Configuración extra desde ... https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
+  ;; (run-import-js)  ;; funcíon que no tengo
+  ;; Estos setq los meto después (algunos), quito de aquí para no mezclar
+  ;; (setq web-mode-enable-auto-quoting nil)
+  ;; (setq web-mode-markup-indent-offset 2)
+  ;; (setq web-mode-code-indent-offset 2)
+  ;; (setq web-mode-attr-indent-offset 2)
+  ;; (setq web-mode-attr-value-indent-offset 2)
+  ;; (setq lsp-eslint-server-command '("node" (concat (getenv "HOME") "/var/src/vscode-eslint/server/out/eslintServer.js") "--stdio"))
+  (set (make-local-variable 'company-backends)
+       '((company-tide company-files :with company-yasnippet)
+         (company-dabbrev-code company-dabbrev)))
+  )
 
 (use-package tide
   :ensure t
@@ -595,26 +646,35 @@ solamente carga el modo para el primer archivo."
   )
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
-(add-hook 'rjsx-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode 'electric-pair-mode)
+;; (add-hook 'typescript-mode '(disable-tabs 2))
+;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
+;; use rjsx-mode for .js* files except json and use tide with rjsx
+;; (add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))  ;; Esto en ppio es automaico para rjsx-mode
+(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+(add-hook 'rjsx-mode-hook 'setup-tide-mode)
+
+;; JavaScript
 (add-hook 'js-mode-hook #'setup-tide-mode)
 (add-hook 'js-mode-hook 'prettier-js-mode)
-(add-hook 'typescript-mode 'electric-pair-mode)
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
+;;; Emmet
 (require 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'web-mode-hook 'emmet-mode)
 
+;;; Web-mode
 ;; Para hacerlo funcionar con typescritp/react tsx
 ;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
-(add-hook 'web-mode-hook 'setup-tide-mode
-          (lambda () (pcase (file-name-extension buffer-file-name)
-                       ("tsx" ('setup-tide-mode))
-                       (_ (my-web-mode-hook)))))
+;; (add-hook 'web-mode-hook 'setup-tide-mode
+;;           (lambda () (pcase (file-name-extension buffer-file-name)
+;;                   ("tsx" ('setup-tide-mode))
+;;                   (_ (my-web-mode-hook)))))
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (add-hook 'web-mode-hook 'company-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
+
 
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
 (defun custom-web-mode-hook ()
@@ -630,8 +690,8 @@ solamente carga el modo para el primer archivo."
 (setq web-mode-enable-current-element-highlight t)
 (add-hook 'web-mode-hook 'setup-tide-mode
           (lambda () (pcase (file-name-extension buffer-file-name)
-                       ("tsx" ('tide-setup-hook))
-                       (_ (my-web-mode-hook)))))
+                  ("tsx" ('tide-setup-hook))
+                  (_ (my-web-mode-hook)))))
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;; para poder trabajar independientemente con los archivos php cuando son para código o son para html
@@ -640,35 +700,6 @@ solamente carga el modo para el primer archivo."
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
-
-;; (require 'emmet-mode)
-;; (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-;; (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-;; (add-hook 'web-mode-hook 'emmet-mode)
-
-;; (use-package web-mode
-;;  :custom
-;;  (web-mode-markup-indent-offset 2)
-;;  (web-mode-css-indent-offset 2)
-;;  (web-mode-code-indent-offset 2)
-;;  :config
-;;  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;;  (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
-;;  (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
-;;  :ensure t)
-
-;; ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
-;; (defun custom-web-mode-hook ()
-;;   "Hooks for Web mode."
-;;   (setq web-mode-markup-indent-offset 2)
-;;   (setq web-mode-css-indent-offset 2)
-;;   (setq web-mode-code-indent-offset 2)
-;;   (setq web-mode-enable-current-column-highlight t)
-;;   (setq web-mode-enable-current-element-highlight t)
-;;   (set (make-local-variable 'company-backends)
-;;        '(company-css company-web-html company-yasnippet company-files)))
-;; (add-hook 'web-mode-hook 'custom-web-mode-hook)
-
 
 
 ;;; Latex, org, markdown
@@ -775,5 +806,11 @@ solamente carga el modo para el primer archivo."
   (global-set-key (kbd "<C-S-left>")   'buf-move-left)
   (global-set-key (kbd "<C-S-right>")  'buf-move-right))
 
-(setq custom-file "~/.emacs.d/emacs-custom.el")
-(load custom-file)
+;; (setq custom-file "~/.emacs.d/emacs-custom.el")
+;; (load custom-file)
+(setq custom-file (expand-file-name "emacs-custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+(provide 'init)
+;;; init.el ends here
