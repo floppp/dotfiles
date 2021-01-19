@@ -610,7 +610,7 @@
 ;; Rjsx-mode
 (use-package rjsx-mode
   :ensure t)
-
+(setq rjsx-indent-level 2)
 ;;; TypeScript/JavaScript
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
@@ -663,19 +663,9 @@ solamente carga el modo para el primer archivo."
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'web-mode-hook 'emmet-mode)
+(add-hook 'rjsx-hook 'emmet-mode)
 
 ;;; Web-mode
-;; Para hacerlo funcionar con typescritp/react tsx
-;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
-;; (add-hook 'web-mode-hook 'setup-tide-mode
-;;           (lambda () (pcase (file-name-extension buffer-file-name)
-;;                   ("tsx" ('setup-tide-mode))
-;;                   (_ (my-web-mode-hook)))))
-(flycheck-add-mode 'typescript-tslint 'web-mode)
-(add-hook 'web-mode-hook 'company-mode)
-(add-hook 'web-mode-hook 'prettier-js-mode)
-
-
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
 (defun custom-web-mode-hook ()
   "Hooks for Web mode."
@@ -685,20 +675,29 @@ solamente carga el modo para el primer archivo."
   (set (make-local-variable 'company-backends)
        '(company-css company-web-html company-yasnippet company-files)))
 
+;; Para hacerlo funcionar con typescritp/react tsx
+;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+(add-hook 'web-mode-hook 'company-mode)
+(add-hook 'web-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'custom-web-mode-hook)
-(setq web-mode-enable-current-column-highlight t)
-(setq web-mode-enable-current-element-highlight t)
+
+
 (add-hook 'web-mode-hook 'setup-tide-mode
           (lambda () (pcase (file-name-extension buffer-file-name)
-                  ("tsx" ('tide-setup-hook))
-                  (_ (my-web-mode-hook)))))
+                       ("tsx" ('tide-setup-hook))
+                       (_ (my-web-mode-hook)))))
+
+(setq web-mode-enable-current-column-highlight t)
+(setq web-mode-enable-current-element-highlight t)
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;; para poder trabajar independientemente con los archivos php cuando son para código o son para html
 (add-to-list 'auto-mode-alist '("\\.phtml?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
 
 
