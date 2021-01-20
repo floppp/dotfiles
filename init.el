@@ -91,6 +91,9 @@
 (setq-default tab-width 4)
 (setq-default fill-column 80)
 (setq-default show-trailing-whitespace t)
+(global-set-key (kbd "C-z") 'advertised-undo)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-z") 'redo)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
