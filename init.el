@@ -695,7 +695,7 @@ solamente carga el modo para el primer archivo."
 (add-to-list 'auto-mode-alist '("\\.phtml?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
