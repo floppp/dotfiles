@@ -86,6 +86,7 @@
 ;; Para que si tengo dos paneles abiertos, al copiar en uno, se copie directamente en el otro.
 (setq dired-dwim-target t)
 (setq tab-always-indent 'complete)  ;; smart tab behavior - indent or complete
+(setq dired-listing-switches "-aBhl  --group-directories-first")
 ;; (setq create-lockfiles nil)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
