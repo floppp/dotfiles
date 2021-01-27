@@ -581,7 +581,7 @@
 
 (if (eq system-type 'darwin)
     (load-scala-macos)
-  (load-scala-linux))
+  (load-scala-macos)) ;; Problem with lsp and scala 3
 
 (use-package yasnippet)
 
