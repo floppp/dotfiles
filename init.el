@@ -60,10 +60,12 @@
 
 (defun load-linux-path ()
   "Loading for home/work paths."
-  (setq exec-path (append exec-path '("/home/fernando/miniconda3/bin")))
-  (setq exec-path (append exec-path '("/home/fernando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
-  (setq exec-path (append exec-path '("/home/fernando/.nvm/versions/node/v14.15.4/bin")))
-  (setq exec-path (append exec-path '("/home/fernando/bin"))))
+  (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/kotlin/current/bin"))
+  (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
+  (setq exec-path (append exec-path '("/home/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
+  (setq exec-path (append exec-path '("/home/nando/.nvm/versions/node/v14.15.4/bin")))
+  (setq exec-path (append exec-path '("/home/nando/.sdkman/candidates/kotlin/current/bin")))
+  (setq exec-path (append exec-path '("/home/nando/bin"))))
 
 (if (eq system-type 'darwin)
     (load-macos-path)
@@ -515,7 +517,7 @@
 (setq elpy-rpc-timeout 10)
 (if (eq system-type 'darwin)
         (setenv "WORKON_HOME" "/Users/nando/miniconda3/envs")
-        (setenv "WORKON_HOME" "/home/fernando/miniconda3/envs"))
+        (setenv "WORKON_HOME" "/home/nando/miniconda3/envs"))
 (pyvenv-mode 1)
 
 (require 'py-autopep8)
@@ -581,7 +583,7 @@
 
 (if (eq system-type 'darwin)
     (load-scala-macos)
-  (load-scala-macos)) ;; Problem with lsp and scala 3
+  (load-scala-linux)) ;; Problem with lsp and scala 3
 
 (use-package yasnippet)
 
