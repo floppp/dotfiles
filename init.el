@@ -1,13 +1,12 @@
 ;;; package -- Summary
-;; Emacs configuration for C/C++, Python, Scala, Clojure, TS/JS, Web (+ React), Java.
+;; Emacs configuration for C/C++, Python, Scala, Clojure, TS/JS, Web (+ React/Angular), Java.
 ;; - LSP for Scala (lsp-metals), C/C++ (ccls), Java (lsp-java).
-;; - Elpy for python.
+;; - Elpy for Python.
 ;; - Cider for Clojure.
 ;; - Tide for TypeScript/JavaScript.
 ;; - Plus some configurations for Org, Latex, MarkDown.
 ;; [TODO: Try built-in react support for Emacs 27.]
 ;; - Rxjs for React.
-
 
 
 ;;; Commentary:
@@ -97,6 +96,7 @@
 (global-set-key (kbd "C-z") 'advertised-undo)
 (defalias 'redo 'undo-tree-redo)
 (global-set-key (kbd "C-S-z") 'redo)
+(global-set-key (kbd "C-c c") 'org-agenda)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -729,9 +729,21 @@ solamente carga el modo para el primer archivo."
 (use-package markdown-mode
   :ensure t)
 
+(defun spell-buffer-spanish ()
+  "Buffer in spanish."
+  (interactive)
+  (ispell-change-dictionary "es_ES")
+  (flyspell-buffer))
+
+(defun spell-buffer-english ()
+  "Buffer in english."
+  (interactive)
+  (ispell-change-dictionary "en_US")
+  (flyspell-buffer))
+
 (setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
-(setq ispell-local-dictionary "es")
+(setq ispell-local-dictionary "es_ES")
 (setq ispell-local-dictionary-alist
       '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
