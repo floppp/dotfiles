@@ -5,8 +5,6 @@
 ;; - Cider for Clojure.
 ;; - Tide for TypeScript/JavaScript.
 ;; - Plus some configurations for Org, Latex, MarkDown.
-;; [TODO: Try built-in react support for Emacs 27.]
-;; - Rxjs for React.
 
 
 ;;; Commentary:
@@ -614,9 +612,9 @@
                         "/usr/bin/ccls"))
 
 ;; Rjsx-mode
-(use-package rjsx-mode
-  :ensure t)
-(setq rjsx-indent-level 2)
+;; (use-package rjsx-mode :ensure t)
+;; (setq rjsx-indent-level 2)
+
 ;;; TypeScript/JavaScript
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
@@ -658,7 +656,7 @@ solamente carga el modo para el primer archivo."
 ;; use rjsx-mode for .js* files except json and use tide with rjsx
 ;; (add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))  ;; Esto en ppio es automaico para rjsx-mode
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-(add-hook 'rjsx-mode-hook 'setup-tide-mode)
+;; (add-hook 'rjsx-mode-hook 'setup-tide-mode)
 
 ;; JavaScript
 (add-hook 'js-mode-hook #'setup-tide-mode)
@@ -669,7 +667,7 @@ solamente carga el modo para el primer archivo."
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'web-mode-hook 'emmet-mode)
-(add-hook 'rjsx-hook 'emmet-mode)
+;; (add-hook 'rjsx-hook 'emmet-mode)
 
 ;;; Web-mode
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
@@ -702,8 +700,8 @@ solamente carga el modo para el primer archivo."
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
 
 
@@ -726,13 +724,25 @@ solamente carga el modo para el primer archivo."
             (org-bullets-mode 1)
             (org-indent-mode t)))
 
+(setq org-agenda-files (list "~/Documentos/agenda.org"))
+
 (use-package markdown-mode
   :ensure t)
 
+;; (defun spell-buffer (lan)
+;;   "Buffer in lan."
+;;   (interactive)
+;;   (ispell-change-dicitionary lan)
+;;   (flyspell-buffer))
 (defun spell-buffer-spanish ()
   "Buffer in spanish."
   (interactive)
   (ispell-change-dictionary "es_ES")
+  (flyspell-buffer))
+
+(defun spell-buffer-catalan ()
+  (interactive)
+  (ispell-change-dictionary "ca_ES")
   (flyspell-buffer))
 
 (defun spell-buffer-english ()
@@ -741,11 +751,11 @@ solamente carga el modo para el primer archivo."
   (ispell-change-dictionary "en_US")
   (flyspell-buffer))
 
-(setq ispell-really-hunspell t)
 (setq ispell-program-name "hunspell")
+(setq ispell-really-hunspell t)
 (setq ispell-local-dictionary "es_ES")
 (setq ispell-local-dictionary-alist
-      '(("es" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
+      '(("es_ES" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8)))
 
 (use-package ispell
   :hook
@@ -755,6 +765,7 @@ solamente carga el modo para el primer archivo."
     (setq-default ispell-program-name "hunspell")
     (setq ispell-really-hunspell t))
   :bind (("C-c s" . spell-buffer-spanish)
+         ("C-c v" . spell-buffer-catalan)
          ("C-c e" . spell-buffer-english)))
 
 ;; TODO: download langtool
