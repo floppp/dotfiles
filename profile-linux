@@ -1,7 +1,7 @@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/nando/Software/c_libs
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/nando/.jdks/openjdk-15.0.2/lib/server/
 export ANDROID_HOME=$HOME/Android/Sdk
 export USE_WOLFRAM_LD_LIBRARY_PATH=1
 

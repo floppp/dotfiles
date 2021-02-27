@@ -47,7 +47,6 @@
 ;; update the package metadata is the local cache is missing
 (unless package-archive-contents
   (package-refresh-contents))
-
 (defun load-macos-path ()
   "Loading some paths to be able to find executables."
   (setenv "JAVA_HOME" "/usr/local/opt/openjdk")
@@ -57,6 +56,8 @@
 
 (defun load-linux-path ()
   "Loading for home/work paths."
+  (setenv "JAVA_HOME" "/usr/lib/jvm/default")
+  (setq lsp-java-java-path "/usr/lib/jvm/default/bin/java")
   (setenv "PATH" (concat (getenv "PATH") ":/home/nando/.sdkman/candidates/kotlin/current/bin"))
   (setq exec-path (append exec-path '("/home/nando/miniconda3/bin")))
   (setq exec-path (append exec-path '("/home/nando/.local/bin"))) ; Esto me ha hecho que funcione el linting en elpy
@@ -396,6 +397,14 @@
          ([remap kill-whole-line] . crux-kill-whole-line)
          ("C-c s" . crux-ispell-word-then-abbrev)))
 
+(use-package neotree
+  :ensure t
+  :config (global-set-key [f8] 'neotree-project-dir)
+          ; Every time when the neotree window is opened, let it find current file and jump to node.
+          (setq neo-smart-open t)
+          ; Do not autorefresh directory to show current file
+          (setq neo-autorefresh nil))
+
 (use-package treemacs
   :ensure t
   :defer t
@@ -440,7 +449,9 @@
   :hook
   (sh-mode . lsp) ;; (c-mode . lsp)
   (c++-mode . lsp)
-  (java-mode .lsp)
+  ;; (java-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
+   (java-mode . #'lsp-deferred)
   ;; (scala-mode . lsp)
   (lsp-mode . lsp-lens-mode)
   :config
@@ -526,7 +537,10 @@
 
 ;;; java
 
-(use-package lsp-java :ensure t)
+(use-package lsp-java
+  :ensure t
+  :config (add-hook 'java-mode-hook 'lsp))
+;; (add-hook 'java-mode-hook #'lsp)
 (use-package dap-java :after (lsp-java))
 
 (use-package dap-mode
@@ -538,6 +552,7 @@
   :config
   (dap-mode t)
   (dap-ui-mode t))
+
 
 ;;; scala
 
@@ -611,10 +626,6 @@
                           "/usr/local/bin/ccls"
                         "/usr/bin/ccls"))
 
-;; Rjsx-mode
-;; (use-package rjsx-mode :ensure t)
-;; (setq rjsx-indent-level 2)
-
 ;;; TypeScript/JavaScript
 (defun setup-tide-mode ()
   "Función que nos lanza el modo y lo configura.
@@ -639,35 +650,28 @@ solamente carga el modo para el primer archivo."
   ;; (setq lsp-eslint-server-command '("node" (concat (getenv "HOME") "/var/src/vscode-eslint/server/out/eslintServer.js") "--stdio"))
   (set (make-local-variable 'company-backends)
        '((company-tide company-files :with company-yasnippet)
-         (company-dabbrev-code company-dabbrev)))
-  )
+         (company-dabbrev-code company-dabbrev))))
+
+(add-hook 'js-mode-hook #'setup-tide-mode)
 
 (use-package tide
   :ensure t
-  ;; Comento porque ya hago en el add-hook de después
-  ;; :after (rjsx-mode company flycheck)
-  ;; :hook (rjsx-mode . setup-tide-mode)
-  )
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-require-manual-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'typescript-mode 'electric-pair-mode)
 ;; (add-hook 'typescript-mode '(disable-tabs 2))
 ;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
-;; use rjsx-mode for .js* files except json and use tide with rjsx
-;; (add-to-list 'auto-mode-alist '("\\.js.*$" . rjsx-mode))  ;; Esto en ppio es automaico para rjsx-mode
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-;; (add-hook 'rjsx-mode-hook 'setup-tide-mode)
-
-;; JavaScript
-(add-hook 'js-mode-hook #'setup-tide-mode)
-(add-hook 'js-mode-hook 'prettier-js-mode)
 
 ;;; Emmet
 (require 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'web-mode-hook 'emmet-mode)
-;; (add-hook 'rjsx-hook 'emmet-mode)
 
 ;;; Web-mode
 ;; https://fransiska.github.io/emacs/2017/08/21/web-development-in-emacs
@@ -681,29 +685,31 @@ solamente carga el modo para el primer archivo."
 
 ;; Para hacerlo funcionar con typescritp/react tsx
 ;; https://dev.to/viglioni/how-i-set-up-my-emacs-for-typescript-3eeh
-(flycheck-add-mode 'typescript-tslint 'web-mode)
+;; (flycheck-add-mode 'typescript-tslint 'web-mode)
 (add-hook 'web-mode-hook 'company-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'custom-web-mode-hook)
-
-
-(add-hook 'web-mode-hook 'setup-tide-mode
-          (lambda () (pcase (file-name-extension buffer-file-name)
-                       ("tsx" ('tide-setup-hook))
-                       (_ (my-web-mode-hook)))))
+(add-hook 'web-mode-hook #'setup-tide-mode)
 
 (setq web-mode-enable-current-column-highlight t)
 (setq web-mode-enable-current-element-highlight t)
+
+(use-package php-mode
+ :ensure t
+ :mode
+ ("\\.php\\'" . php-mode))
+
+(use-package company-php
+  :defer
+  :after company)
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.phtml?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.s*css?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts?\\'" . typescript-mode))
-
+(add-to-list 'auto-mode-alist '("\\.php?". php-mode))
 
 ;;; Latex, org, markdown
 (use-package tex
@@ -729,11 +735,6 @@ solamente carga el modo para el primer archivo."
 (use-package markdown-mode
   :ensure t)
 
-;; (defun spell-buffer (lan)
-;;   "Buffer in lan."
-;;   (interactive)
-;;   (ispell-change-dicitionary lan)
-;;   (flyspell-buffer))
 (defun spell-buffer-spanish ()
   "Buffer in spanish."
   (interactive)
@@ -781,7 +782,6 @@ solamente carga el modo para el primer archivo."
       ;; "EN_QUOTES")
       )
 
-
 ;;; others
 
 (use-package company
@@ -797,11 +797,11 @@ solamente carga el modo para el primer archivo."
   (setq company-tooltip-flip-when-above t)
   (global-company-mode))
 
-
 (use-package flycheck
   :ensure t
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  ;; :config (add-hook 'after-init-hook #'global-flycheck-mode)
+  :init (global-flycheck-mode)
+  )
 
 (use-package hl-todo
   :ensure t
