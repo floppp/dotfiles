@@ -1,4 +1,5 @@
-function watch-folder-and-exec-function {
+. ~/.profile_private
+function watch_folder_and_exec_function {
     [[ $# == 0 ]] && echo "La función necesita qué ha de ejecutar cuando los archivos cambien\n" && return
 
     echo "ejecutamos:      $@"
@@ -8,7 +9,57 @@ function watch-folder-and-exec-function {
     done
 }
 
-function watch-and-upload {
+function upload_folder {
+    src=$1
+    dst=$2
+
+    if [[ $src == '-h' ]]; then
+        echo "2 parámetros posicionales obligatorios:"
+        echo "  - ruta local a subir"
+        echo "  - ruta servidor donde subir"
+        echo "2 opciones:"
+        echo "  - -e archivo con listado a excluir"
+        echo "  - -s proveedor donde se encuentra servidor remoto."
+        return
+    fi
+
+    while [[ -n $1 ]]; do
+        case "$1" in
+            -e)
+                local exclude_file=$2
+                shift
+                ;;
+            -s)
+                local server=$2
+                shift
+                ;;
+        esac
+        shift
+    done
+
+    if [[ -z $server ]]; then
+        local server=$(echo "contabo\naws\novh\nclouding" | fzf)
+    fi
+
+    case $server in
+        "contabo")
+            local dict=${contabo}
+            local ip=${contabo[ip]}
+            local port=${contabo[port]}
+            local user=${contabo[user]}
+            ;;
+    esac
+
+    if [[ -z $exclude_file ]]; then
+        echo "[BASH COMMAND] rsync -avzP -e \"ssh -p $port\" $src $user@$ip:$dst"
+        rsync -avzP -e "ssh -p $port" $src $user@$ip:$dst
+    else
+        echo "[BASH COMMAND] rsync -avzP -e \"ssh -p $port\" --exclude-from=\"$src$exclude_file\" $src $user@$ip:$dst"
+        rsync -avzP -e "ssh -p $port" --exclude-from="$src$exclude_file" $src $user@$ip:$dst
+    fi
+}
+
+function watch_and_upload {
     [[ $# != 3 ]] && echo "La función necesita tres parámetros:\n  - directorio local\n  - directorio remoto\n  - nombre del archivo en directorio local con elementos a excluir de la sincronización" && return
     # rsync flags
     #     a => archive mode == rlptgoD (recursivo, conserva permisos, enlaces simbólicos, etc)
@@ -22,8 +73,10 @@ function watch-and-upload {
     echo "origen: $1"
     echo "destino: $2"
     echo "excluimos:" && cat $1/$3
+    # Primera subida nada más lanzarlo.
+    rsync -avzP --exclude-from="$1$3" -e "ssh -p 6573" $1 nando@194.163.137.6:$2
     while inotifywait -r -e modify,create,move,delete --exclude '.git' $1; do
-        rsync -avzP --exclude-from="$1$3" -e "ssh -i /home/nando/Documentos/imm/20190206_fernando/id_rsa -p 2345" $1 fernando@167.114.242.135:$2
+        rsync -avzP --exclude-from="$1$3" -e "ssh -p 6573" $1 nando@194.163.137.6:$2
         echo "echo"
     done
 }
